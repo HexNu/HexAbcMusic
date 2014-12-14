@@ -10,8 +10,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -34,11 +36,25 @@ public class AbcVoice implements Voice {
     private String body;
     @Column
     private int voiceIndex;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "voice", targetEntity = AbcClef.class)
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = AbcClef.class)
     private Clef clef;
-    @OneToOne
+    @ManyToOne(targetEntity = AbcMetaData.class)
     private MetaData metaData;
-    
+    @Transient
+    public static final Clef DEFAULT_CLEF = new AbcClef();
+
+    public AbcVoice() {
+        this(0);
+    }
+
+    public AbcVoice(int index) {
+        this(index, DEFAULT_CLEF);
+    }
+
+    public AbcVoice(int index, Clef clef) {
+        this.voiceIndex = index;
+        this.clef = clef;
+    }
 
     @Override
     public Long getId() {
@@ -79,7 +95,7 @@ public class AbcVoice implements Voice {
     public void setCode(String code) {
         this.code = code;
     }
-    
+
     @Override
     public int getVoiceIndex() {
         return voiceIndex;

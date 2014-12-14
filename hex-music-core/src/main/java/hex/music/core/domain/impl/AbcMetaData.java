@@ -43,6 +43,8 @@ public class AbcMetaData implements MetaData {
     @Column(length = 2 * KB)
     private String notes;
     @Column
+    private String transcriber;
+    @Column
     private String rythm;
     @Column
     private String meter;
@@ -150,6 +152,16 @@ public class AbcMetaData implements MetaData {
     @Override
     public String getNotes() {
         return notes;
+    }
+
+    @Override
+    public String getTranscriber() {
+        return transcriber;
+    }
+
+    @Override
+    public void setTranscriber(String transcriber) {
+        this.transcriber = transcriber;
     }
 
     @Override

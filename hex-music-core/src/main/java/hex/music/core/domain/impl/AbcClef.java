@@ -1,13 +1,16 @@
 package hex.music.core.domain.impl;
 
 import hex.music.core.domain.Clef;
+import hex.music.core.domain.Voice;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -24,12 +27,12 @@ public class AbcClef implements Clef {
     private Long id;
     @Column
     private String name;
-    @Column
-    private String shortName;
     @Enumerated(EnumType.STRING)
     private final Type type;
     @Column
     private final int transpose;
+    @OneToOne(mappedBy = "clef", fetch = FetchType.EAGER, targetEntity = AbcVoice.class)
+    private Voice voice;
     @Transient
     public static final Type DEFAULT_TYPE = Type.TREBLE;
     @Transient
@@ -46,6 +49,16 @@ public class AbcClef implements Clef {
     public AbcClef(Type type, int transpose) {
         this.type = type;
         this.transpose = transpose;
+    }
+
+    @Override
+    public Voice getVoice() {
+        return voice;
+    }
+
+    @Override
+    public void setVoice(Voice voice) {
+        this.voice = voice;
     }
 
     @Override
@@ -79,7 +92,7 @@ public class AbcClef implements Clef {
         if (name != null && !name.equals("")) {
             builder.append(name).append(" ");
         }
-        
+
         return builder.toString();
     }
 }

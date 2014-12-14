@@ -113,7 +113,7 @@ public interface MetaData extends DomainEntity {
     /**
      * Notes.
      *
-     * i.e Se även SL Jämtland/Härjedalen 310
+     * i.e. Se även SL Jämtland/Härjedalen 310
      *
      * Field in abc: N
      *
@@ -122,6 +122,19 @@ public interface MetaData extends DomainEntity {
     String getNotes();
 
     void setNotes(String notes);
+    
+    /**
+     * Name of the person who transcribed the tune to abc.
+     *
+     * i.e. Aron Betasson
+     *
+     * Field in abc: Z
+     *
+     * @return
+     */
+    String getTranscriber();
+    
+    void setTranscriber(String transcriber);
 
     /**
      * The meter for the tune.

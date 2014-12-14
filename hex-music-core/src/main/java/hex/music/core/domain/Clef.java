@@ -6,6 +6,10 @@ package hex.music.core.domain;
  */
 public interface Clef extends DomainEntity {
 
+    Voice getVoice();
+
+    void setVoice(Voice voice);
+
     Type getType();
 
     int getTranspose();
