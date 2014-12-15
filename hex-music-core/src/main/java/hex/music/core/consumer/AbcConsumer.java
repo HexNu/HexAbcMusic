@@ -88,7 +88,7 @@ public class AbcConsumer {
                 // TODO: Införa properties för Key och försöka hantera inkommande sträng
                 // på samma sätt som för voice.
                 // antagligen genom att läsa tecken för tecken...
-                tune.setKey(new AbcKey(Key.Type.getByCode(value)));
+                tune.setKey(new AbcKey(Key.Signature.getByCode(value)));
                 break;
             case "L":
                 tune.setUnitNoteLength(value);
@@ -155,7 +155,7 @@ public class AbcConsumer {
 //            System.out.println(t.getMeter());
 //            System.out.println(t.getRythm());
 //            System.out.println(t.getUnitNoteLength());
-//            System.out.println(t.getKey().getCode());
+//            System.out.println(t.getKey().getVoiceId());
 //            System.out.println(t.getVoices().get(0).getBody());
         });
     }

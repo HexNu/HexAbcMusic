@@ -29,7 +29,7 @@ public class AbcVoice implements Voice {
     @Column
     private String shortName;
     @Column
-    private String code;
+    private String voiceId;
     @Column
     private String body;
     @Column
@@ -83,13 +83,13 @@ public class AbcVoice implements Voice {
     }
 
     @Override
-    public String getCode() {
-        return code;
+    public String getVoiceId() {
+        return voiceId;
     }
 
     @Override
-    public void setCode(String code) {
-        this.code = code;
+    public void setVoiceId(String voiceId) {
+        this.voiceId = voiceId;
     }
 
     @Override

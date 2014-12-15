@@ -6,11 +6,11 @@ package hex.music.core.domain;
  */
 public interface Voice extends DomainEntity {
 
-    public static final String DEFAULT_CODE = "V1";
+    public static final String DEFAULT_VOICE_ID = "V1";
 
-    String getCode();
+    String getVoiceId();
 
-    void setCode(String code);
+    void setVoiceId(String code);
 
     void setName(String name);
 

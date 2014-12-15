@@ -6,15 +6,15 @@ package hex.music.core.domain;
  */
 public interface Key extends DomainEntity {
 
-    Type getType();
+    Signature getSignature();
 
-    void setType(Type type);
+    void setSignature(Signature signature);
 
     Clef getClef();
 
     void setClef(Clef clef);
 
-    public enum Type {
+    public enum Signature {
 
         A_MAJ("A dur", "A"),
         A_MIN("A moll", "Am"),
@@ -52,9 +52,9 @@ public interface Key extends DomainEntity {
         G_MIX("G mixolydisk", "Gmix");
         private final String label;
         private final String code;
-        public static final Type DEFAULT_TYPE = D_MAJ;
+        public static final Signature DEFAULT_TYPE = D_MAJ;
 
-        private Type(String label, String code) {
+        private Signature(String label, String code) {
             this.label = label;
             this.code = code;
         }
@@ -67,8 +67,8 @@ public interface Key extends DomainEntity {
             return code;
         }
 
-        public static Type getByCode(String code) {
-            for (Type t : values()) {
+        public static Signature getByCode(String code) {
+            for (Signature t : values()) {
                 if (t.getCode().equalsIgnoreCase(code)) {
                     return t;
                 }

@@ -24,20 +24,20 @@ public class AbcKey implements Key {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private Signature signature;
     @OneToOne(cascade = CascadeType.ALL, targetEntity = AbcClef.class)
     private Clef clef;
 
     public AbcKey() {
-        this(Type.DEFAULT_TYPE);
+        this(Signature.DEFAULT_TYPE);
     }
     
-    public AbcKey(Type type) {
+    public AbcKey(Signature type) {
         this(type, Clef.DEFAULT_CLEF);
     }
 
-    public AbcKey(Type type, Clef clef) {
-        this.type = type;
+    public AbcKey(Signature type, Clef clef) {
+        this.signature = type;
         this.clef = clef;
     }
 
@@ -53,17 +53,17 @@ public class AbcKey implements Key {
 
     @Override
     public String getName() {
-        return type.getLabel();
+        return signature.getLabel();
     }
 
     @Override
-    public Type getType() {
-        return type;
+    public Signature getSignature() {
+        return signature;
     }
 
     @Override
-    public void setType(Type type) {
-        this.type = type;
+    public void setSignature(Signature signature) {
+        this.signature = signature;
     }
 
     @Override
