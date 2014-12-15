@@ -26,6 +26,8 @@ public interface Clef extends DomainEntity {
      * Returns the note representation that is used on the middle (third) line.
      *
      * Defaults are: treble: B; alto: C; tenor: A,; bass: D,; none: B
+     * 
+     * i.e clef=bass middle=d means that the D, is noted as d in the body.
      *
      * @return
      */
@@ -35,6 +37,8 @@ public interface Clef extends DomainEntity {
      * Sets the note representation that is used on the middle (third) line.
      *
      * Defaults are: treble: B; alto: C; tenor: A,; bass: D,; none: B
+     *
+     * i.e clef=bass middle=d means that the D, is noted as d in the body.
      *
      * @param middle
      */
