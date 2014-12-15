@@ -15,7 +15,7 @@ public class DaoFactory {
         this.em = em;
     }
 
-    public MetaDataDao getMetaDataDao() {
-        return new MetaDataDao(em);
+    public TuneDao getTuneDao() {
+        return new TuneDao(em);
     }
 }

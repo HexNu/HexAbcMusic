@@ -3,8 +3,8 @@
   <persistence-unit name="hex-musicPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <class>hex.music.core.domain.impl.AbcClef</class>
-    <class>hex.music.core.domain.impl.AbcMetaData</class>
     <class>hex.music.core.domain.impl.AbcVoice</class>
+    <class>hex.music.core.domain.impl.AbcTune</class>
     <properties>
       <property name="hibernate.connection.username" value="hex"/>
       <property name="hibernate.connection.password" value="hex"/>

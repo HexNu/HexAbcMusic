@@ -7,16 +7,16 @@ import hex.music.core.service.command.AbstractServiceCommand;
  *
  * @author hln
  */
-public class SaveTuneCommand extends AbstractServiceCommand<Tune> {
+public class GetTuneCommand extends AbstractServiceCommand<Tune>  {
+    private final Long id;
 
-    private final Tune tune;
-
-    public SaveTuneCommand(Tune tune) {
-        this.tune = tune;
+    public GetTuneCommand(Long id) {
+        this.id = id;
     }
 
     @Override
     public Tune execute() {
-        return getDaoFactory().getTuneDao().save(tune);
+        return getDaoFactory().getTuneDao().findByPrimaryKey(id);
     }
+
 }

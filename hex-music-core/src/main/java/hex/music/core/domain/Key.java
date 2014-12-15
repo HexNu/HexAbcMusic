@@ -20,6 +20,7 @@ public enum Key {
     C_MIN("C moll", "Cm"),
     C_DOR("C dorisk", "Cdor"),
     C_MIX("C mixolydisk", "Cmix"),
+    C_SHARP_MIN("Ciss moll", "C#m"),
     D_MAJ("D dur", "D"),
     D_MIN("D moll", "Dm"),
     D_DOR("D dorisk", "Ddor"),
@@ -34,23 +35,34 @@ public enum Key {
     F_MIN("F moll", "Fm"),
     F_DOR("F dorisk", "Fdor"),
     F_MIX("F mixolydisk", "Fmix"),
+    F_SHARP_MIN("Fiss moll", "F#m"),
     G_MAJ("G dur", "G"),
     G_MIN("G moll", "Gm"),
     G_DOR("G dorisk", "Gdor"),
     G_MIX("G mixolydisk", "Gmix");
     private final String label;
     private final String code;
+    public static final Key DEFAULT_KEY = D_MAJ;
 
     private Key(String label, String code) {
         this.label = label;
         this.code = code;
     }
 
-    protected String getLabel() {
+    public String getLabel() {
         return label;
     }
 
-    protected String getCode() {
+    public String getCode() {
         return code;
+    }
+    
+    public static Key getByCode(String code) {
+        for (Key k : values()) {
+            if (k.getCode().equalsIgnoreCase(code)) {
+                return k;
+            }
+        }
+        return DEFAULT_KEY;
     }
 }

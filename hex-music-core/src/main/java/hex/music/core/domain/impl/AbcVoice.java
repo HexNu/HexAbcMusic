@@ -1,7 +1,7 @@
 package hex.music.core.domain.impl;
 
 import hex.music.core.domain.Clef;
-import hex.music.core.domain.MetaData;
+import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,8 +38,8 @@ public class AbcVoice implements Voice {
     private int voiceIndex;
     @OneToOne(cascade = CascadeType.ALL, targetEntity = AbcClef.class)
     private Clef clef;
-    @ManyToOne(targetEntity = AbcMetaData.class)
-    private MetaData metaData;
+    @ManyToOne(targetEntity = AbcTune.class)
+    private Tune tune;
     @Transient
     public static final Clef DEFAULT_CLEF = new AbcClef();
 
@@ -77,7 +77,7 @@ public class AbcVoice implements Voice {
     }
 
     @Override
-    public String getShortName() {
+    public String getSubname() {
         return shortName;
     }
 
@@ -117,13 +117,13 @@ public class AbcVoice implements Voice {
     }
 
     @Override
-    public MetaData getMetaData() {
-        return metaData;
+    public Tune getTune() {
+        return tune;
     }
 
     @Override
-    public void setMetaData(MetaData metaData) {
-        this.metaData = metaData;
+    public void setTune(Tune tune) {
+        this.tune = tune;
     }
 
     @Override
@@ -134,5 +134,13 @@ public class AbcVoice implements Voice {
     @Override
     public void setBody(String body) {
         this.body = body;
+    }
+
+    @Override
+    public void addBodyLine(String line) {
+        if (body == null) {
+            body = "";
+        }
+        body += line + "\n";
     }
 }

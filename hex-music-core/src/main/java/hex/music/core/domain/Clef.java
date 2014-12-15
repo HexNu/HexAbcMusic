@@ -16,17 +16,35 @@ public interface Clef extends DomainEntity {
 
     public enum Type {
 
-        TREBLE("G klav", "treble"),
-        TREBLE_8VA("G klav 8va", "treble+8"),
-        TREBLE_8VA_BASSO("G klav 8va basso", "treble+8"),
-        SOPRANO("C klav, linje 1", "alto1"),
-        MEZZOSOPRANO("Alt klav, linje 2", "alto2"),
-        ALTO("C klac, linje 3 (Alt klav)", "alto"),
-        TENOR("C klav, linje 4", "tenor"),
-        BARITON("F klav, linje 3", "bass3"),
-        BASS("F klav, linje 4", "bass");
+        TREBLE("G-klav", "treble"),
+        ALTO("C- eller Altklav)", "alto"),
+        BASS("F-klav, linje 4", "bass"),
+        TREBLE_8VA("G-klav 8va", "treble+8"),
+        TREBLE_8VA_BASSO("G-klav 8va basso", "treble-8"),
+        BASS_8VA("F-klav 8va", "bass+8"),
+        BASS_8VA_BASSO("F-kla 8va basso", "bass-8"),
+        TREBLE1("G-klav, linje 1", "treble1"),
+        TREBLE2("G-klav, linje 2", "treble2"),
+        TREBLE3("G-klav, linje 3", "treble3"),
+        TREBLE4("G-klav, linje 4", "treble4"),
+        TREBLE5("G-klav, linje 5", "treble5"),
+        ALTO1("C-klav, linje 1 (Sopranklav)", "alto1"),
+        ALTO2("C-klav, linje 2 (Mezzosopranklav)", "alto2"),
+        ALTO3("C-klav, linje 3 (Altklav)", "alto3"),
+        ALTO4("C-klav, linje 4 (Tenorklav)", "alto4"),
+        ALTO5("C-klav, linje 5 (Baritonklav)", "alto5"),
+        BASS1("F-klav, linje 1", "bass1"),
+        BASS2("F-klav, linje 2", "bass2"),
+        BASS3("F-klav, linje 3", "bass3"),
+        BASS4("F-klav, linje 4", "bass4"),
+        BASS5("F-klav, linje 5", "bass5"),
+        TENOR("C-klav, linje 4", "tenor"),
+        SOPRANO("C-klav, linje 1", "alto1"),
+        MEZZOSOPRANO("C-klav, linje 2", "alto2"),
+        BARITON("F-klav, linje 3", "bass3");
         private final String label;
         private final String code;
+        public static final Type DEFAULT_TYPE = TREBLE; 
 
         private Type(String label, String code) {
             this.label = label;
@@ -34,12 +52,21 @@ public interface Clef extends DomainEntity {
 
         }
 
-        protected String getLabel() {
+        public String getLabel() {
             return label;
         }
 
-        protected String getCode() {
+        public String getCode() {
             return code;
+        }
+        
+        public static Type getByCode(String code) {
+            for (Type t : values()) {
+                if (t.getCode().equalsIgnoreCase(code)) {
+                    return t;
+                }
+            }
+            return DEFAULT_TYPE;
         }
     }
 }

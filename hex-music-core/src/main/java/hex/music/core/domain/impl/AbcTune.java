@@ -1,7 +1,7 @@
 package hex.music.core.domain.impl;
 
 import hex.music.core.domain.Key;
-import hex.music.core.domain.MetaData;
+import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +22,16 @@ import javax.persistence.Table;
  * @author hln
  */
 @Entity
-@Table(name = "MetaData")
-public class AbcMetaData implements MetaData {
+@Table(name = "Tune")
+public class AbcTune implements Tune {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column
     private String title;
+    @Column
+    private String subheader;
     @Column
     private String originator;
     @Column
@@ -54,13 +56,13 @@ public class AbcMetaData implements MetaData {
     private Key musicalKey;
     @Column
     private String tempo;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "metaData", targetEntity = AbcVoice.class)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "tune", targetEntity = AbcVoice.class)
     private final List<Voice> voices = new ArrayList<>();
 
-    public AbcMetaData() {
+    public AbcTune() {
     }
 
-    public AbcMetaData(String title) {
+    public AbcTune(String title) {
         this.title = title;
     }
 
@@ -87,6 +89,16 @@ public class AbcMetaData implements MetaData {
     @Override
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String getSubheader() {
+        return subheader;
+    }
+
+    @Override
+    public void setSubheader(String subheader) {
+        this.subheader = subheader;
     }
 
     @Override

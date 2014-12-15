@@ -34,12 +34,10 @@ public class AbcClef implements Clef {
     @OneToOne(mappedBy = "clef", fetch = FetchType.EAGER, targetEntity = AbcVoice.class)
     private Voice voice;
     @Transient
-    public static final Type DEFAULT_TYPE = Type.TREBLE;
-    @Transient
     public static final int DEFAULT_TRANSPOSE = 0;
 
     public AbcClef() {
-        this(DEFAULT_TYPE, DEFAULT_TRANSPOSE);
+        this(Type.DEFAULT_TYPE, DEFAULT_TRANSPOSE);
     }
 
     public AbcClef(Type type) {

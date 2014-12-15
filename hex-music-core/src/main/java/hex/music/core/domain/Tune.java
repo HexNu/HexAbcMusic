@@ -6,10 +6,10 @@ import java.util.List;
  *
  * @author hln
  */
-public interface MetaData extends DomainEntity {
+public interface Tune extends DomainEntity {
 
     /**
-     * The reference number for the tune.
+     * Getter for the reference number for the Tune.
      *
      * This number is automatially generated.
      *
@@ -21,7 +21,7 @@ public interface MetaData extends DomainEntity {
     Long getId();
 
     /**
-     * The tune title.
+     * Getter for the Tune title.
      *
      * Field in abc: T
      *
@@ -29,10 +29,31 @@ public interface MetaData extends DomainEntity {
      */
     String getTitle();
 
+    /**
+     * Field in abc: T
+     *
+     * @param title
+     */
     void setTitle(String title);
 
     /**
-     * The composer of the tune.
+     * Getter for the Tune title.
+     *
+     * Field in abc: T
+     *
+     * @return
+     */
+    String getSubheader();
+
+    /**
+     * Field in abc: T
+     *
+     * @param subheader
+     */
+    void setSubheader(String subheader);
+
+    /**
+     * Getter for he composer of the Tune.
      *
      * If it is a known composer: Pelle Schenell. If it is a tune where the use
      * originator.
@@ -43,19 +64,29 @@ public interface MetaData extends DomainEntity {
      */
     String getComposer();
 
+    /**
+     * Field in abc: C
+     *
+     * @param composer
+     */
     void setComposer(String composer);
 
     /**
      * The musician that the tune originates from.
      *
      * i. e. Katrina Lundstet. If the composer is known, use that field.
-     * 
+     *
      * Field in abc: C
      *
      * @return
      */
     String getOriginator();
 
+    /**
+     * Field in abc: C
+     *
+     * @param originator
+     */
     void setOriginator(String originator);
 
     /**
@@ -69,6 +100,11 @@ public interface MetaData extends DomainEntity {
      */
     String getRythm();
 
+    /**
+     * Field in abc: R
+     *
+     * @param rythm
+     */
     void setRythm(String rythm);
 
     /**
@@ -82,6 +118,11 @@ public interface MetaData extends DomainEntity {
      */
     String getRegion();
 
+    /**
+     * Field in abc: O
+     *
+     * @param region
+     */
     void setRegion(String region);
 
     /**
@@ -95,6 +136,11 @@ public interface MetaData extends DomainEntity {
      */
     String getSource();
 
+    /**
+     * Field in abc: S
+     *
+     * @param source
+     */
     void setSource(String source);
 
     /**
@@ -108,6 +154,11 @@ public interface MetaData extends DomainEntity {
      */
     String getHistory();
 
+    /**
+     * Field in abc: H
+     *
+     * @param history
+     */
     void setHistory(String history);
 
     /**
@@ -121,8 +172,13 @@ public interface MetaData extends DomainEntity {
      */
     String getNotes();
 
+    /**
+     * Field in abc: N
+     *
+     * @param notes
+     */
     void setNotes(String notes);
-    
+
     /**
      * Name of the person who transcribed the tune to abc.
      *
@@ -133,7 +189,12 @@ public interface MetaData extends DomainEntity {
      * @return
      */
     String getTranscriber();
-    
+
+    /**
+     * Field in abc: Z
+     *
+     * @param transcriber
+     */
     void setTranscriber(String transcriber);
 
     /**
@@ -147,6 +208,11 @@ public interface MetaData extends DomainEntity {
      */
     String getMeter();
 
+    /**
+     * Field in abc: M
+     *
+     * @param meter
+     */
     void setMeter(String meter);
 
     /**
@@ -160,6 +226,11 @@ public interface MetaData extends DomainEntity {
      */
     String getUnitNoteLength();
 
+    /**
+     * Field in abc: L
+     *
+     * @param length
+     */
     void setUnitNoteLength(String length);
 
     /**
@@ -173,6 +244,11 @@ public interface MetaData extends DomainEntity {
      */
     Key getKey();
 
+    /**
+     * Field in abc: K
+     *
+     * @param key
+     */
     void setKey(Key key);
 
     /**
@@ -188,6 +264,11 @@ public interface MetaData extends DomainEntity {
      */
     String getTempo();
 
+    /**
+     * Field in abc: Q
+     *
+     * @param tempo
+     */
     void setTempo(String tempo);
 
     /**
@@ -201,5 +282,10 @@ public interface MetaData extends DomainEntity {
      */
     List<Voice> getVoices();
 
+    /**
+     * Field in abc: V
+     *
+     * @param voice
+     */
     void addVoice(Voice voice);
 }

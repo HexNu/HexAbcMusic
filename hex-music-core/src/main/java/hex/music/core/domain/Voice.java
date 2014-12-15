@@ -6,19 +6,21 @@ package hex.music.core.domain;
  */
 public interface Voice extends DomainEntity {
 
+    public static final String DEFAULT_CODE = "V1";
+
     String getCode();
 
     void setCode(String code);
 
     void setName(String name);
 
-    String getShortName();
+    String getSubname();
 
     void setShortName(String shortName);
 
-    MetaData getMetaData();
+    Tune getTune();
 
-    void setMetaData(MetaData metaData);
+    void setTune(Tune tune);
 
     /**
      * The index for the voice.
@@ -45,4 +47,6 @@ public interface Voice extends DomainEntity {
     String getBody();
 
     void setBody(String body);
+
+    void addBodyLine(String line);
 }
