@@ -1,6 +1,7 @@
 package hex.music.core.producer;
 
 import hex.music.core.AbcConstants;
+import hex.music.core.AbcConstants.Field;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
 import java.io.UnsupportedEncodingException;
@@ -37,38 +38,50 @@ public class AbcProducer {
         StringBuilder result = new StringBuilder();
         result.append("X:").append(data.getId()).append("\n");
         createTuneHeader(result);
-        if (data.getRythm() != null) {
-            result.append("R:").append(data.getRythm()).append("\n");
+        createTuneMetaData(result);
+        createTuneBody(result);
+        result.append("\n\n");
+        return result.toString();
+    }
+
+    private void createTuneHeader(StringBuilder result) {
+        createKeyValueRow(result, Field.T, data.getTitle());
+        createKeyValueRow(result, Field.T, data.getSubheader());
+        createKeyValueRow(result, Field.C, data.getComposer());
+        if (data.getOriginator() != null) {
+            createKeyValueRow(result, Field.C, "efter " + data.getOriginator());
         }
-        if (data.getRegion() != null) {
-            result.append("O:").append(data.getRegion()).append("\n");
+        createKeyValueRow(result, Field.Q, data.getTempo());
+    }
+
+    private void createKeyValueRow(StringBuilder result, Field key, String value) {
+        if (value != null) {
+            result.append(key.name()).append(":").append(value).append("\n");
         }
-        if (data.getSource() != null) {
-            result.append("S:").append(data.getSource()).append("\n");
-        }
-        if (data.getHistory() != null) {
-            result.append("H:").append(data.getHistory()).append("\n");
-        }
-        if (data.getNotes() != null) {
-            result.append("N:").append(data.getNotes()).append("\n");
-        }
-        if (data.getTranscriber() != null) {
-            result.append("Z:").append(data.getTranscriber()).append("\n");
-        }
-        if (data.getMeter() != null) {
-            result.append("M:").append(data.getMeter()).append("\n");
-        }
-        if (data.getUnitNoteLength() != null) {
-            result.append("L:").append(data.getUnitNoteLength()).append("\n");
-        }
-        if (data.getKey() != null) {
-            result.append("K:").append(data.getKey().getSignature().getCode()).append("\n");
-        }
+    }
+
+    private void createTuneMetaData(StringBuilder result) {
+        createKeyValueRow(result, Field.R, data.getRythm());
+        createKeyValueRow(result, Field.O, data.getRegion());
+        createKeyValueRow(result, Field.S, data.getSource());
+        createKeyValueRow(result, Field.H, data.getHistory());
+        createKeyValueRow(result, Field.N, data.getNotes());
+        createKeyValueRow(result, Field.Z, data.getTranscriber());
+        createKeyValueRow(result, Field.M, data.getMeter());
+        createKeyValueRow(result, Field.L, data.getUnitNoteLength());
+        createKeyValueRow(result, Field.K, data.getKey().getSignature().getCode());
+    }
+
+    private void createTuneBody(StringBuilder result) {
         data.getVoices().stream().map((voice) -> {
             result.append("V:").append(voice.getVoiceId() != null ? voice.getVoiceId() : Voice.DEFAULT_VOICE_ID);
             if (data.getVoices().size() > 1) {
-                result.append(" name=\"").append(voice.getName()).append("\"")
-                        .append(" subname=\"").append(voice.getSubname()).append("\"");
+                if (voice.getName() != null) {
+                    result.append(" name=\"").append(voice.getName()).append("\"");
+                }
+                if (voice.getSubname() != null) {
+                    result.append(" subname=\"").append(voice.getSubname()).append("\"");
+                }
             }
             result.append(" clef=").append(voice.getClef().getType().getCode());
             return voice;
@@ -78,25 +91,7 @@ public class AbcProducer {
             }
             return voice;
         }).forEach((voice) -> {
-            result.append("\n").append(voice.getBody()).append("\n");
+            result.append("\n").append(voice.getBody());
         });
-        result.append("\n\n");
-        return result.toString();
-    }
-
-    private void createTuneHeader(StringBuilder result) {
-        result.append("T:").append(data.getTitle()).append("\n");
-        if (data.getSubheader() != null) {
-            result.append("T:").append(data.getSubheader()).append("\n");
-        }
-        if (data.getComposer() != null) {
-            result.append("C:").append(data.getComposer()).append("\n");
-        }
-        if (data.getOriginator() != null) {
-            result.append("C:efter ").append(data.getOriginator()).append("\n");
-        }
-        if (data.getTempo() != null) {
-            result.append("Q:").append(data.getTempo()).append("\n");
-        }
     }
 }

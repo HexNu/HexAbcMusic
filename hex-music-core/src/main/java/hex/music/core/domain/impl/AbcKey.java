@@ -68,11 +68,11 @@ public class AbcKey implements Key {
 
     @Override
     public Clef getClef() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return clef;
     }
 
     @Override
     public void setClef(Clef clef) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.clef = clef;
     }
 }

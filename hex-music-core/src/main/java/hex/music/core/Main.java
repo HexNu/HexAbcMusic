@@ -1,13 +1,9 @@
 package hex.music.core;
 
-import hex.music.core.domain.Tune;
 import hex.music.core.service.command.CommandExecutor;
-import hex.music.core.service.command.tune.FindAllTunesCommand;
-import hex.music.core.service.command.tune.GetAbcDocCommand;
 import hex.music.core.service.support.PuHandlerFactory;
-import hex.music.core.util.AbcFileWriter;
-import java.io.File;
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  *
@@ -17,18 +13,28 @@ public class Main {
 
     public static final String FOLK = "FOLK";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
 
         PuHandlerFactory PU_HANDLER_FACTORY = new PuHandlerFactory();
         CommandExecutor commandExecutor = new CommandExecutor(PU_HANDLER_FACTORY);
+
+// Importera låt:
+//        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Polska efter Törnblom.abc");
+//        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Låtar/Friskn gammel kar.abc");
+//        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Låtar/Kaisa.abc");
+////        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Låtar/Sorkar/Brudmarsch och Brudpolska.abc");
+//        List<Tune> tuneList = new AbcConsumer(stream).consume();
+//        for (Tune tune : tuneList) {
+//            commandExecutor.executeInTransaction(new SaveTuneCommand(tune), FOLK);
+//        }
 //        
 // Skriva ut lista på låtar:
-//        
-        List<Tune> tunes = commandExecutor.execute(new FindAllTunesCommand(), FOLK);
-        String resultString = commandExecutor.execute(new GetAbcDocCommand(tunes), FOLK);
-        File resultFile = new File("/home/hln/Skrivbord/Låtar.abc");
-        new AbcFileWriter(resultString, resultFile).write();
-
+////        
+//        List<Tune> tunes = commandExecutor.execute(new FindAllTunesCommand(), FOLK);
+//        String resultString = commandExecutor.execute(new GetAbcDocCommand(tunes), FOLK);
+//        File resultFile = new File("/home/hln/Skrivbord/Låtar.abc");
+//        new AbcFileWriter(resultString, resultFile).write();
+////
 //
 //        File abcFile = new File("/home/hln/Skrivbord/Polska efter Olof Törnblom.abc");
 //        try {

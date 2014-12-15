@@ -16,7 +16,11 @@ public interface Clef extends DomainEntity {
 //    void setVoice(Voice voice);
     Type getType();
 
+    void setType(Type type);
+
     int getTranspose();
+
+    void setTranspose(int transpose);
 
     public enum Type {
 

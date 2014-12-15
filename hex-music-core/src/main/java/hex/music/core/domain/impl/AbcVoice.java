@@ -30,7 +30,7 @@ public class AbcVoice implements Voice {
     private String shortName;
     @Column
     private String voiceId;
-    @Column
+    @Column(length = 32 * KB)
     private String body;
     @Column
     private int voiceIndex;
