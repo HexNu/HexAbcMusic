@@ -1,15 +1,19 @@
 package hex.music.core.domain;
 
+import hex.music.core.domain.impl.AbcClef;
+
 /**
  *
  * @author hln
  */
 public interface Clef extends DomainEntity {
 
-    Voice getVoice();
+    public static final int DEFAULT_TRANSPOSE = 0;
+    public static final Clef DEFAULT_CLEF = new AbcClef();
 
-    void setVoice(Voice voice);
-
+//    Voice getVoice();
+//
+//    void setVoice(Voice voice);
     Type getType();
 
     int getTranspose();
@@ -44,7 +48,7 @@ public interface Clef extends DomainEntity {
         BARITON("F-klav, linje 3", "bass3");
         private final String label;
         private final String code;
-        public static final Type DEFAULT_TYPE = TREBLE; 
+        public static final Type DEFAULT_TYPE = TREBLE;
 
         private Type(String label, String code) {
             this.label = label;
@@ -59,7 +63,7 @@ public interface Clef extends DomainEntity {
         public String getCode() {
             return code;
         }
-        
+
         public static Type getByCode(String code) {
             for (Type t : values()) {
                 if (t.getCode().equalsIgnoreCase(code)) {

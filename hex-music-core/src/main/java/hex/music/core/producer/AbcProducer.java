@@ -62,7 +62,7 @@ public class AbcProducer {
             result.append("L:").append(data.getUnitNoteLength()).append("\n");
         }
         if (data.getKey() != null) {
-            result.append("K:").append(data.getKey().getCode()).append("\n");
+            result.append("K:").append(data.getKey().getType().getCode()).append("\n");
         }
         data.getVoices().stream().map((voice) -> {
             result.append("V:").append(voice.getCode() != null ? voice.getCode() : Voice.DEFAULT_CODE);

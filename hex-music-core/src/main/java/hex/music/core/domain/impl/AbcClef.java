@@ -31,10 +31,8 @@ public class AbcClef implements Clef {
     private final Type type;
     @Column
     private final int transpose;
-    @OneToOne(mappedBy = "clef", fetch = FetchType.EAGER, targetEntity = AbcVoice.class)
-    private Voice voice;
-    @Transient
-    public static final int DEFAULT_TRANSPOSE = 0;
+//    @OneToOne(mappedBy = "clef", fetch = FetchType.EAGER, targetEntity = AbcVoice.class)
+//    private Voice voice;
 
     public AbcClef() {
         this(Type.DEFAULT_TYPE, DEFAULT_TRANSPOSE);
@@ -49,15 +47,15 @@ public class AbcClef implements Clef {
         this.transpose = transpose;
     }
 
-    @Override
-    public Voice getVoice() {
-        return voice;
-    }
-
-    @Override
-    public void setVoice(Voice voice) {
-        this.voice = voice;
-    }
+//    @Override
+//    public Voice getVoice() {
+//        return voice;
+//    }
+//
+//    @Override
+//    public void setVoice(Voice voice) {
+//        this.voice = voice;
+//    }
 
     @Override
     public Long getId() {

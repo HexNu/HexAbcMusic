@@ -6,14 +6,12 @@ import hex.music.core.domain.Voice;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  *
@@ -40,15 +38,13 @@ public class AbcVoice implements Voice {
     private Clef clef;
     @ManyToOne(targetEntity = AbcTune.class)
     private Tune tune;
-    @Transient
-    public static final Clef DEFAULT_CLEF = new AbcClef();
 
     public AbcVoice() {
         this(0);
     }
 
     public AbcVoice(int index) {
-        this(index, DEFAULT_CLEF);
+        this(index, Clef.DEFAULT_CLEF);
     }
 
     public AbcVoice(int index, Clef clef) {

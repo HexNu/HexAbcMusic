@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -52,7 +53,7 @@ public class AbcTune implements Tune {
     private String meter;
     @Column
     private String unitNoteLength;
-    @Enumerated(EnumType.STRING)
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = AbcKey.class)
     private Key musicalKey;
     @Column
     private String tempo;

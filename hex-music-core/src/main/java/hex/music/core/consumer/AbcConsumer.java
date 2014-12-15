@@ -5,6 +5,7 @@ import hex.music.core.AbcConstants.Field;
 import hex.music.core.domain.Key;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
+import hex.music.core.domain.impl.AbcKey;
 import hex.music.core.domain.impl.AbcTune;
 import hex.music.core.domain.impl.AbcVoice;
 import hex.music.core.producer.AbcProducer;
@@ -48,7 +49,6 @@ public class AbcConsumer {
         Tune currentTune = null;
         Voice currentVoice = null;
         while ((currentLine = bufferedReader.readLine()) != null) {
-            System.out.println(currentLine);
             if (matchesField(Field.X, currentLine)) {
                 currentTune = new AbcTune();
                 result.add(currentTune);
@@ -88,7 +88,7 @@ public class AbcConsumer {
                 // TODO: Införa properties för Key och försöka hantera inkommande sträng
                 // på samma sätt som för voice.
                 // antagligen genom att läsa tecken för tecken...
-                tune.setKey(Key.getByCode(value));
+                tune.setKey(new AbcKey(Key.Type.getByCode(value)));
                 break;
             case "L":
                 tune.setUnitNoteLength(value);
