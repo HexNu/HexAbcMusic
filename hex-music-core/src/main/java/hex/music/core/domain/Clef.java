@@ -22,6 +22,24 @@ public interface Clef extends DomainEntity {
 
     void setTranspose(int transpose);
 
+    /**
+     * Returns the note representation that is used on the middle (third) line.
+     *
+     * Defaults are: treble: B; alto: C; tenor: A,; bass: D,; none: B
+     *
+     * @return
+     */
+    String getMiddle();
+
+    /**
+     * Sets the note representation that is used on the middle (third) line.
+     *
+     * Defaults are: treble: B; alto: C; tenor: A,; bass: D,; none: B
+     *
+     * @param middle
+     */
+    void setMiddle(String middle);
+
     public enum Type {
 
         TREBLE("G-klav", "treble"),

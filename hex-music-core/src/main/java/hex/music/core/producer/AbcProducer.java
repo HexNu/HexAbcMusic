@@ -86,6 +86,9 @@ public class AbcProducer {
             result.append(" clef=").append(voice.getClef().getType().getCode());
             return voice;
         }).map((voice) -> {
+            if (voice.getClef().getMiddle() != null) {
+                result.append(" middle=").append(voice.getClef().getMiddle());
+            }
             if (voice.getClef().getTranspose() != 0) {
                 result.append(" transpose=").append(voice.getClef().getTranspose());
             }

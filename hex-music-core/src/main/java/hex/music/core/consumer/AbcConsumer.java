@@ -11,7 +11,6 @@ import hex.music.core.domain.impl.AbcKey;
 import hex.music.core.domain.impl.AbcTune;
 import hex.music.core.domain.impl.AbcVoice;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -163,6 +162,9 @@ public class AbcConsumer {
                 clef.setTranspose(Integer.valueOf(properties.get("transpose")));
             } catch (NumberFormatException e) { // Do nothing
             }
+        }
+        if (properties.containsKey("middle")) {
+            clef.setMiddle(properties.get("middle"));
         }
         return clef;
     }

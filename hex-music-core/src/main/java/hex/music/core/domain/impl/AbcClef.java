@@ -27,6 +27,8 @@ public class AbcClef implements Clef {
     private Type type;
     @Column
     private int transpose;
+    @Column
+    private String middle;
 //    @OneToOne(mappedBy = "clef", fetch = FetchType.EAGER, targetEntity = AbcVoice.class)
 //    private Voice voice;
 
@@ -43,15 +45,6 @@ public class AbcClef implements Clef {
         this.transpose = transpose;
     }
 
-//    @Override
-//    public Voice getVoice() {
-//        return voice;
-//    }
-//
-//    @Override
-//    public void setVoice(Voice voice) {
-//        this.voice = voice;
-//    }
     @Override
     public Long getId() {
         return id;
@@ -85,6 +78,16 @@ public class AbcClef implements Clef {
     @Override
     public void setTranspose(int transpose) {
         this.transpose = transpose;
+    }
+
+    @Override
+    public String getMiddle() {
+        return middle;
+    }
+
+    @Override
+    public void setMiddle(String middle) {
+        this.middle = middle;
     }
 
     @Override
