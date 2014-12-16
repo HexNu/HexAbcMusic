@@ -21,19 +21,15 @@ public class AbcClef implements Clef {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
-    private String name;
     @Enumerated(EnumType.STRING)
     private Type type;
     @Column
     private int transpose;
     @Column
     private String middle;
-//    @OneToOne(mappedBy = "clef", fetch = FetchType.EAGER, targetEntity = AbcVoice.class)
-//    private Voice voice;
 
     public AbcClef() {
-        this(Type.DEFAULT_TYPE, DEFAULT_TRANSPOSE);
+        this(DEFAULT_TYPE, DEFAULT_TRANSPOSE);
     }
 
     public AbcClef(Type type) {
@@ -57,7 +53,7 @@ public class AbcClef implements Clef {
 
     @Override
     public String getName() {
-        return name;
+        return type.getLabel();
     }
 
     @Override
@@ -88,15 +84,5 @@ public class AbcClef implements Clef {
     @Override
     public void setMiddle(String middle) {
         this.middle = middle;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        if (name != null && !name.equals("")) {
-            builder.append(name).append(" ");
-        }
-
-        return builder.toString();
     }
 }

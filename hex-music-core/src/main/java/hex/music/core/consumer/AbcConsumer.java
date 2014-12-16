@@ -80,7 +80,7 @@ public class AbcConsumer {
                         currentTune.addVoice(currentVoice);
                         currentVoice.setTune(currentTune);
                     } else if (!isInTuneBody(currentLine)) {
-                        extractValue(currentTune, currentLine);
+                        setValueFromLine(currentTune, currentLine);
                     } else {
                         if (currentVoice == null) {
                             currentVoice = new AbcVoice();
@@ -105,7 +105,7 @@ public class AbcConsumer {
     }
 
     private Voice handleVoiceProperties(String line) {
-        Map<String, String> properties = createPropertyMap(line);
+        Map<String, String> properties = createPropertyMap(line.substring(2));
         Voice result = new AbcVoice();
         result.setVoiceId(properties.get("fieldValue"));
         result.setClef(createClef(properties));
@@ -122,21 +122,13 @@ public class AbcConsumer {
         Map<String, String> properties = new HashMap<>();
         List<String> lineParts = splitProperties(line);
         if (lineParts.size() > 0) {
-            properties.put("fieldValue", lineParts.get(0).substring(2));
-        }
-        if (lineParts.size() > 1) {
-            String key = null;
-            String value = null;
+            String key = "fieldValue";
             for (String p : lineParts) {
-                if (!p.startsWith("K:") && !p.startsWith("V:")) {
-                    if (key == null) {
-                        key = p;
-                    } else if (value == null) {
-                        value = p.replaceAll("\"", "");
-                        properties.put(key, value);
-                        key = null;
-                        value = null;
-                    }
+                if (key == null) {
+                    key = p;
+                } else {
+                    properties.put(key, p.replaceAll("\"", ""));
+                    key = null;
                 }
             }
         }
@@ -169,20 +161,21 @@ public class AbcConsumer {
         return clef;
     }
 
-    private void extractValue(Tune tune, String line) {
+    private void setValueFromLine(Tune tune, String line) {
         String field = line.substring(0, 1);
         String value = getFieldValue(line);
         switch (field) {
             case "C":
-                tune.setComposer(value);
+                if (value.toLowerCase().startsWith("efter")) {
+                    tune.setOriginator(value);
+                } else {
+                    tune.setComposer(value);
+                }
                 break;
             case "H":
                 tune.setHistory(value);
                 break;
             case "K":
-                // TODO: Införa properties för Key och försöka hantera inkommande sträng
-                // på samma sätt som för voice.
-                // antagligen genom att läsa tecken för tecken...
                 tune.setKey(handleKeyProperties(line));
                 break;
             case "L":

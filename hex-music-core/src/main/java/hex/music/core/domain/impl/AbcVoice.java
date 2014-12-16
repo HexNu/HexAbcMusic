@@ -44,7 +44,7 @@ public class AbcVoice implements Voice {
     }
 
     public AbcVoice(int index) {
-        this(index, Clef.DEFAULT_CLEF);
+        this(index, new AbcClef());
     }
 
     public AbcVoice(int index, Clef clef) {

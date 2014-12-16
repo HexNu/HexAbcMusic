@@ -2,10 +2,13 @@ package hex.music.core;
 
 import hex.music.core.consumer.AbcConsumer;
 import hex.music.core.domain.Tune;
-import hex.music.core.producer.AbcProducer;
 import hex.music.core.service.command.CommandExecutor;
+import hex.music.core.service.command.tune.FindAllTunesCommand;
+import hex.music.core.service.command.tune.GetAbcDocCommand;
 import hex.music.core.service.command.tune.SaveTuneCommand;
 import hex.music.core.service.support.PuHandlerFactory;
+import hex.music.core.util.AbcFileWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,26 +29,26 @@ public class Main {
         CommandExecutor commandExecutor = new CommandExecutor(PU_HANDLER_FACTORY);
 
 // Importera låt:
-//        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Polska efter Törnblom.abc");
+        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Polska efter Törnblom.abc");
 //        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Låtar/Friskn gammel kar.abc");
 //        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Låtar/Kaisa.abc");
 //        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Låtar/Sorkar/Brudmarsch och Brudpolska.abc");
-//        List<Tune> tuneList = new AbcConsumer(stream).consume();
-        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Snällpolska.abc");
-        List<Tune> tuneList = new AbcConsumer(stream, "UTF-8").consume();
+        List<Tune> tuneList = new AbcConsumer(stream).consume();
+//        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Snällpolska.abc");
+//        List<Tune> tuneList = new AbcConsumer(stream, "UTF-8").consume();
         for (Tune tune : tuneList) {
-//            commandExecutor.executeInTransaction(new SaveTuneCommand(tune), FOLK);
+            commandExecutor.executeInTransaction(new SaveTuneCommand(tune), FOLK);
 //            System.out.println(tune.getTitle());
-            System.out.println(new AbcProducer(tune).produce());
+//            System.out.println(new AbcProducer(tune).produce());
         }
         stream.close();
 //        
 // Skriva ut lista på låtar:
 ////        
-//        List<Tune> tunes = commandExecutor.execute(new FindAllTunesCommand(), FOLK);
-//        String resultString = commandExecutor.execute(new GetAbcDocCommand(tunes), FOLK);
-//        File resultFile = new File("/home/hln/Skrivbord/Låtar.abc");
-//        new AbcFileWriter(resultString, resultFile).write();
+        List<Tune> tunes = commandExecutor.execute(new FindAllTunesCommand(), FOLK);
+        String resultString = commandExecutor.execute(new GetAbcDocCommand(tunes), FOLK);
+        File resultFile = new File("/home/hln/Skrivbord/Låtar.abc");
+        new AbcFileWriter(resultString, resultFile).write();
 ////
 //
 //        File abcFile = new File("/home/hln/Skrivbord/Polska efter Olof Törnblom.abc");

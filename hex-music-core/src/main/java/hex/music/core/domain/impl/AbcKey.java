@@ -33,7 +33,7 @@ public class AbcKey implements Key {
     }
     
     public AbcKey(Signature type) {
-        this(type, Clef.DEFAULT_CLEF);
+        this(type, new AbcClef());
     }
 
     public AbcKey(Signature type, Clef clef) {

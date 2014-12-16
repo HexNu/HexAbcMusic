@@ -77,11 +77,13 @@ public class AbcProducer {
     private void createMusicKeyRow(StringBuilder result) {
         result.append("K:").append(data.getKey().getSignature().getCode());
         Clef clef = data.getKey().getClef();
-        result.append(" clef=").append(clef.getType().getCode());
+        if (!clef.getType().equals(Clef.DEFAULT_TYPE)) {
+            result.append(" clef=").append(clef.getType().getCode());
+        }
         if (clef.getMiddle() != null) {
             result.append(" middle=").append(clef.getMiddle());
         }
-        if (clef.getTranspose() != 0) {
+        if (clef.getTranspose() != Clef.DEFAULT_TRANSPOSE) {
             result.append(" transpose=").append(clef.getTranspose());
         }
         result.append("\n");
