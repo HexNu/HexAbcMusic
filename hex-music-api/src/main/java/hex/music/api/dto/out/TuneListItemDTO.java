@@ -19,6 +19,7 @@ public class TuneListItemDTO extends AbstractDTO {
 
     public TuneListItemDTO(Tune tune, LinkDTOBuilder linkBuilder) {
         addLink(linkBuilder.createTuneDownloadLink(tune));
+        addLink(linkBuilder.createTuneViewAbcLink(tune));
         title = tune.getSubheader() != null ? tune.getTitle() + " - " + tune.getSubheader() : tune.getTitle();
         composer = tune.getComposer() != null ? tune.getComposer() : "";
         originator = tune.getOriginator() != null ? tune.getOriginator() : "";

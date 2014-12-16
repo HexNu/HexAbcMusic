@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Låtar</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="resources/tunes/abc">
+        </script>
+        <script type="text/javascript">
+            var xmlhttp = new XMLHttpRequest();
+            var url = 'resources/tunes/abc';
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    var jsonData = JSON.parse(xmlhttp.responseText);
+                    generateList(jsonData.tunes);
+                }
+            };
+            xmlhttp.open('GET', url, true);
+            xmlhttp.send();
+
+            function generateList(tunes) {
+                var i;
+                for (i = 0; i < tunes.length; i++) {
+                    var li = document.createElement('li');
+                    var tuneTitle = document.createTextNode(tunes[i].title);
+                    li.appendChild(tuneTitle);
+                    for (j = 0; j < tunes[i].links.length; j++) {
+                        var space = document.createTextNode(' - ');
+                        li.appendChild(space);
+                        var link = document.createElement('a');
+                        link.setAttribute('href', tunes[i].links[j].uri);
+                        var linkText = document.createTextNode(tunes[i].links[j].rel);
+                        link.appendChild(linkText);
+                        li.appendChild(link);
+                    }
+                    document.getElementById('tune-list').appendChild(li);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Låtar</h1>
+        <ul id="tune-list"></ul>
+        <p>H</p>
+    </body>
+</html>

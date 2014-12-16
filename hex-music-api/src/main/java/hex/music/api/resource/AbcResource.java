@@ -19,6 +19,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -46,14 +47,26 @@ public class AbcResource extends AbstractResource {
     @GET
     @Path("{id}")
     public Response downloadAbcTune(@PathParam("id") String id) throws UnsupportedEncodingException {
-        InputStream result = null;
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
         String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), id);
-        result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
+        InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
         return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
-                .encoding(AbcConstants.ABC_ENCODING)
                 .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + ".abc\"")
                 .build();
+    }
+
+    @GET
+    @Path("preview/{id}")
+    public Response previewAbcCode(@PathParam("id") String id, @QueryParam("view") String view) throws UnsupportedEncodingException {
+        Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
+        String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), id);
+        if (view == null || view.equalsIgnoreCase("abc")) {
+            return Response.ok(abcString)
+                    .header("Content-Type", "text/plain; charset=iso-8859-1")
+                    .build();
+        } else {
+            return Response.noContent().build();
+        }
     }
 
     @POST
