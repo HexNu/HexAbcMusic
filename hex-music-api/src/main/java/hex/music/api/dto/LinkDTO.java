@@ -19,10 +19,4 @@ public class LinkDTO {
         this.rel = rel;
         this.uri = uri.toString();
     }
-
-    @Override
-    public String toString() {
-        return "rel=\"" + rel + "\" uri=\"" + uri + "\"";
-    }
-
 }

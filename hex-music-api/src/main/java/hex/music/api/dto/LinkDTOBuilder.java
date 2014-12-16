@@ -33,7 +33,6 @@ public class LinkDTOBuilder {
 
     public LinkDTO createTuneDownloadLink(Tune tune) {
         LinkDTO linkDTO = new LinkDTO("download", createURI("tunes/abc/" + tune.getId()));
-        System.out.println(linkDTO);
         return linkDTO;
     }
 }
