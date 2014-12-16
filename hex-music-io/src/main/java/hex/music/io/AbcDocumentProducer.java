@@ -1,4 +1,4 @@
-package hex.music.service.io.produce;
+package hex.music.io;
 
 import hex.music.core.AbcConstants;
 import hex.music.core.AbcConstants.Field;
@@ -13,11 +13,11 @@ import java.util.logging.Logger;
  *
  * @author hln
  */
-public class AbcProducer {
+public class AbcDocumentProducer {
 
     private final Tune data;
 
-    public AbcProducer(Tune data) {
+    public AbcDocumentProducer(Tune data) {
         this.data = data;
     }
 
@@ -26,7 +26,7 @@ public class AbcProducer {
         try {
             changeEncoding(result);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(AbcProducer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbcDocumentProducer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

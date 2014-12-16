@@ -1,7 +1,7 @@
 package hex.music.service.command.tune;
 
 import hex.music.core.domain.Tune;
-import hex.music.service.io.produce.AbcProducer;
+import hex.music.io.AbcDocumentProducer;
 import hex.music.service.command.AbstractServiceCommand;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class GetAbcDocCommand extends AbstractServiceCommand<String> {
     public String execute() {
         StringBuilder result = new StringBuilder();
         for (Tune tune : tunes) {
-            result.append(new AbcProducer(tune).produce());
+            result.append(new AbcDocumentProducer(tune).produce());
         }
         return result.toString();
     }

@@ -1,4 +1,4 @@
-package hex.music.service.io.consume;
+package hex.music.io;
 
 import hex.music.core.AbcConstants;
 import hex.music.core.AbcConstants.Field;
@@ -26,35 +26,35 @@ import java.util.regex.Pattern;
  *
  * @author hln
  */
-public class AbcConsumer {
+public class AbcDocumentParser {
 
     private final InputStream stream;
     private final String encoding;
     private final boolean isUpdate;
 
-    public AbcConsumer() {
+    public AbcDocumentParser() {
         this(null);
     }
 
-    public AbcConsumer(InputStream stream) {
+    public AbcDocumentParser(InputStream stream) {
         this(stream, false);
     }
 
-    public AbcConsumer(InputStream stream, String encoding) {
+    public AbcDocumentParser(InputStream stream, String encoding) {
         this(stream, encoding, false);
     }
 
-    public AbcConsumer(InputStream stream, boolean isUpdate) {
+    public AbcDocumentParser(InputStream stream, boolean isUpdate) {
         this(stream, AbcConstants.ABC_ENCODING, isUpdate);
     }
 
-    public AbcConsumer(InputStream stream, String encoding, boolean isUpdate) {
+    public AbcDocumentParser(InputStream stream, String encoding, boolean isUpdate) {
         this.stream = stream;
         this.encoding = encoding;
         this.isUpdate = isUpdate;
     }
 
-    public List<Tune> consume() throws UnsupportedEncodingException, IOException {
+    public List<Tune> parse() throws UnsupportedEncodingException, IOException {
         List<Tune> result = new ArrayList<>();
         if (stream != null && encoding != null) {
             InputStreamReader reader = new InputStreamReader(stream, AbcConstants.ABC_ENCODING);
@@ -68,6 +68,7 @@ public class AbcConsumer {
                     // Skip
                 } else if (matchesField(Field.X, currentLine)) {
                     currentTune = new AbcTune();
+                    currentVoice = null;
                     result.add(currentTune);
                     if (isUpdate) {
                         currentTune.setId(Long.valueOf(getFieldValue(currentLine)));
