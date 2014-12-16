@@ -3,7 +3,6 @@ package hex.music.core.producer;
 import hex.music.core.AbcConstants;
 import hex.music.core.AbcConstants.Field;
 import hex.music.core.domain.Clef;
-import hex.music.core.domain.Key;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
 import java.io.UnsupportedEncodingException;

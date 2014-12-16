@@ -3,7 +3,6 @@ package hex.music.core.consumer;
 import hex.music.core.AbcConstants;
 import hex.music.core.AbcConstants.Field;
 import hex.music.core.domain.Clef;
-import hex.music.core.domain.DomainEntity;
 import hex.music.core.domain.Key;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
@@ -12,7 +11,6 @@ import hex.music.core.domain.impl.AbcKey;
 import hex.music.core.domain.impl.AbcTune;
 import hex.music.core.domain.impl.AbcVoice;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -228,23 +226,5 @@ public class AbcConsumer {
 
     private boolean matchesField(Field field, String line) {
         return line.startsWith(field.name() + ":");
-    }
-
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-//        String testar = "V:V1 name=\"1:a Fiol\" subname=\"F 1\" clef=treble";
-//        InputStream stream = new FileInputStream("/home/hln/Skrivbord/Låtar/Kaisa.abc");
-//        List<Tune> consume = new AbcConsumer(stream).consume();
-//        consume.stream().forEach((t) -> {
-//            System.out.println(new AbcProducer(t).produce());
-//            System.out.println(t.getTitle());
-//            System.out.println(t.getSubheader());
-//            System.out.println(t.getComposer());
-//            System.out.println(t.getOriginator());
-//            System.out.println(t.getMeter());
-//            System.out.println(t.getRythm());
-//            System.out.println(t.getUnitNoteLength());
-//            System.out.println(t.getKey().getVoiceId());
-//            System.out.println(t.getVoices().get(0).getBody());
-//        });
     }
 }
