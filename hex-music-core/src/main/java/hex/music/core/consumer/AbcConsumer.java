@@ -96,25 +96,18 @@ public class AbcConsumer {
         return result;
     }
 
-    private List<String> splitProperties(String line) {
-        List<String> result = new ArrayList<>();
-        Matcher m = Pattern.compile("[^\\s\"=']+|\"[^\"]*\"|'[^']*'").matcher(line);
-        while (m.find()) {
-            result.add(m.group());
-        }
-        return result;
-    }
-
     private Key handleKeyProperties(String line) {
+        Map<String, String> properties = createPropertyMap(line);
         Key result = new AbcKey();
-        Map<String, String> properties = createPropertyMap(line, "K", result);
+        result.setSignature(Key.Signature.getByCode(properties.get("fieldValue")));
         result.setClef(createClef(properties));
         return result;
     }
 
     private Voice handleVoiceProperties(String line) {
+        Map<String, String> properties = createPropertyMap(line);
         Voice result = new AbcVoice();
-        Map<String, String> properties = createPropertyMap(line, "V", result);
+        result.setVoiceId(properties.get("fieldValue"));
         result.setClef(createClef(properties));
         if (properties.containsKey("name")) {
             result.setName(properties.get("name"));
@@ -125,21 +118,17 @@ public class AbcConsumer {
         return result;
     }
 
-    private Map<String, String> createPropertyMap(String line, String field, DomainEntity result) {
+    private Map<String, String> createPropertyMap(String line) {
         Map<String, String> properties = new HashMap<>();
         List<String> lineParts = splitProperties(line);
         if (lineParts.size() > 0) {
-            if (result instanceof Voice) {
-                ((Voice) result).setVoiceId(lineParts.get(0).substring(2));
-            } else if (result instanceof Key) {
-                ((Key) result).setSignature(Key.Signature.getByCode(lineParts.get(0).substring(2)));
-            }
+            properties.put("fieldValue", lineParts.get(0).substring(2));
         }
         if (lineParts.size() > 1) {
             String key = null;
             String value = null;
             for (String p : lineParts) {
-                if (!p.startsWith(field + ":")) {
+                if (!p.startsWith("K:") && !p.startsWith("V:")) {
                     if (key == null) {
                         key = p;
                     } else if (value == null) {
@@ -152,6 +141,15 @@ public class AbcConsumer {
             }
         }
         return properties;
+    }
+
+    private List<String> splitProperties(String line) {
+        List<String> result = new ArrayList<>();
+        Matcher m = Pattern.compile("[^\\s\"=']+|\"[^\"]*\"|'[^']*'").matcher(line);
+        while (m.find()) {
+            result.add(m.group());
+        }
+        return result;
     }
 
     private Clef createClef(Map<String, String> properties) {
