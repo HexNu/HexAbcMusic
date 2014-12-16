@@ -1,6 +1,7 @@
 package hex.music.api.resource;
 
-import hex.music.service.provider.ServiceProviderDelegate;
+import hex.music.service.command.CommandExecutor;
+import hex.music.service.support.PuHandlerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import javax.ws.rs.HeaderParam;
@@ -26,6 +27,9 @@ public abstract class AbstractResource {
 
     @Context
     private UriInfo uriInfo;
+
+    private static final PuHandlerFactory PU_HANDLER_FACTORY = new PuHandlerFactory();
+    protected CommandExecutor commandExecutor = new CommandExecutor(PU_HANDLER_FACTORY);
 
     public String getKey() {
         if (key == null || key.length() == 0) {
