@@ -2,6 +2,8 @@ package hex.music.core.producer;
 
 import hex.music.core.AbcConstants;
 import hex.music.core.AbcConstants.Field;
+import hex.music.core.domain.Clef;
+import hex.music.core.domain.Key;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
 import java.io.UnsupportedEncodingException;
@@ -69,7 +71,20 @@ public class AbcProducer {
         createKeyValueRow(result, Field.Z, data.getTranscriber());
         createKeyValueRow(result, Field.M, data.getMeter());
         createKeyValueRow(result, Field.L, data.getUnitNoteLength());
-        createKeyValueRow(result, Field.K, data.getKey().getSignature().getCode());
+        createMusicKeyRow(result);
+    }
+
+    private void createMusicKeyRow(StringBuilder result) {
+        result.append("K:").append(data.getKey().getSignature().getCode());
+        Clef clef = data.getKey().getClef();
+        result.append(" clef=").append(clef.getType().getCode());
+        if (clef.getMiddle() != null) {
+            result.append(" middle=").append(clef.getMiddle());
+        }
+        if (clef.getTranspose() != 0) {
+            result.append(" transpose=").append(clef.getTranspose());
+        }
+        result.append("\n");
     }
 
     private void createTuneBody(StringBuilder result) {

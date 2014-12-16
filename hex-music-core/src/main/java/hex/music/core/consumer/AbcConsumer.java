@@ -3,6 +3,7 @@ package hex.music.core.consumer;
 import hex.music.core.AbcConstants;
 import hex.music.core.AbcConstants.Field;
 import hex.music.core.domain.Clef;
+import hex.music.core.domain.DomainEntity;
 import hex.music.core.domain.Key;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 public class AbcConsumer {
 
     private final InputStream stream;
+    private final String encoding;
     private final boolean isUpdate;
 
     public AbcConsumer() {
@@ -40,43 +42,56 @@ public class AbcConsumer {
         this(stream, false);
     }
 
+    public AbcConsumer(InputStream stream, String encoding) {
+        this(stream, encoding, false);
+    }
+
     public AbcConsumer(InputStream stream, boolean isUpdate) {
+        this(stream, AbcConstants.ABC_ENCODING, isUpdate);
+    }
+
+    public AbcConsumer(InputStream stream, String encoding, boolean isUpdate) {
         this.stream = stream;
+        this.encoding = encoding;
         this.isUpdate = isUpdate;
     }
 
     public List<Tune> consume() throws UnsupportedEncodingException, IOException {
         List<Tune> result = new ArrayList<>();
-        InputStreamReader reader = new InputStreamReader(stream, AbcConstants.ABC_ENCODING);
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        String currentLine;
-        Tune currentTune = null;
-        Voice currentVoice = null;
-        while ((currentLine = bufferedReader.readLine()) != null) {
-            if (currentLine.length() < 2 || currentLine.startsWith("%")) {
-                // Skip
-            } else if (matchesField(Field.X, currentLine)) {
-                currentTune = new AbcTune();
-                result.add(currentTune);
-                if (isUpdate) {
-                    currentTune.setId(Long.valueOf(getFieldValue(currentLine)));
-                }
-            } else if (currentTune != null) {
-                if (matchesField(Field.V, currentLine)) {
-                    currentVoice = handleVoiceProperties(currentLine);
-                    currentTune.addVoice(currentVoice);
-                    currentVoice.setTune(currentTune);
-                } else if (!isInTuneBody(currentLine)) {
-                    extractValue(currentTune, currentLine);
-                } else {
-                    if (currentVoice == null) {
-                        currentVoice = new AbcVoice();
+        if (stream != null && encoding != null) {
+            InputStreamReader reader = new InputStreamReader(stream, AbcConstants.ABC_ENCODING);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String currentLine;
+            Tune currentTune = null;
+            Voice currentVoice = null;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                currentLine = new String(currentLine.getBytes(AbcConstants.ABC_ENCODING), encoding);
+                if (currentLine.length() < 2 || currentLine.startsWith("%")) {
+                    // Skip
+                } else if (matchesField(Field.X, currentLine)) {
+                    currentTune = new AbcTune();
+                    result.add(currentTune);
+                    if (isUpdate) {
+                        currentTune.setId(Long.valueOf(getFieldValue(currentLine)));
+                    }
+                } else if (currentTune != null) {
+                    if (matchesField(Field.V, currentLine)) {
+                        currentVoice = handleVoiceProperties(currentLine);
                         currentTune.addVoice(currentVoice);
                         currentVoice.setTune(currentTune);
+                    } else if (!isInTuneBody(currentLine)) {
+                        extractValue(currentTune, currentLine);
+                    } else {
+                        if (currentVoice == null) {
+                            currentVoice = new AbcVoice();
+                            currentTune.addVoice(currentVoice);
+                            currentVoice.setTune(currentTune);
+                        }
+                        currentVoice.addBodyLine(currentLine);
                     }
-                    currentVoice.addBodyLine(currentLine);
                 }
             }
+            bufferedReader.close();
         }
         return result;
     }
@@ -92,57 +107,15 @@ public class AbcConsumer {
 
     private Key handleKeyProperties(String line) {
         Key result = new AbcKey();
-        List<String> lineParts = splitProperties(line);
-        Map<String, String> properties = new HashMap<>();
-        if (lineParts.size() > 0) {
-            result.setSignature(Key.Signature.getByCode(lineParts.get(0).substring(2)));
-        }
-        if (lineParts.size() > 1) {
-            String key = null;
-            String value = null;
-            for (String p : lineParts) {
-                if (!p.startsWith("K:")) {
-                    if (key == null) {
-                        key = p;
-                    } else if (value == null) {
-                        value = p.replaceAll("\"", "");
-                        properties.put(key, value);
-                        key = null;
-                        value = null;
-                    }
-                }
-            }
-        }
-        Clef clef = createClef(properties);
-        result.setClef(clef);
+        Map<String, String> properties = createPropertyMap(line, "K", result);
+        result.setClef(createClef(properties));
         return result;
     }
 
     private Voice handleVoiceProperties(String line) {
         Voice result = new AbcVoice();
-        List<String> lineParts = splitProperties(line);
-        Map<String, String> properties = new HashMap<>();
-        if (lineParts.size() > 0) {
-            result.setVoiceId(lineParts.get(0).substring(2));
-        }
-        if (lineParts.size() > 1) {
-            String key = null;
-            String value = null;
-            for (String p : lineParts) {
-                if (!p.startsWith("V:")) {
-                    if (key == null) {
-                        key = p;
-                    } else if (value == null) {
-                        value = p.replaceAll("\"", "");
-                        properties.put(key, value);
-                        key = null;
-                        value = null;
-                    }
-                }
-            }
-        }
-        Clef clef = createClef(properties);
-        result.setClef(clef);
+        Map<String, String> properties = createPropertyMap(line, "V", result);
+        result.setClef(createClef(properties));
         if (properties.containsKey("name")) {
             result.setName(properties.get("name"));
         }
@@ -150,6 +123,35 @@ public class AbcConsumer {
             result.setShortName(properties.get("subname"));
         }
         return result;
+    }
+
+    private Map<String, String> createPropertyMap(String line, String field, DomainEntity result) {
+        Map<String, String> properties = new HashMap<>();
+        List<String> lineParts = splitProperties(line);
+        if (lineParts.size() > 0) {
+            if (result instanceof Voice) {
+                ((Voice) result).setVoiceId(lineParts.get(0).substring(2));
+            } else if (result instanceof Key) {
+                ((Key) result).setSignature(Key.Signature.getByCode(lineParts.get(0).substring(2)));
+            }
+        }
+        if (lineParts.size() > 1) {
+            String key = null;
+            String value = null;
+            for (String p : lineParts) {
+                if (!p.startsWith(field + ":")) {
+                    if (key == null) {
+                        key = p;
+                    } else if (value == null) {
+                        value = p.replaceAll("\"", "");
+                        properties.put(key, value);
+                        key = null;
+                        value = null;
+                    }
+                }
+            }
+        }
+        return properties;
     }
 
     private Clef createClef(Map<String, String> properties) {
