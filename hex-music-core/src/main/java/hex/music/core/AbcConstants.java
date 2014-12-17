@@ -6,7 +6,8 @@ package hex.music.core;
  */
 public interface AbcConstants {
     
-    public static final String ABC_ENCODING = "ISO-8859-1";
+    public static final String ABC_ENCODING = "ISO-8859-1",
+            UTF_8 = "UTF-8";
 
     public enum Field {
 
