@@ -1,0 +1,8 @@
+body {font-family: Verdana, Helvetica, sans-serif; font-size: small;}
+h1  {position: absolute; top: 30px; left: 300px;}
+#menu {position: absolute; top: 10px; left: 10px;}
+#list-area {background-color: #CCC; padding: 10px; position: absolute; top: 100px; left: 10px;}
+#list h3 {margin: 0}
+#edit-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 300px;}
+.list-link {font-size: smaller;}
+input[type=number] {text-align: right;}

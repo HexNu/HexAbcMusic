@@ -68,8 +68,13 @@ public class AbcResource extends AbstractResource {
             return Response.noContent().build();
         }
     }
+    
+//    @POST
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+//    public Response
 
     @POST
+    @Path("upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response upploadAbcDoc(@FormDataParam("file") InputStream inputStream) {
         List<Tune> newTunes = commandExecutor.executeInTransaction(new CreateTunesFromAbcDocCommand(inputStream), getKey());

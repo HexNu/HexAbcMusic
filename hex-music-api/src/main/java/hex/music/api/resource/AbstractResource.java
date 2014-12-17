@@ -1,5 +1,6 @@
 package hex.music.api.resource;
 
+import hex.music.core.AbcConstants;
 import hex.music.service.command.CommandExecutor;
 import hex.music.service.support.PuHandlerFactory;
 import java.io.UnsupportedEncodingException;
@@ -57,6 +58,6 @@ public abstract class AbstractResource {
     }
 
     protected static String convertISO88591ToUTF8(String string) throws UnsupportedEncodingException {
-        return new String(string.getBytes("ISO-8859-1"), "UTF-8");
+        return new String(string.getBytes(AbcConstants.ABC_ENCODING), AbcConstants.UTF_8);
     }
 }
