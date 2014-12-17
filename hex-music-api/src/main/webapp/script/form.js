@@ -187,16 +187,28 @@ var form = {
      * @param {type} value
      * @returns {Element|form.TextArea.result}
      */
-    TextArea: function (name, id, cssClass, rows, cols, value) {
-        var result = dom.createNode('textarea', text);
+    TextArea: function (name, id, cssClass, value, rows, cols) {
+        var result = dom.createNode('textarea');
         result.setAttribute('name', name);
         if (id !== undefined && id !== null) {
             result.setAttribute('id', id);
         }
-        result.setAttribute('rows', rows !== undefined && rows !== null ? rows : 5);
-        result.setAttribute('cols', cols !== undefined && cols !== null ? cols : 30);
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('id', cssClass);
+        }
         if (value !== undefined && value !== null) {
-            dom.appendText(result, value);
+            result.value = value;
+        }
+        result.setAttribute('rows', rows !== undefined && rows !== null ? rows : 10);
+        result.setAttribute('cols', cols !== undefined && cols !== null ? cols : 50);
+        return result;
+    },
+    Border: function(name) {
+        var result = dom.createNode('fieldset');
+        if (name !== undefined && name !== null) {
+            var legend = dom.createNode('legend');
+            dom.appendText(legend, name);
+            result.appendChild(legend);
         }
         return result;
     }
