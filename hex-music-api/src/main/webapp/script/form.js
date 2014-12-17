@@ -2,24 +2,38 @@ var form = {
     /**
      * 
      * @param {type} id
+     * @param {type} cssClass
      * @param {type} action
      * @param {type} method
      * @param {type} enctype
-     * @returns {dom@call;createNode.Form.form}
+     * @returns {form.Form.result|Element}
      */
-    Form: function (id, action, method, enctype) {
+    Form: function (id, cssClass, action, method, enctype) {
         var result = dom.createNode('form');
         result.setAttribute('id', id);
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
+        }
         result.setAttribute('action', action);
         result.setAttribute('method', method);
         result.setAttribute('enctype', enctype);
         return result;
     },
-    DataList: function (name, id) {
+    /**
+     * 
+     * @param {type} name
+     * @param {type} id
+     * @param {type} cssClass
+     * @returns {form.DataList.dataListContainer|Element}
+     */
+    DataList: function (name, id, cssClass) {
         var dataListContainer = dom.createNode('div');
         var list = dom.createNode('input');
         list.setAttribute('name', name);
         list.setAttribute('list', id);
+        if (cssClass !== undefined && cssClass !== null) {
+            dataListContainer.setAttribute('class', cssClass);
+        }
         dataListContainer.appendChild(list);
         var dataList = dom.createNode('datalist');
         dataList.setAttribute('id', id);
@@ -27,34 +41,73 @@ var form = {
         return dataListContainer;
 
     },
-    SelectList: function (name, id) {
+    /**
+     * 
+     * @param {type} name
+     * @param {type} id
+     * @param {type} cssClass
+     * @returns {form.SelectList.result|Element}
+     */
+    SelectList: function (name, id, cssClass) {
         var result = dom.createNode('select');
         result.setAttribute('name', name);
         if (id !== undefined && id !== null) {
             result.setAttribute('id', id);
         }
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
+        }
         return result;
     },
-    FileChooser: function (name, id) {
+    /**
+     * 
+     * @param {type} name
+     * @param {type} id
+     * @param {type} cssClass
+     * @returns {form.FileChooser.result|Element}
+     */
+    FileChooser: function (name, id, cssClass) {
         var result = dom.createNode('input');
         result.setAttribute('name', name);
         if (id !== undefined && id !== null) {
             result.setAttribute('id', id);
         }
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
+        }
         if (required !== undefined && required !== null && required === true) {
             result.setAttribute('required');
         }
         return result;
-    }
-    ,
-    Label: function (text, forId) {
+    },
+    /**
+     * 
+     * @param {type} text
+     * @param {type} forId
+     * @param {type} cssClass
+     * @returns {form.Label.result|Element}
+     */
+    Label: function (text, forId, cssClass) {
         var result = dom.createNode('label', text);
         if (forId !== undefined && forId !== null) {
             result.setAttribute('for', forId);
         }
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
+        }
         return result;
     },
-    NumberChooserField: function (name, id, value, min, max) {
+    /**
+     * 
+     * @param {type} name
+     * @param {type} id
+     * @param {type} cssClass
+     * @param {type} value
+     * @param {type} min
+     * @param {type} max
+     * @returns {form.NumberChooserField.result|Element}
+     */
+    NumberChooserField: function (name, id, cssClass, value, min, max) {
         this.providedValue = value !== undefined && value !== null ? value : 0;
         this.min = min !== undefined && min !== null ? min > this.providedValue ? this.providedValue : min : null;
         this.max = max !== undefined && max !== null ? max < this.providedValue ? this.providedValue : max : null;
@@ -63,6 +116,9 @@ var form = {
         result.setAttribute('name', name);
         if (id !== undefined && id !== null) {
             result.setAttribute('id', id);
+        }
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
         }
         if (value !== undefined && value !== null) {
             result.setAttribute('value', value);
@@ -75,31 +131,63 @@ var form = {
         }
         return result;
     },
-    SearchField: function (name, id, value) {
+    /**
+     * 
+     * @param {type} name
+     * @param {type} id
+     * @param {type} cssClass
+     * @param {type} value
+     * @returns {form.SearchField.result|Element}
+     */
+    SearchField: function (name, id, cssClass, value) {
         var result = dom.createNode('input');
         result.setAttribute('type', 'search');
         result.setAttribute('name', name);
         if (id !== undefined && id !== null) {
             result.setAttribute('id', id);
         }
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
+        }
         if (value !== undefined && value !== null) {
             result.setAttribute('value', value);
         }
         return result;
     },
-    TextField: function (name, id, value) {
+    /**
+     * 
+     * @param {type} name
+     * @param {type} id
+     * @param {type} cssClass
+     * @param {type} value
+     * @returns {form.TextField.result|Element}
+     */
+    TextField: function (name, id, cssClass, value) {
         var result = dom.createNode('input');
         result.setAttribute('type', 'text');
         result.setAttribute('name', name);
         if (id !== undefined && id !== null) {
             result.setAttribute('id', id);
         }
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
+        }
         if (value !== undefined && value !== null) {
             result.setAttribute('value', value);
         }
         return result;
     },
-    TextArea: function (name, id, rows, cols, value) {
+    /**
+     * 
+     * @param {type} name
+     * @param {type} id
+     * @param {type} cssClass
+     * @param {type} rows
+     * @param {type} cols
+     * @param {type} value
+     * @returns {Element|form.TextArea.result}
+     */
+    TextArea: function (name, id, cssClass, rows, cols, value) {
         var result = dom.createNode('textarea', text);
         result.setAttribute('name', name);
         if (id !== undefined && id !== null) {

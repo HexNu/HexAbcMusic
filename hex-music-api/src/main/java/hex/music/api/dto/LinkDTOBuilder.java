@@ -40,4 +40,9 @@ public class LinkDTOBuilder {
         LinkDTO linkDTO = new LinkDTO("view-abc", createURI("tunes/abc/preview/" + tune.getId()));
         return linkDTO;
     }
+
+    public LinkDTO createTuneEditLink(Tune tune) {
+        LinkDTO linkDTO = new LinkDTO("edit", createURI("tunes/abc/edit/" + tune.getId()));
+        return linkDTO;
+    }
 }

@@ -7,6 +7,7 @@ var init = function () {
     head.appendChild(createScriptNode('script/dom-node.js'));
     head.appendChild(createScriptNode('script/form.js'));
     head.appendChild(createScriptNode('script/http.js'));
+    head.appendChild(createScriptNode('script/hex-editor.js'));
     head.appendChild(createScriptNode('script/hex-tunes.js'));
 };
 createScriptNode = function(url) {

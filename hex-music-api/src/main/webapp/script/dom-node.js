@@ -2,8 +2,8 @@ var $ = function (id) {
     return document.getElementById(id);
 };
 var dom = {
-    clearNode: function(nodeName) {
-        $(nodeName).innerHTML = '';
+    clearNode: function(nodeId) {
+        $(nodeId).innerHTML = '';
     },
     createNode: function (name, text) {
         var node = document.createElement(name);

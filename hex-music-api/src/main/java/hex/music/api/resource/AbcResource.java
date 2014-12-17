@@ -1,6 +1,7 @@
 package hex.music.api.resource;
 
 import hex.music.api.dto.LinkDTOBuilder;
+import hex.music.api.dto.out.TuneDTO;
 import hex.music.api.dto.out.TuneListDTO;
 import hex.music.api.dto.out.TuneListItemDTO;
 import hex.music.core.AbcConstants;
@@ -40,7 +41,6 @@ public class AbcResource extends AbstractResource {
         tunes.stream().forEach((tune) -> {
             result.addTuneListItem(new TuneListItemDTO(tune, linkDTOBuilder));
         });
-        System.out.println(result.getTunes().size());
         return Response.ok(result).build();
     }
 
@@ -56,6 +56,15 @@ public class AbcResource extends AbstractResource {
     }
 
     @GET
+    @Path("edit/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editTune(@PathParam("id") String id) {
+        Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
+        TuneDTO result = new TuneDTO(tune);
+        return Response.ok(result).build();
+    }
+
+    @GET
     @Path("preview/{id}")
     public Response previewAbcCode(@PathParam("id") String id, @QueryParam("view") String view) throws UnsupportedEncodingException {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
@@ -68,10 +77,6 @@ public class AbcResource extends AbstractResource {
             return Response.noContent().build();
         }
     }
-    
-//    @POST
-//    @Consumes(MediaType.MULTIPART_FORM_DATA)
-//    public Response
 
     @POST
     @Path("upload")

@@ -20,28 +20,32 @@ hex.tunes = {
                     dom.appendText(descriptionNode, ' | ');
                 }
                 var linkNode = dom.createNode('a', tunes[i].links[j].rel);
-                linkNode.setAttribute('href', tunes[i].links[j].uri);
+                if (tunes[i].links[j].rel === 'edit') {
+                    linkNode.setAttribute('href', '#');
+                    linkNode.setAttribute('link', tunes[i].links[j].uri);
+                    linkNode.addEventListener('click', function (event) {
+                        hex.view.edit(event.target.getAttribute('link'));
+                    });
+                } else {
+                    linkNode.setAttribute('href', tunes[i].links[j].uri);
+                }
                 linkNode.setAttribute('class', 'list-link');
                 descriptionNode.appendChild(linkNode);
             }
             $('list').appendChild(descriptionNode);
         }
     },
-    createTuneEditForm: function (isNew) {
-        this.clearEditArea();
-        var method = isNew ? http.Method.PUT : http.Method.POST;
-        var editForm = form.Form('edit-form', 'resources/abc', method, http.MediaType.MULTIPART_FORM_DATA);
-        var nameTextField = new form.TextField('name');
-        editForm.appendChild(nameTextField);
-        $('edit-area').appendChild(editForm);
+    createTuneEditForm: function (jsonData) {
+        dom.clearNode('edit-area');
+        $('edit-area').appendChild(hex.editor.create(jsonData));
     }
 };
 hex.view = {
     list: function () {
         http.Get('resources/tunes/abc', hex.tunes.generateList);
     },
-    edit: function (isNew) {
-        hex.tunes.createTuneEditForm(isNew);
+    edit: function (url) {
+        http.Get(url, hex.tunes.createTuneEditForm);
     }
 };
 http.Get('resources/tunes/abc', hex.tunes.generateList);
