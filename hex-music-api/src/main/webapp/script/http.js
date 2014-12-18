@@ -1,9 +1,11 @@
 var http = {
-    xmlHttpRequest: function(url, action, method) {
+    xmlHttpRequest: function (url, action, method) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function () {
             if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
-                action(JSON.parse(xmlHttp.responseText));
+                if (action !== undefined && action !== null) {
+                    action(JSON.parse(xmlHttp.responseText));
+                }
             }
         };
         xmlHttp.open(method, url, true);
@@ -12,16 +14,16 @@ var http = {
     Get: function (url, action) {
         http.xmlHttpRequest(url, action, this.Method.GET);
     },
-    Put: function(url, action, formData) {
+    Put: function (url, action, formData) {
         http.xmlHttpRequest(url, action, this.Method.PUT);
     },
-    Post: function(url, action, formData) {
+    Post: function (url, action, formData) {
         http.xmlHttpRequest(url, action, this.Method.POST);
     },
-    Head: function(url, action) {
+    Head: function (url, action) {
         http.xmlHttpRequest(url, action, this.Method.HEAD);
     },
-    Delete: function(url, action) {
+    Delete: function (url, action) {
         http.xmlHttpRequest(url, action, this.Method.DELETE);
     },
     Method: {

@@ -43,12 +43,23 @@ public class AbcResource extends AbstractResource {
         });
         return Response.ok(result).build();
     }
+    
+    @GET
+    @Path("download")
+    public Response downloadAllAbcTune(@PathParam("id") String id) throws UnsupportedEncodingException {
+        List<Tune> tunes = commandExecutor.execute(new GetAllTunesCommand(), getKey());
+        String abcString = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
+        InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
+        return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
+                .header("Content-Disposition", "attachment; filename=\"Alla låtar.abc\"")
+                .build();
+    }
 
     @GET
-    @Path("{id}")
+    @Path("download/{id}")
     public Response downloadAbcTune(@PathParam("id") String id) throws UnsupportedEncodingException {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
-        String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), id);
+        String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), getKey());
         InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
         return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
                 .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + ".abc\"")

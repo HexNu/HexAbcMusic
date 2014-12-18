@@ -203,13 +203,16 @@ var form = {
         result.setAttribute('cols', cols !== undefined && cols !== null ? cols : 50);
         return result;
     },
-    Border: function(name) {
-        var result = dom.createNode('fieldset');
+    Border: function(name, cssClass) {
+        var border = dom.createNode('fieldset');
+        if (cssClass !== undefined && cssClass !== null) {
+            border.setAttribute('class', cssClass);
+        }
         if (name !== undefined && name !== null) {
             var legend = dom.createNode('legend');
             dom.appendText(legend, name);
-            result.appendChild(legend);
+            border.appendChild(legend);
         }
-        return result;
+        return border;
     }
 };

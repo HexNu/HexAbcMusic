@@ -1,11 +1,17 @@
 body {font-family: Verdana, Helvetica, sans-serif; font-size: 12px;}
-textarea {font-family: monospace; font-size: 10px;}
 h1  {position: absolute; top: 30px; left: 300px;}
+/****  MENU ****/
 #menu {position: absolute; top: 10px; left: 10px;}
+#menu button {width: 7em}
+/****  TUNE-LIST ****/
+a[href='#'] {color: #00F}
+.list-link {font-size: smaller;}
 #list-area {background-color: #CCC; padding: 10px; position: absolute; top: 100px; left: 10px;}
 #list h3 {margin: 0}
-#edit-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 300px;}
-.list-link {font-size: smaller;}
+/****  EDITOR  ****/
+textarea {font-family: monospace; font-size: 10px;}
+input[type='number'] {text-align: right;}
+div.voice-editor {background-color: #FFF; opacity: 1;}
 .editor {width: 56em; min-height: 40em;}
 .editor * label {width: 8em; display: block; float: left; text-align: right; padding-right: 0.3em}
 .long-text-field {width: 30em;}
@@ -13,5 +19,7 @@ h1  {position: absolute; top: 30px; left: 300px;}
 .short-fields-row {width: 28em;}
 .left-form-container {width: 14em; float: left}
 .right-form-container {width: 14em; float: right}
-input[type='number'] {text-align: right;}
-a[href='#'] {color: #00F}
+#edit-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 300px;}
+/****  FIL-IMPORT  ****/
+#file-upload-form {display: inline}
+#file-upload {display: none}

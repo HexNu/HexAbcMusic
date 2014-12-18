@@ -1,37 +1,37 @@
 hex.editor = {
     create: function (jsonData) {
-        var isNew = jsonData.id !== undefined && jsonData !== null && jsonData !== '';
-        var method = isNew ? http.Method.PUT : http.Method.POST;
+        var isNew = jsonData === undefined || jsonData === null || jsonData === '';
+        var method = isNew ? http.Method.POST : http.Method.PUT;
         var editForm = form.Form('edit-form', 'editor', 'resources/abc', method, http.MediaType.MULTIPART_FORM_DATA);
-        editForm.appendChild(hex.editor.fields.titleRow(jsonData.title));
-        editForm.appendChild(hex.editor.fields.subheaderRow(jsonData.subheader));
-        editForm.appendChild(hex.editor.fields.composerRow(jsonData.composer));
-        editForm.appendChild(hex.editor.fields.originatorRow(jsonData.originator));
-        editForm.appendChild(hex.editor.fields.rythmRow(jsonData.rythm));
-        editForm.appendChild(hex.editor.fields.regionRow(jsonData.region));
-        editForm.appendChild(hex.editor.fields.historyRow(jsonData.history));
-        editForm.appendChild(hex.editor.fields.notesRow(jsonData.notes));
-        editForm.appendChild(hex.editor.fields.transcriberRow(jsonData.transcriber));
-        editForm.appendChild(hex.editor.fields.sourceRow(jsonData.source));
-        editForm.appendChild(hex.editor.fields.noteLengthRow(jsonData));
-
-        for (var i = 0; i < jsonData.voices.length; i++) {
-            editForm.appendChild(hex.editor.fields.voicEditor(jsonData.voices[i], i));
+        editForm.appendChild(hex.editor.fields.titleRow(isNew ? '' : jsonData.title));
+        editForm.appendChild(hex.editor.fields.subheaderRow(isNew ? '' : jsonData.subheader));
+        editForm.appendChild(hex.editor.fields.composerRow(isNew ? '' : jsonData.composer));
+        editForm.appendChild(hex.editor.fields.originatorRow(isNew ? '' : jsonData.originator));
+        editForm.appendChild(hex.editor.fields.rythmRow(isNew ? '' : jsonData.rythm));
+        editForm.appendChild(hex.editor.fields.regionRow(isNew ? '' : jsonData.region));
+        editForm.appendChild(hex.editor.fields.historyRow(isNew ? '' : jsonData.history));
+        editForm.appendChild(hex.editor.fields.notesRow(isNew ? '' : jsonData.notes));
+        editForm.appendChild(hex.editor.fields.transcriberRow(isNew ? '' : jsonData.transcriber));
+        editForm.appendChild(hex.editor.fields.sourceRow(isNew ? '' : jsonData.source));
+        editForm.appendChild(hex.editor.fields.noteLengthRow(isNew ? '' : jsonData));
+        var numberOfVoices = isNew ? 1 : jsonData.voices.length;
+        for (var i = 0; i < numberOfVoices; i++) {
+            if (isNew) {
+                editForm.appendChild(hex.editor.fields.voicEditor(null, i));
+            } else {
+                editForm.appendChild(hex.editor.fields.voicEditor(jsonData.voices[i], i));
+            }
         }
         return editForm;
     },
     fields: {
-        longTextFieldRow: function (value, text, tuneField, mandatory) {
+        longTextFieldRow: function (value, text, tuneField) {
             var fieldValue = value !== undefined && value !== null ? value : '';
             var result = dom.createNode('div');
             var label = form.Label(text + ':', tuneField + '-field');
             result.appendChild(label);
             var textField = form.TextField(tuneField, tuneField + '-field', 'long-text-field', fieldValue);
             result.appendChild(textField);
-            if (mandatory !== undefined && mandatory !== null && mandatory) {
-                result.appendChild(dom.createNode('sub', ' *'));
-                textField.setAttribute('required', '');
-            }
             return result;
         },
         titleRow: function (value) {
@@ -86,11 +86,12 @@ hex.editor = {
             return result;
         },
         voiceIdAndIndexRow: function (jsonData, index) {
+            var isNew = jsonData === null || jsonData === undefined;
             var result = dom.createNode('div');
             result.setAttribute('class', 'short-fields-row');
             var voiceNumber = index + 1;
-            var voiceIdValue = jsonData.voiceId !== undefined && jsonData.voiceId !== null ? jsonData.voiceId : 'V' + voiceNumber;
-            var voiceIndexValue = jsonData.voiceIndex !== undefined && jsonData.voiceIndex !== null ? jsonData.voiceIndex : index;
+            var voiceIdValue = !isNew && jsonData.voiceId !== undefined && jsonData.voiceId !== null ? jsonData.voiceId : 'V' + voiceNumber;
+            var voiceIndexValue = !isNew && jsonData.voiceIndex !== undefined && jsonData.voiceIndex !== null ? jsonData.voiceIndex : index;
             var voiceIdContainer = dom.createNode('div');
             var voiceIdLabel = form.Label('StämmId:', 'voice-id-field-' + index);
             voiceIdContainer.appendChild(voiceIdLabel);
@@ -108,10 +109,11 @@ hex.editor = {
             return result;
         },
         voiceNamesRow: function (jsonData, index) {
+            var isNew = jsonData === null || jsonData === undefined;
             var result = dom.createNode('div');
             result.setAttribute('class', 'short-fields-row');
-            var voiceNameValue = jsonData.name !== undefined && jsonData.name !== null ? jsonData.name : '';
-            var voiceSubnameValue = jsonData.subname !== undefined && jsonData.subname !== null ? jsonData.subname : '';
+            var voiceNameValue = !isNew && jsonData.name !== undefined && jsonData.name !== null ? jsonData.name : '';
+            var voiceSubnameValue = !isNew && jsonData.subname !== undefined && jsonData.subname !== null ? jsonData.subname : '';
             var voiceNameContainer = dom.createNode('div');
             var voiceNameLabel = form.Label('Namn:', 'voice-name-field-' + index);
             voiceNameContainer.appendChild(voiceNameLabel);
@@ -130,15 +132,16 @@ hex.editor = {
         },
         voicEditor: function (jsonVoiceData, index) {
             var voiceNumber = index + 1;
-            var result = form.Border('Stämma ' + voiceNumber);
-            result.setAttribute('class', 'short-fields-row');
+            var border = form.Border('Stämma ' + voiceNumber, "voice-editor");
+            border.setAttribute('class', 'short-fields-row');
             var voiceIndexRow = hex.editor.fields.voiceIdAndIndexRow(jsonVoiceData, index);
-            result.appendChild(voiceIndexRow);
+            border.appendChild(voiceIndexRow);
             var voiceNamesRow = hex.editor.fields.voiceNamesRow(jsonVoiceData, index);
-            result.appendChild(voiceNamesRow);
-            var voiceBodyEditorArea = form.TextArea('voice-body', 'voice-body-field-' + index, null, jsonVoiceData.body, 10, 105);
-            result.appendChild(voiceBodyEditorArea);
-            return result;
+            border.appendChild(voiceNamesRow);
+            var voiceBody = jsonVoiceData === null ? '' : jsonVoiceData.body;
+            var voiceBodyEditorArea = form.TextArea('voice-body', 'voice-body-field-' + index, null, voiceBody, 10, 105);
+            border.appendChild(voiceBodyEditorArea);
+            return border;
         }
     }
 };
