@@ -96,10 +96,10 @@ public class AbcDocumentParser {
     }
 
     private Key handleKeyProperties(String line) {
-        Map<String, String> properties = createPropertyMap(line);
-        Key result = new AbcKey();
-        result.setSignature(Key.Signature.getByCode(properties.get("fieldValue")));
-        result.setClef(createClef(properties));
+        Map<String, String> properties = createPropertyMap(line.substring(2));
+        Key.Signature keySignature = Key.Signature.getByCode(properties.get("fieldValue"));
+        Clef clef = createClef(properties);
+        Key result = new AbcKey(keySignature, clef);
         return result;
     }
 
