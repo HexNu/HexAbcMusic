@@ -23,6 +23,8 @@ div.voice-editor {background-color: #FFF; opacity: 1;}
 .short-fields-row {width: 28em;}
 .short-fields-row table {border-collapse: collapse; border-spacing: 0};
 .short-fields-row * td {padding: 0 0 8px 0;}
+.short-fields-row * td label {padding: 0}
+.short-fields-row * td input {margin: 0; width: 30px}
 .left-form-container {width: 14em; float: left}
 .right-form-container {width: 14em; float: right}
 #editor-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 300px;}
