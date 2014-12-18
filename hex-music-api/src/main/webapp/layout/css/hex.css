@@ -1,25 +1,31 @@
 body {font-family: Verdana, Helvetica, sans-serif; font-size: 12px;}
-h1  {position: absolute; top: 30px; left: 300px;}
-/****  MENU ****/
-#menu {position: absolute; top: 10px; left: 10px;}
-#menu button {width: 7em}
-/****  TUNE-LIST ****/
-a[href='#'] {color: #00F}
+h1  {position: absolute; top: 30px; left: 30px;}
+/**** LOGO ****/
+#logo {position: fixed; top: 0px; right: 10px; opacity: 0.8; width: 165px; height: 165px;
+       background-image: url('../images/logo.png')}
+/**** MENU ****/
+#menu-area {position: absolute; top: 10px; left: 10px;}
+#menu-area button {width: 7em;}
+#menu-area img {margin-left: 3px; margin-bottom: 3px; vertical-align: bottom;}
+#menu-area .search-box {display: inline-block; margin-top: 0px; vertical-align: top;}
+/**** TUNE-LIST ****/
 .list-link {font-size: smaller;}
 #list-area {background-color: #CCC; padding: 10px; position: absolute; top: 100px; left: 10px;}
 #list h3 {margin: 0}
-/****  EDITOR  ****/
+/**** EDITOR  ****/
 textarea {font-family: monospace; font-size: 10px;}
 input[type='number'] {text-align: right;}
 div.voice-editor {background-color: #FFF; opacity: 1;}
 .editor {width: 56em; min-height: 40em;}
-.editor * label {width: 8em; display: block; float: left; text-align: right; padding-right: 0.3em}
+.editor * label {width: 8em; padding-top: 3px; display: block; float: left; text-align: right; vertical-align: bottom; padding-right: 0.3em}
 .long-text-field {width: 30em;}
 .short-text-field {width: 5em;}
 .short-fields-row {width: 28em;}
+.short-fields-row table {border-collapse: collapse; border-spacing: 0};
+.short-fields-row * td {padding: 0 0 8px 0;}
 .left-form-container {width: 14em; float: left}
 .right-form-container {width: 14em; float: right}
-#edit-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 300px;}
-/****  FIL-IMPORT  ****/
+#editor-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 300px;}
+/**** FIL-IMPORT  ****/
 #file-upload-form {display: inline}
 #file-upload {display: none}

@@ -79,7 +79,7 @@ public class AbcResource extends AbstractResource {
     @Path("preview/{id}")
     public Response previewAbcCode(@PathParam("id") String id, @QueryParam("view") String view) throws UnsupportedEncodingException {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
-        String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), id);
+        String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), getKey());
         if (view == null || view.equalsIgnoreCase("abc")) {
             return Response.ok(abcString)
                     .header("Content-Type", "text/plain; charset=iso-8859-1")

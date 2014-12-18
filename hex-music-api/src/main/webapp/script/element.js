@@ -1,4 +1,4 @@
-var form = {
+var element = {
     /**
      * 
      * @param {type} id
@@ -26,20 +26,23 @@ var form = {
      * @param {type} cssClass
      * @returns {form.DataList.dataListContainer|Element}
      */
-    DataList: function (name, id, cssClass) {
+    DataList: function (name, id,  cssClass) {
         var dataListContainer = dom.createNode('div');
         var list = dom.createNode('input');
         list.setAttribute('name', name);
-        list.setAttribute('list', id);
+        list.setAttribute('id', id + '-input');
+        list.setAttribute('list', id + '-datalist');
         if (cssClass !== undefined && cssClass !== null) {
             dataListContainer.setAttribute('class', cssClass);
         }
         dataListContainer.appendChild(list);
         var dataList = dom.createNode('datalist');
-        dataList.setAttribute('id', id);
+        dataList.setAttribute('id', id + '-datalist');
+        var select = dom.createNode('select');
+        select.setAttribute('id', id);
+        dataList.appendChild(select);
         dataListContainer.appendChild(dataList);
         return dataListContainer;
-
     },
     /**
      * 
@@ -203,16 +206,40 @@ var form = {
         result.setAttribute('cols', cols !== undefined && cols !== null ? cols : 50);
         return result;
     },
-    Border: function(name, cssClass) {
-        var border = dom.createNode('fieldset');
+    Border: function (name, cssClass) {
+        var result = dom.createNode('fieldset');
         if (cssClass !== undefined && cssClass !== null) {
-            border.setAttribute('class', cssClass);
+            result.setAttribute('class', cssClass);
         }
         if (name !== undefined && name !== null) {
             var legend = dom.createNode('legend');
             dom.appendText(legend, name);
-            border.appendChild(legend);
+            result.appendChild(legend);
         }
-        return border;
+        return result;
+    },
+    /**
+     * 
+     * @param {type} imageName
+     * @param {type} id
+     * @param {type} cssClass
+     * @param {type} altText
+     * @returns {element.ImageButton.result|Element}
+     */
+    IconButton: function (imageName, id, cssClass, altText) {
+        var result = dom.createNode('img');
+        result.setAttribute('src', 'layout/images/icons/16x16/' + imageName + '.png');
+        result.setAttribute('width', '16');
+        result.setAttribute('hight', '16');
+        if (id !== undefined && id !== null) {
+            result.setAttribute('id', id);
+        }
+        if (cssClass !== undefined && cssClass !== null) {
+            result.setAttribute('class', cssClass);
+        }
+        if (altText !== undefined && altText !== null) {
+            result.setAttribute('alt', altText);
+        }
+        return result;
     }
 };
