@@ -2,7 +2,97 @@ var element = {
     /**
      * 
      * @param {type} name
-     * @returns {undefined}
+     * @returns {element.NumberChooserField}
+     */
+    NumberChooserField: function (name) {
+        this.domElement = dom.createNode('input');
+        this.domElement.setAttribute('type', 'number');
+        this.domElement.setAttribute('name', name);
+    },
+    /**
+     * 
+     * @param {type} name
+     * @param {type} value
+     * @returns {element.SearchField}
+     */
+    SearchField: function (name, value) {
+        this.domElement = dom.createNode('input');
+        this.domElement.setAttribute('type', 'search');
+        this.domElement.setAttribute('name', name);
+        this.setValue(value);
+    },
+    /**
+     * 
+     * @param {type} id
+     * @returns {element.Form}
+     */
+    Form: function (id) {
+        this.domElement = dom.createNode('form');
+        this.setId(id);
+    },
+    /**
+     * 
+     * @param {type} fieldName
+     * @param {type} action
+     * @returns {element.FileUploader}
+     */
+    FileUploader: function (fieldName, action) {
+        var fileChooserId = fieldName + '-chooser';
+        var formId = fieldName;
+        this.id = formId;
+        this.action = action;
+        this.domElement = dom.createNode('form');
+        this.domElement.setAttribute('style', 'display:inline');
+        this.domElement.setAttribute('id', this.id);
+        this.domElement.setAttribute('action', this.action);
+        this.domElement.setAttribute('method', http.Method.POST);
+        this.domElement.setAttribute('enctype', http.MediaType.MULTIPART_FORM_DATA);
+        this.domElement.setAttribute('target', 'upload-target');
+        this.target = dom.createNode('iframe');
+        this.target.setAttribute('src', '_blank');
+        this.target.setAttribute('style', 'display:none');
+        this.target.setAttribute('name', 'upload-target');
+        this.domElement.appendChild(this.target);
+        this.fileChooser = new element.FileChooser(this.id);
+        this.fileChooser.setId(fileChooserId);
+        this.fileChooser.addChangeAction(function () {
+            $(formId).submit();
+        });
+        this.fileChooser.getElement().setAttribute('style', 'display:none');
+        this.domElement.appendChild(this.fileChooser.getElement());
+        this.fileChooserTrigger = new element.IconButton('document_import', 'Importera');
+        this.fileChooserTrigger.addIconClickedAction(function () {
+            $(fileChooserId).click();
+        });
+        this.domElement.appendChild(this.fileChooserTrigger.getElement());
+    },
+    /**
+     * 
+     * @param {type} name
+     * @returns {element.FileChooser}
+     */
+    FileChooser: function (name) {
+        this.name = name;
+        this.domElement = dom.createNode('input');
+        this.domElement.setAttribute('name', this.name);
+        this.domElement.setAttribute('type', 'file');
+    },
+    /**
+     * 
+     * @param {type} name
+     * @returns {element.SelectList}
+     */
+    SelectList: function (name) {
+        this.domElement = dom.createNode('select');
+        this.name = name || null;
+        if (this.name !== null) {
+            this.domElement.setAttribute('name', name);
+        }
+    },
+    /**
+     * 
+     * @param {type} name
+     * @returns {element.TextField}
      */
     TextField: function (name) {
         this.domElement = dom.createNode('input');
@@ -14,7 +104,7 @@ var element = {
      * @param {type} name
      * @param {type} rows
      * @param {type} cols
-     * @returns {undefined}
+     * @returns {element.TextArea}
      */
     TextArea: function (name, rows, cols) {
         this.domElement = dom.createNode('textarea');
@@ -27,7 +117,7 @@ var element = {
      * 
      * @param {type} text
      * @param {type} targetId
-     * @returns {undefined}
+     * @returns {element.Label}
      */
     Label: function (text, targetId) {
         this.text = text || null;
@@ -40,7 +130,7 @@ var element = {
      * 
      * @param {type} legend
      * @param {type} cssClass
-     * @returns {undefined}
+     * @returns {element.Border}
      */
     Border: function (legend, cssClass) {
         this.domElement = dom.createNode('fieldset');
@@ -51,7 +141,7 @@ var element = {
      * 
      * @param {type} imageName
      * @param {type} altText
-     * @returns {undefined}
+     * @returns {element.IconButton}
      */
     IconButton: function (imageName, altText) {
         this.setImageUrl('layout/images/icons/16x16/' + imageName + '.png');
@@ -62,26 +152,6 @@ var element = {
         if (altText) {
             this.domElement.setAttribute('alt', altText);
         }
-    },
-    /**
-     * 
-     * @param {type} id
-     * @param {type} cssClass
-     * @param {type} action
-     * @param {type} method
-     * @param {type} enctype
-     * @returns {form.Form.result|Element}
-     */
-    Form: function (id, cssClass, action, method, enctype) {
-        var result = dom.createNode('form');
-        result.setAttribute('id', id);
-        if (cssClass !== undefined && cssClass !== null) {
-            result.setAttribute('class', cssClass);
-        }
-        result.setAttribute('action', action);
-        result.setAttribute('method', method);
-        result.setAttribute('enctype', enctype);
-        return result;
     },
     /**
      * 
@@ -110,102 +180,153 @@ var element = {
         dataList.appendChild(select);
         dataListContainer.appendChild(dataList);
         return dataListContainer;
+    }
+};
+element.NumberChooserField.prototype = {
+    setValue: function (value) {
+        this.value = value || 0;
+        this.domElement.setAttribute('value', this.value);
     },
-    /**
-     * 
-     * @param {type} name
-     * @param {type} id
-     * @param {type} cssClass
-     * @returns {form.SelectList.result|Element}
-     */
-    SelectList: function (name, id, cssClass) {
-        var result = dom.createNode('select');
-        result.setAttribute('name', name);
-        if (id !== undefined && id !== null) {
-            result.setAttribute('id', id);
-        }
-        if (cssClass !== undefined && cssClass !== null) {
-            result.setAttribute('class', cssClass);
-        }
-        return result;
+    setMin: function (min) {
+        this.min = min || 0;
+        this.domElement.setAttribute('min', this.min);
     },
-    /**
-     * 
-     * @param {type} name
-     * @param {type} id
-     * @param {type} cssClass
-     * @returns {form.FileChooser.result|Element}
-     */
-    FileChooser: function (name, id, cssClass) {
-        var result = dom.createNode('input');
-        result.setAttribute('name', name);
-        if (id !== undefined && id !== null) {
-            result.setAttribute('id', id);
-        }
-        if (cssClass !== undefined && cssClass !== null) {
-            result.setAttribute('class', cssClass);
-        }
-        if (required !== undefined && required !== null && required === true) {
-            result.setAttribute('required');
-        }
-        return result;
+    setMax: function (max) {
+        this.max = max || 500;
+        this.domElement.setAttribute('min', this.max);
     },
-    /**
-     * 
-     * @param {type} name
-     * @param {type} id
-     * @param {type} cssClass
-     * @param {type} value
-     * @param {type} min
-     * @param {type} max
-     * @returns {form.NumberChooserField.result|Element}
-     */
-    NumberChooserField: function (name, id, cssClass, value, min, max) {
-        this.providedValue = value !== undefined && value !== null ? value : 0;
-        this.min = min !== undefined && min !== null ? min > this.providedValue ? this.providedValue : min : null;
-        this.max = max !== undefined && max !== null ? max < this.providedValue ? this.providedValue : max : null;
-        var result = dom.createNode('input');
-        result.setAttribute('type', 'number');
-        result.setAttribute('name', name);
-        if (id !== undefined && id !== null) {
-            result.setAttribute('id', id);
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
         }
-        if (cssClass !== undefined && cssClass !== null) {
-            result.setAttribute('class', cssClass);
-        }
-        if (value !== undefined && value !== null) {
-            result.setAttribute('value', value);
-        }
-        if (this.min !== null) {
-            result.setAttribute('min', this.min);
-        }
-        if (this.max !== null) {
-            result.setAttribute('max', this.max);
-        }
-        return result;
     },
-    /**
-     * 
-     * @param {type} name
-     * @param {type} id
-     * @param {type} cssClass
-     * @param {type} value
-     * @returns {form.SearchField.result|Element}
-     */
-    SearchField: function (name, id, cssClass, value) {
-        var result = dom.createNode('input');
-        result.setAttribute('type', 'search');
-        result.setAttribute('name', name);
-        if (id !== undefined && id !== null) {
-            result.setAttribute('id', id);
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
         }
-        if (cssClass !== undefined && cssClass !== null) {
-            result.setAttribute('class', cssClass);
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
+element.SearchField.prototype = {
+    setValue: function (value) {
+        this.value = value || null;
+        if (this.value !== null) {
+            this.domElement.setAttribute('value', this.value);
         }
-        if (value !== undefined && value !== null) {
-            result.setAttribute('value', value);
+    },
+    getValue: function () {
+        return this.domElement.value;
+    },
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
         }
-        return result;
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
+element.Form.prototype = {
+    addElement: function (childElement) {
+        this.domElement.appendChild(childElement);
+    },
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
+    setEncodignType: function (enctype) {
+        this.enctype = enctype || null;
+        if (this.enctype !== null) {
+            this.domElement.setAttribute('enctype', this.enctype);
+        }
+    },
+    setMethod: function (method) {
+        this.method = method || null;
+        if (this.method !== null) {
+            this.domElement.setAttribute('method', this.method);
+        }
+    },
+    setAction: function (action) {
+        this.action = action || null;
+        if (this.action !== null) {
+            this.domElement.setAttribute('action', this.action);
+        }
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
+element.FileUploader.prototype = {
+    getElement: function () {
+        return this.domElement;
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    }
+};
+element.FileChooser.prototype = {
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    getElement: function () {
+        return this.domElement;
+    },
+    addChangeAction: function (action) {
+        this.domElement.addEventListener('change', action);
+    }
+};
+element.SelectList.prototype = {
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setSelectedIndex: function (selectedIndex) {
+        this.selectedIndex = selectedIndex || null;
+        if (this.selectedIndex !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    getElement: function () {
+        return this.domElement;
+    },
+    addChangeAction: function (action) {
+        this.domElement.addEventListener('change', action);
     }
 };
 element.TextField.prototype = {

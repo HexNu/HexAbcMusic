@@ -1,8 +1,8 @@
 body {font-family: Verdana, Helvetica, sans-serif; font-size: 12px;}
 h1  {position: absolute; top: 30px; left: 30px;}
 /**** LOGO ****/
-#logo {position: fixed; top: 0px; right: 10px; opacity: 0.8; width: 165px; height: 165px;
-       background-image: url('../images/logo.png')}
+#logo {position: fixed; top: 20px; right: 30px; opacity: 0.8; width: 64px; height: 64px;
+       background-image: url('../images/logo64.png')}
 /**** MENU ****/
 #menu-area {position: absolute; top: 10px; left: 10px;}
 #menu-area button {width: 7em;}

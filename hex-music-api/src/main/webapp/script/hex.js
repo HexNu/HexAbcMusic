@@ -64,22 +64,26 @@ hex = {
         create: function (jsonData) {
             var tuneDto = new dto.in.Tune(jsonData);
             var method = tuneDto.isNew() ? http.Method.POST : http.Method.PUT;
-            var editorForm = element.Form('edit-form', 'editor', 'resources/abc', method, http.MediaType.MULTIPART_FORM_DATA);
-            editorForm.appendChild(hex.editor.elements.titleRow(tuneDto.getTitle()));
-            editorForm.appendChild(hex.editor.elements.subheaderRow(tuneDto.getSubheader()));
-            editorForm.appendChild(hex.editor.elements.composerRow(tuneDto.getComposer()));
-            editorForm.appendChild(hex.editor.elements.originatorRow(tuneDto.getOriginator()));
-            editorForm.appendChild(hex.editor.elements.rythmRow(tuneDto.getRythm()));
-            editorForm.appendChild(hex.editor.elements.regionRow(tuneDto.getRegion()));
-            editorForm.appendChild(hex.editor.elements.historyRow(tuneDto.getHistory()));
-            editorForm.appendChild(hex.editor.elements.notesRow(tuneDto.getNotes()));
-            editorForm.appendChild(hex.editor.elements.transcriberRow(tuneDto.getTranscriber()));
-            editorForm.appendChild(hex.editor.elements.sourceRow(tuneDto.getSource()));
-            editorForm.appendChild(hex.editor.elements.meterNoteLengthKeyRow(tuneDto));
+            var editorForm = new element.Form('edit-form');
+            editorForm.setAction('resources/abc');
+            editorForm.setCssClass('editor');
+            editorForm.setMethod(method);
+            editorForm.setEncodignType(http.MediaType.MULTIPART_FORM_DATA);
+            editorForm.addElement(hex.editor.elements.titleRow(tuneDto.getTitle()));
+            editorForm.addElement(hex.editor.elements.subheaderRow(tuneDto.getSubheader()));
+            editorForm.addElement(hex.editor.elements.composerRow(tuneDto.getComposer()));
+            editorForm.addElement(hex.editor.elements.originatorRow(tuneDto.getOriginator()));
+            editorForm.addElement(hex.editor.elements.rythmRow(tuneDto.getRythm()));
+            editorForm.addElement(hex.editor.elements.regionRow(tuneDto.getRegion()));
+            editorForm.addElement(hex.editor.elements.historyRow(tuneDto.getHistory()));
+            editorForm.addElement(hex.editor.elements.notesRow(tuneDto.getNotes()));
+            editorForm.addElement(hex.editor.elements.transcriberRow(tuneDto.getTranscriber()));
+            editorForm.addElement(hex.editor.elements.sourceRow(tuneDto.getSource()));
+            editorForm.addElement(hex.editor.elements.meterNoteLengthKeyRow(tuneDto));
             for (var i = 0; i < tuneDto.getNumberOfVoices(); i++) {
-                editorForm.appendChild(hex.editor.elements.voicEditor(tuneDto.getVoice(i)));
+                editorForm.addElement(hex.editor.elements.voicEditor(tuneDto.getVoice(i)));
             }
-            $('editor-area').appendChild(editorForm);
+            $('editor-area').appendChild(editorForm.getElement());
         },
         elements: {
             longTextFieldRow: function (value, text, tuneField) {
@@ -182,8 +186,12 @@ hex = {
                 indexContainer.setAttribute('class', 'right-form-container');
                 var voiceIndexLabel = new element.Label('Index:', 'voice-index-field-' + voiceDto.getIndex());
                 indexContainer.appendChild(voiceIndexLabel.getElement());
-                var voiceIndexNumberField = element.NumberChooserField('voice-index', 'voice-index-field-' + voiceDto.getIndex(), 'short-text-field', voiceDto.getIndex(), 0);
-                indexContainer.appendChild(voiceIndexNumberField);
+                var voiceIndexNumberField = new element.NumberChooserField('voice-index-' + voiceDto.getIndex());
+                voiceIndexNumberField.setCssClass('short-text-field');
+                voiceIndexNumberField.setId('voice-index-field-' + voiceDto.getIndex());
+                voiceIndexNumberField.setValue(parseInt(voiceDto.getIndex()));
+                voiceIndexNumberField.setMin(0);
+                indexContainer.appendChild(voiceIndexNumberField.getElement());
                 result.appendChild(voiceIdContainer);
                 result.appendChild(indexContainer);
                 return result;
@@ -231,69 +239,51 @@ hex = {
     },
     menu: {
         create: function () {
-            $('menu-area').appendChild(hex.menu.elements.searchBox());
-            $('menu-area').appendChild(hex.menu.elements.tuneListTrigger());
-            $('menu-area').appendChild(hex.menu.elements.importTrigger());
-            $('menu-area').appendChild(hex.menu.elements.exportTrigger().getElement());
-            $('menu-area').appendChild(hex.menu.elements.addTuneTrigger().getElement());
-            $('menu-area').appendChild(hex.menu.elements.searchTuneTrigger().getElement());
+            this.addSearchBox();
+            this.addSearchTuneTrigger();
+            this.addTuneListTrigger();
+            this.addExportTrigger();
+            this.addImportTrigger();
+            this.addNewTunewButton();
         },
-        elements: {
-            searchTuneTrigger: function () {
-                return new element.IconButton('magnifier', null, null, 'Sök');
-            },
-            addTuneTrigger: function () {
-                var addTuneTrigger = new element.IconButton('add', null, null, 'Ny låt');
-                addTuneTrigger.setTooltip('Lägg till en låt');
-                addTuneTrigger.addIconClickedAction(function () {
-                    hex.actions.edit();
-                });
-                return addTuneTrigger;
-
-            },
-            exportTrigger: function () {
-                var exportTrigger = new element.IconButton('document_export', null, null, 'Exportera');
-                exportTrigger.setTooltip('Ladda ner alla låtar som en abc-fil till din dator.');
-                exportTrigger.addIconClickedAction(function () {
-                    hex.actions.downloadAll();
-                });
-                return exportTrigger;
-            },
-            importTrigger: function () {
-                var result = dom.createNode('form');
-                result.setAttribute('id', 'file-upload-form');
-                result.setAttribute('action', 'resources/tunes/abc/upload');
-                result.setAttribute('method', http.Method.POST);
-                result.setAttribute('enctype', http.MediaType.MULTIPART_FORM_DATA);
-                result.setAttribute('target', 'new-page');
-                var fileChooser = dom.createNode('input');
-                fileChooser.setAttribute('id', 'file-upload');
-                fileChooser.setAttribute('type', 'file');
-                fileChooser.setAttribute('name', 'file');
-                fileChooser.addEventListener('change', function () {
-                    $('file-upload-form').submit();
-                });
-                result.appendChild(fileChooser);
-                var fileChooserTrigger = new element.IconButton('document_import', null, null, 'Importera');
-                fileChooserTrigger.setTooltip('Ladda upp en abc-fil till servern.');
-                fileChooserTrigger.addIconClickedAction(function () {
-                    $('file-upload').click();
-                });
-                result.appendChild(fileChooserTrigger.getElement());
-                return result;
-            },
-            searchBox: function () {
-                var result = element.SearchField('titles', 'tune-title-list', 'search-box');
-                return result;
-            },
-            tuneListTrigger: function () {
-                var tuneListTrigger = new element.IconButton('directory_listing', null, null, 'Låtlista');
-                tuneListTrigger.setTooltip('Visa eller uppdatara låtlistan.');
-                tuneListTrigger.addIconClickedAction(function () {
-                    hex.actions.list();
-                });
-                return tuneListTrigger.getElement();
-            }
+        addSearchBox: function () {
+            var searchField = new element.SearchField('titles');
+            searchField.setId('tune-title-list');
+            searchField.setCssClass('search-box');
+            $('menu-area').appendChild(searchField.getElement());
+        },
+        addSearchTuneTrigger: function () {
+            var searchTuneButton = new element.IconButton('magnifier', 'Sök');
+            $('menu-area').appendChild(searchTuneButton.getElement());
+        },
+        addTuneListTrigger: function () {
+            var tuneListTrigger = new element.IconButton('directory_listing', null, null, 'Låtlista');
+            tuneListTrigger.setTooltip('Visa eller uppdatara låtlistan.');
+            tuneListTrigger.addIconClickedAction(function () {
+                hex.actions.list();
+            });
+            $('menu-area').appendChild(tuneListTrigger.getElement());
+        },
+        addExportTrigger: function () {
+            var exportTrigger = new element.IconButton('document_export', null, null, 'Exportera');
+            exportTrigger.setTooltip('Ladda ner alla låtar som en abc-fil till din dator.');
+            exportTrigger.addIconClickedAction(function () {
+                hex.actions.downloadAll();
+            });
+            $('menu-area').appendChild(exportTrigger.getElement());
+        },
+        addImportTrigger: function () {
+            var importTrigger = new element.FileUploader('file', 'resources/tunes/abc/upload');
+            importTrigger.setTooltip('Ladda upp en abc-fil till servern.');
+            $('menu-area').appendChild(importTrigger.getElement());
+        },
+        addNewTunewButton: function () {
+            var addTuneTrigger = new element.IconButton('add', 'Ny låt');
+            addTuneTrigger.setTooltip('Lägg till en låt');
+            addTuneTrigger.addIconClickedAction(function () {
+                hex.actions.edit();
+            });
+            $('menu-area').appendChild(addTuneTrigger.getElement());
         }
     }
 
