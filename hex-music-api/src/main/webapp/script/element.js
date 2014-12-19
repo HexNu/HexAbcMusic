@@ -27,7 +27,7 @@ var element = {
      * 
      * @param {type} text
      * @param {type} targetId
-     * @returns {form.Label.result|Element}
+     * @returns {undefined}
      */
     Label: function (text, targetId) {
         this.text = text || null;
@@ -51,7 +51,7 @@ var element = {
      * 
      * @param {type} imageName
      * @param {type} altText
-     * @returns {element.ImageButton.result|Element}
+     * @returns {undefined}
      */
     IconButton: function (imageName, altText) {
         this.setImageUrl('layout/images/icons/16x16/' + imageName + '.png');

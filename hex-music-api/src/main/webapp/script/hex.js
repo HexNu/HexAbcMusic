@@ -62,27 +62,22 @@ hex = {
     },
     editor: {
         create: function (jsonData) {
-            var isNew = jsonData === undefined || jsonData === null || jsonData === '';
-            var method = isNew ? http.Method.POST : http.Method.PUT;
+            var tuneDto = new dto.in.Tune(jsonData);
+            var method = tuneDto.isNew() ? http.Method.POST : http.Method.PUT;
             var editorForm = element.Form('edit-form', 'editor', 'resources/abc', method, http.MediaType.MULTIPART_FORM_DATA);
-            editorForm.appendChild(hex.editor.elements.titleRow(isNew ? '' : jsonData.title));
-            editorForm.appendChild(hex.editor.elements.subheaderRow(isNew ? '' : jsonData.subheader));
-            editorForm.appendChild(hex.editor.elements.composerRow(isNew ? '' : jsonData.composer));
-            editorForm.appendChild(hex.editor.elements.originatorRow(isNew ? '' : jsonData.originator));
-            editorForm.appendChild(hex.editor.elements.rythmRow(isNew ? '' : jsonData.rythm));
-            editorForm.appendChild(hex.editor.elements.regionRow(isNew ? '' : jsonData.region));
-            editorForm.appendChild(hex.editor.elements.historyRow(isNew ? '' : jsonData.history));
-            editorForm.appendChild(hex.editor.elements.notesRow(isNew ? '' : jsonData.notes));
-            editorForm.appendChild(hex.editor.elements.transcriberRow(isNew ? '' : jsonData.transcriber));
-            editorForm.appendChild(hex.editor.elements.sourceRow(isNew ? '' : jsonData.source));
-            editorForm.appendChild(hex.editor.elements.meterNoteLengthKeyRow(isNew ? '' : jsonData));
-            var numberOfVoices = isNew ? 1 : jsonData.voices.length;
-            for (var i = 0; i < numberOfVoices; i++) {
-                if (isNew) {
-                    editorForm.appendChild(hex.editor.elements.voicEditor(null, i).getElement());
-                } else {
-                    editorForm.appendChild(hex.editor.elements.voicEditor(jsonData.voices[i], i).getElement());
-                }
+            editorForm.appendChild(hex.editor.elements.titleRow(tuneDto.getTitle()));
+            editorForm.appendChild(hex.editor.elements.subheaderRow(tuneDto.getSubheader()));
+            editorForm.appendChild(hex.editor.elements.composerRow(tuneDto.getComposer()));
+            editorForm.appendChild(hex.editor.elements.originatorRow(tuneDto.getOriginator()));
+            editorForm.appendChild(hex.editor.elements.rythmRow(tuneDto.getRythm()));
+            editorForm.appendChild(hex.editor.elements.regionRow(tuneDto.getRegion()));
+            editorForm.appendChild(hex.editor.elements.historyRow(tuneDto.getHistory()));
+            editorForm.appendChild(hex.editor.elements.notesRow(tuneDto.getNotes()));
+            editorForm.appendChild(hex.editor.elements.transcriberRow(tuneDto.getTranscriber()));
+            editorForm.appendChild(hex.editor.elements.sourceRow(tuneDto.getSource()));
+            editorForm.appendChild(hex.editor.elements.meterNoteLengthKeyRow(tuneDto));
+            for (var i = 0; i < tuneDto.getNumberOfVoices(); i++) {
+                editorForm.appendChild(hex.editor.elements.voicEditor(tuneDto.getVoice(i)));
             }
             $('editor-area').appendChild(editorForm);
         },
@@ -128,14 +123,11 @@ hex = {
             sourceRow: function (value) {
                 return hex.editor.elements.longTextFieldRow(value, 'Källa', 'source');
             },
-            meterNoteLengthKeyRow: function (jsonData) {
+            meterNoteLengthKeyRow: function (tuneDto) {
                 var result = dom.createNode('div');
                 result.setAttribute('class', 'short-fields-row');
                 var table = dom.createNode('table');
                 var row = dom.createNode('tr');
-//                var meterValue = jsonData.meter !== undefined && jsonData.meter !== null ? jsonData.meter : '';
-//                var defaultLengthValue = jsonData.unitNoteLength !== undefined && jsonData.unitNoteLength !== null ? jsonData.unitNoteLength : '';
-                var keyValue = jsonData.key !== undefined && jsonData.key !== null ? jsonData.key.signature : '';
                 var meterLabelContainer = dom.createNode('td');
                 meterLabelContainer.setAttribute('class', 'label');
                 var meterLabel = new element.Label('Taktart:', 'meter-field');
@@ -144,7 +136,7 @@ hex = {
                 var meterTextField = new element.TextField('meter');
                 meterTextField.setId('meter-field');
                 meterTextField.setCssClass('short-text-field');
-                meterTextField.setValue(jsonData.meter);
+                meterTextField.setValue(tuneDto.getMeter());
                 meterContainer.appendChild(meterTextField.getElement());
                 var lengthLabelContainer = dom.createNode('td');
                 lengthLabelContainer.setAttribute('class', 'label');
@@ -154,14 +146,14 @@ hex = {
                 var defaultLengthTextField = new element.TextField('unit-note-length');
                 defaultLengthTextField.setId('unit-note-length');
                 defaultLengthTextField.setCssClass('unit-note-length-field');
-                defaultLengthTextField.setValue(jsonData.unitNoteLength);
+                defaultLengthTextField.setValue(tuneDto.getUnitNoteLength());
                 lengthContainer.appendChild(defaultLengthTextField.getElement());
                 var keyLabelContainer = dom.createNode('td');
                 keyLabelContainer.setAttribute('class', 'label');
                 var keyLabel = new element.Label('Tonart:', 'key-field');
                 keyLabelContainer.appendChild(keyLabel.getElement());
                 var keyContainer = dom.createNode('td');
-                var keyTextField = element.DataList('key-signature', 'key-field', 'short-text-field', keyValue);
+                var keyTextField = element.DataList('key-signature', 'key-field', 'short-text-field', tuneDto.getKey().getSignature());
                 keyContainer.appendChild(keyTextField);
                 row.appendChild(meterLabelContainer);
                 row.appendChild(meterContainer);
@@ -173,76 +165,67 @@ hex = {
                 result.appendChild(table);
                 return result;
             },
-            voiceIdAndIndexRow: function (jsonData, index) {
-                var isNew = jsonData === null || jsonData === undefined;
+            voiceIdAndIndexRow: function (voiceDto) {
                 var result = dom.createNode('div');
+                var voiceNumber = voiceDto.getIndex() + 1;
                 result.setAttribute('class', 'short-fields-row');
-                var voiceNumber = index + 1;
-                var voiceIdValue = !isNew && jsonData.voiceId !== undefined && jsonData.voiceId !== null ? jsonData.voiceId : 'V' + voiceNumber;
-                var voiceIndexValue = !isNew && jsonData.voiceIndex !== undefined && jsonData.voiceIndex !== null ? jsonData.voiceIndex : index;
                 var voiceIdContainer = dom.createNode('div');
-                var voiceIdLabel = new element.Label('StämmId:', 'voice-id-field-' + index);
+                var voiceIdLabel = new element.Label('StämmId:', 'voice-id-field-' + voiceNumber);
                 voiceIdContainer.appendChild(voiceIdLabel.getElement());
                 voiceIdContainer.setAttribute('class', 'left-form-container');
                 var voiceIdTextField = new element.TextField('voice-id');
-                voiceIdTextField.setId('voice-id-field-' + index);
+                voiceIdTextField.setId('voice-id-field-' + voiceDto.getIndex());
                 voiceIdTextField.setCssClass('short-text-field');
-                voiceIdTextField.setValue(voiceIdValue);
+                voiceIdTextField.setValue(voiceDto.getVoiceId());
                 voiceIdContainer.appendChild(voiceIdTextField.getElement());
                 var indexContainer = dom.createNode('div');
                 indexContainer.setAttribute('class', 'right-form-container');
-                var voiceIndexLabel = new element.Label('Index:', 'voice-index-field-' + index);
+                var voiceIndexLabel = new element.Label('Index:', 'voice-index-field-' + voiceDto.getIndex());
                 indexContainer.appendChild(voiceIndexLabel.getElement());
-                var voiceIndexNumberField = element.NumberChooserField('voice-index', 'voice-index-field-' + index, 'short-text-field', voiceIndexValue, 0);
-//                var voiceIndexNumberField = element.NumberChooserField('voice-index');
+                var voiceIndexNumberField = element.NumberChooserField('voice-index', 'voice-index-field-' + voiceDto.getIndex(), 'short-text-field', voiceDto.getIndex(), 0);
                 indexContainer.appendChild(voiceIndexNumberField);
                 result.appendChild(voiceIdContainer);
                 result.appendChild(indexContainer);
                 return result;
             },
-            voiceNamesRow: function (jsonData, index) {
-                var isNew = jsonData === null || jsonData === undefined;
+            voiceNamesRow: function (voiceDto) {
                 var result = dom.createNode('div');
                 result.setAttribute('class', 'short-fields-row');
-                var voiceNameValue = !isNew && jsonData.name !== undefined && jsonData.name !== null ? jsonData.name : '';
-                var voiceSubnameValue = !isNew && jsonData.subname !== undefined && jsonData.subname !== null ? jsonData.subname : '';
                 var voiceNameContainer = dom.createNode('div');
-                var voiceNameLabel = new element.Label('Namn:', 'voice-name-field-' + index);
+                var voiceNameLabel = new element.Label('Namn:', 'voice-name-field-' + voiceDto.getIndex());
                 voiceNameContainer.appendChild(voiceNameLabel.getElement());
                 voiceNameContainer.setAttribute('class', 'left-form-container');
                 var voiceNameTextField = new element.TextField('voice-name');
-                voiceNameTextField.setId('voice-name-field-' + index);
+                voiceNameTextField.setId('voice-name-field-' + voiceDto.getIndex());
                 voiceNameTextField.setCssClass('short-text-field');
-                voiceNameTextField.setValue(voiceNameValue);
+                voiceNameTextField.setValue(voiceDto.getName());
                 voiceNameContainer.appendChild(voiceNameTextField.getElement());
                 var voiceSubnameContainer = dom.createNode('div');
                 voiceSubnameContainer.setAttribute('class', 'right-form-container');
-                var voiceSubnameLabel = new element.Label('Kortnamn:', 'voice-subname-field-' + index);
+                var voiceSubnameLabel = new element.Label('Kortnamn:', 'voice-subname-field-' + voiceDto.getIndex());
                 voiceSubnameContainer.appendChild(voiceSubnameLabel.getElement());
                 var voiceSubnameNumberField = new element.TextField('voice-subname');
-                voiceSubnameNumberField.setId('voice-subname-field-' + index);
+                voiceSubnameNumberField.setId('voice-subname-field-' + voiceDto.getIndex());
                 voiceSubnameNumberField.setCssClass('short-text-field');
-                voiceSubnameNumberField.setValue(voiceSubnameValue);
-                
+                voiceSubnameNumberField.setValue(voiceDto.getSubname());
                 voiceSubnameContainer.appendChild(voiceSubnameNumberField.getElement());
                 result.appendChild(voiceNameContainer);
                 result.appendChild(voiceSubnameContainer);
                 return result;
             },
-            voicEditor: function (jsonVoiceData, index) {
-                var voiceNumber = index + 1;
+            voicEditor: function (voiceDto) {
+                var voiceNumber = voiceDto.getIndex() + 1;
                 var border = new element.Border('Stämma ' + voiceNumber, 'short-fields-row');
                 border.setId('voice-editor');
-                var voiceIndexRow = hex.editor.elements.voiceIdAndIndexRow(jsonVoiceData, index);
+                var voiceIndexRow = hex.editor.elements.voiceIdAndIndexRow(voiceDto);
                 border.addChild(voiceIndexRow);
-                var voiceNamesRow = hex.editor.elements.voiceNamesRow(jsonVoiceData, index);
+                var voiceNamesRow = hex.editor.elements.voiceNamesRow(voiceDto);
                 border.addChild(voiceNamesRow);
-                var voiceBody = jsonVoiceData === null ? '' : jsonVoiceData.body;
                 var voiceBodyEditorArea = new element.TextArea('voice-body', 10, 105);
-                voiceBodyEditorArea.setId('voice-body-field-' + index);
-                voiceBodyEditorArea.setText(voiceBody);
+                voiceBodyEditorArea.setId('voice-body-field-' + voiceDto.getIndex());
+                voiceBodyEditorArea.setText(voiceDto.getBody());
                 border.addChild(voiceBodyEditorArea.getElement());
-                return border;
+                return border.getElement();
             }
         }
     },
@@ -303,7 +286,7 @@ hex = {
                 var result = element.SearchField('titles', 'tune-title-list', 'search-box');
                 return result;
             },
-            tuneListTrigger: function (buttons) {
+            tuneListTrigger: function () {
                 var tuneListTrigger = new element.IconButton('directory_listing', null, null, 'Låtlista');
                 tuneListTrigger.setTooltip('Visa eller uppdatara låtlistan.');
                 tuneListTrigger.addIconClickedAction(function () {
