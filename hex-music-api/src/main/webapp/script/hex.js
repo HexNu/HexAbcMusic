@@ -1,5 +1,62 @@
 hex = {
+    lists: {
+        composers: null,
+        keys: null,
+        meters: [
+            {'name': '2/4'},
+            {'name': '3/4'},
+            {'name': '4/4'},
+            {'name': 'C'},
+            {'name': 'C|'},
+            {'name': '5/4'},
+            {'name': '6/4'},
+            {'name': '7/4'},
+            {'name': '8/4'},
+            {'name': '9/4'},
+            {'name': '1/4'},
+            {'name': '5/8'},
+            {'name': '6/8'},
+            {'name': '7/8'},
+            {'name': '8/8'},
+            {'name': '9/8'},
+            {'name': '10/8'},
+            {'name': '11/8'},
+            {'name': '12/8'},
+            {'name': '13/8'},
+            {'name': '14/8'},
+            {'name': '15/8'},
+            {'name': '16/8'},
+            {'name': '2/2'},
+            {'name': '3/2'},
+            {'name': '4/2'},
+            {'name': 'none'}
+        ],
+        noteLengths: [
+            {'name': '1/8'},
+            {'name': '1/4'},
+            {'name': '1/2'},
+            {'name': '1/1'},
+            {'name': '1/16'},
+            {'name': '1/32'},
+            {'name': '1/64'},
+            {'name': '1/128'}
+        ],
+        originators: null,
+        regions: null,
+        rythms: null
+    },
     actions: {
+        populateAllLists: function () {
+            http.Get('resources/tunes/abc', hex.actions.generateList, http.Method.GET);
+            hex.actions.getAutoCompleteData();
+        },
+        getAutoCompleteData: function() {
+            http.Get('resources/tunes/abc/composers', hex.actions.generateComposerList, http.Method.GET);
+            http.Get('resources/tunes/abc/keys', hex.actions.generateKeyList, http.Method.GET);
+            http.Get('resources/tunes/abc/originators', hex.actions.generateOriginatorList, http.Method.GET);
+            http.Get('resources/tunes/abc/rythms', hex.actions.generateRythmList, http.Method.GET);
+            http.Get('resources/tunes/abc/regions', hex.actions.generateRegionList, http.Method.GET);
+        },
         clearEditorArea: function () {
             dom.clearNode('editor-area');
         },
@@ -8,6 +65,21 @@ hex = {
         },
         clearList: function () {
             dom.clearNode('list');
+        },
+        generateComposerList: function (jsonData) {
+            hex.lists.composers = jsonData;
+        },
+        generateOriginatorList: function (jsonData) {
+            hex.lists.originators = jsonData;
+        },
+        generateRegionList: function (jsonData) {
+            hex.lists.regions = jsonData;
+        },
+        generateRythmList: function (jsonData) {
+            hex.lists.rythms = jsonData;
+        },
+        generateKeyList: function (jsonData) {
+            hex.lists.keys = jsonData;
         },
         generateList: function (jsonData) {
             var tunes = jsonData.tunes;
@@ -55,13 +127,14 @@ hex = {
                 hex.actions.createTuneEditForm(null);
             }
         },
-        list: function () {
+        listTunes: function () {
             hex.actions.clearList();
             http.Get('resources/tunes/abc', hex.actions.generateList);
         }
     },
     editor: {
         create: function (jsonData) {
+            hex.actions.populateAllLists();
             var tuneDto = new dto.in.Tune(jsonData);
             var method = tuneDto.isNew() ? http.Method.POST : http.Method.PUT;
             var editorForm = new element.Form('edit-form');
@@ -97,6 +170,17 @@ hex = {
                 result.appendChild(textField.getElement());
                 return result;
             },
+            longDataListRow: function (value, text, tuneField, items) {
+                var result = dom.createNode('div');
+                var label = new element.Label(text + ':', tuneField + '-field');
+                var dataListField = new element.DataList(tuneField, tuneField + '-field');
+                dataListField.setCssClass('long-text-field');
+                dataListField.setValue(value);
+                dataListField.setDataList(items);
+                result.appendChild(label.getElement());
+                result.appendChild(dataListField.getElement());
+                return result;
+            },
             titleRow: function (value) {
                 return hex.editor.elements.longTextFieldRow(value, 'Title', 'title', true);
             },
@@ -104,16 +188,16 @@ hex = {
                 return hex.editor.elements.longTextFieldRow(value, 'Undertitel', 'subheader');
             },
             composerRow: function (value) {
-                return hex.editor.elements.longTextFieldRow(value, 'Kompositör', 'composer');
+                return hex.editor.elements.longDataListRow(value, 'Kompositör', 'composer', hex.lists.composers);
             },
             originatorRow: function (value) {
-                return hex.editor.elements.longTextFieldRow(value, 'Efter', 'originator');
+                return hex.editor.elements.longDataListRow(value, 'Efter', 'originator', hex.lists.originators);
             },
             rythmRow: function (value) {
-                return hex.editor.elements.longTextFieldRow(value, 'Låttyp', 'rythm');
+                return hex.editor.elements.longDataListRow(value, 'Låttyp', 'rythm', hex.lists.rythms);
             },
             regionRow: function (value) {
-                return hex.editor.elements.longTextFieldRow(value, 'Plats', 'region');
+                return hex.editor.elements.longDataListRow(value, 'Plats', 'region', hex.lists.regions);
             },
             historyRow: function (value) {
                 return hex.editor.elements.longTextFieldRow(value, 'Historik', 'history');
@@ -137,28 +221,31 @@ hex = {
                 var meterLabel = new element.Label('Taktart:', 'meter-field');
                 meterLabelContainer.appendChild(meterLabel.getElement());
                 var meterContainer = dom.createNode('td');
-                var meterTextField = new element.TextField('meter');
-                meterTextField.setId('meter-field');
+                var meterTextField = new element.DataList('meter', 'meter-field');
                 meterTextField.setCssClass('short-text-field');
                 meterTextField.setValue(tuneDto.getMeter());
                 meterContainer.appendChild(meterTextField.getElement());
+                meterTextField.setDataList(hex.lists.meters);
                 var lengthLabelContainer = dom.createNode('td');
                 lengthLabelContainer.setAttribute('class', 'label');
                 var defaultLengthLabel = new element.Label('Notlängd:', 'unit-note-length-field');
                 lengthLabelContainer.appendChild(defaultLengthLabel.getElement());
                 var lengthContainer = dom.createNode('td');
-                var defaultLengthTextField = new element.TextField('unit-note-length');
-                defaultLengthTextField.setId('unit-note-length');
-                defaultLengthTextField.setCssClass('unit-note-length-field');
+                var defaultLengthTextField = new element.DataList('unit-note-length', 'unit-note-length-field');
+                defaultLengthTextField.setCssClass('short-text-field');
                 defaultLengthTextField.setValue(tuneDto.getUnitNoteLength());
+                defaultLengthTextField.setDataList(hex.lists.noteLengths);
                 lengthContainer.appendChild(defaultLengthTextField.getElement());
                 var keyLabelContainer = dom.createNode('td');
                 keyLabelContainer.setAttribute('class', 'label');
                 var keyLabel = new element.Label('Tonart:', 'key-field');
                 keyLabelContainer.appendChild(keyLabel.getElement());
                 var keyContainer = dom.createNode('td');
-                var keyTextField = element.DataList('key-signature', 'key-field', 'short-text-field', tuneDto.getKey().getSignature());
-                keyContainer.appendChild(keyTextField);
+                var keyTextField = new element.DataList('key-signature', 'key-field');
+                keyTextField.setCssClass('short-text-field');
+                keyTextField.setValue(tuneDto.getKey().getSignature());
+                keyTextField.setDataList(hex.lists.keys);
+                keyContainer.appendChild(keyTextField.getElement());
                 row.appendChild(meterLabelContainer);
                 row.appendChild(meterContainer);
                 row.appendChild(lengthLabelContainer);
@@ -238,9 +325,11 @@ hex = {
         }
     },
     menu: {
+        add: function (element) {
+            $('menu-area').appendChild(element);
+        },
         create: function () {
             this.addSearchBox();
-            this.addSearchTuneTrigger();
             this.addTuneListTrigger();
             this.addExportTrigger();
             this.addImportTrigger();
@@ -250,32 +339,30 @@ hex = {
             var searchField = new element.SearchField('titles');
             searchField.setId('tune-title-list');
             searchField.setCssClass('search-box');
-            $('menu-area').appendChild(searchField.getElement());
-        },
-        addSearchTuneTrigger: function () {
             var searchTuneButton = new element.IconButton('magnifier', 'Sök');
-            $('menu-area').appendChild(searchTuneButton.getElement());
+            this.add(searchField.getElement());
+            this.add(searchTuneButton.getElement());
         },
         addTuneListTrigger: function () {
-            var tuneListTrigger = new element.IconButton('directory_listing', null, null, 'Låtlista');
+            var tuneListTrigger = new element.IconButton('directory_listing', 'Låtlista');
             tuneListTrigger.setTooltip('Visa eller uppdatara låtlistan.');
             tuneListTrigger.addIconClickedAction(function () {
-                hex.actions.list();
+                hex.actions.listTunes();
             });
-            $('menu-area').appendChild(tuneListTrigger.getElement());
+            this.add(tuneListTrigger.getElement());
         },
         addExportTrigger: function () {
-            var exportTrigger = new element.IconButton('document_export', null, null, 'Exportera');
+            var exportTrigger = new element.IconButton('document_export', 'Exportera');
             exportTrigger.setTooltip('Ladda ner alla låtar som en abc-fil till din dator.');
             exportTrigger.addIconClickedAction(function () {
                 hex.actions.downloadAll();
             });
-            $('menu-area').appendChild(exportTrigger.getElement());
+            this.add(exportTrigger.getElement());
         },
         addImportTrigger: function () {
             var importTrigger = new element.FileUploader('file', 'resources/tunes/abc/upload');
             importTrigger.setTooltip('Ladda upp en abc-fil till servern.');
-            $('menu-area').appendChild(importTrigger.getElement());
+            this.add(importTrigger.getElement());
         },
         addNewTunewButton: function () {
             var addTuneTrigger = new element.IconButton('add', 'Ny låt');
@@ -283,11 +370,10 @@ hex = {
             addTuneTrigger.addIconClickedAction(function () {
                 hex.actions.edit();
             });
-            $('menu-area').appendChild(addTuneTrigger.getElement());
+            this.add(addTuneTrigger.getElement());
         }
     }
-
 };
-alert('Laddar låtar');
+alert('Välkommen');
 hex.actions.createMenu();
-http.Get('resources/tunes/abc', hex.actions.generateList, http.Method.GET);
+hex.actions.populateAllLists();

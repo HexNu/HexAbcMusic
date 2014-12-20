@@ -30,7 +30,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  * @author hln
  */
 @Path("tunes/abc")
-public class AbcResource extends AbstractResource {
+public class TuneResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

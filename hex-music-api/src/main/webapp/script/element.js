@@ -157,31 +157,57 @@ var element = {
      * 
      * @param {type} name
      * @param {type} id
-     * @param {type} cssClass
-     * @param {type} value
-     * @returns {form.DataList.dataListContainer|Element}
+     * @returns {element.DataList}
      */
-    DataList: function (name, id, cssClass, value) {
-        var dataListContainer = dom.createNode('div');
-        var list = dom.createNode('input');
-        list.setAttribute('name', name);
-        list.setAttribute('id', id + '-input');
-        list.setAttribute('list', id + '-datalist');
-        var inputValue = value !== null && value !== undefined ? value : '';
-        list.setAttribute('value', inputValue);
-        if (cssClass !== undefined && cssClass !== null) {
-            dataListContainer.setAttribute('class', cssClass);
-        }
-        dataListContainer.appendChild(list);
-        var dataList = dom.createNode('datalist');
-        dataList.setAttribute('id', id + '-datalist');
-        var select = dom.createNode('select');
-        select.setAttribute('id', id);
-        dataList.appendChild(select);
-        dataListContainer.appendChild(dataList);
-        return dataListContainer;
+    DataList: function (name, id) {
+        // Här kan det vara buggigt...
+        this.domElement = dom.createNode('div');
+        this.domElement.setAttribute('id', id);
+        this.list = dom.createNode('input');
+        this.list.setAttribute('name', name);
+        this.list.setAttribute('id', id + '-input');
+        this.list.setAttribute('list', id + '-datalist');
+        this.domElement.appendChild(this.list);
+        this.dataList = dom.createNode('datalist');
+        this.dataList.setAttribute('id', id + '-datalist');
+        this.select = dom.createNode('select');
+        this.select.setAttribute('id', id + '-select');
+        this.dataList.appendChild(this.select);
+        this.domElement.appendChild(this.dataList);
     }
 };
+element.DataList.prototype = {
+    setValue: function (value) {
+        this.value = value !== null && value !== undefined ? value : '';
+        this.list.setAttribute('value', this.value);
+    },
+    setDataList: function (items) {
+        this.items = items || null;
+        if (this.items !== null) {
+            this.clearDataList();
+            for (var i = 0; i < this.items.length; i++) {
+                var opt = dom.createNode('option');
+                if (this.items[i].description !== undefined && this.items[i].description !== null) {
+                    opt.setAttribute('label', this.items[i].description);
+                }
+                opt.setAttribute('value', this.items[i].name);
+                this.select.appendChild(opt);
+            }
+        }
+    },
+    clearDataList: function () {
+        this.select.innerHTML = '';
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+},
 element.NumberChooserField.prototype = {
     setValue: function (value) {
         this.value = value || 0;
