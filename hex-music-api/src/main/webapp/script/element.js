@@ -28,7 +28,32 @@ var element = {
      */
     Form: function (id) {
         this.domElement = dom.createNode('form');
+        this.table = dom.createNode('table');
+        this.table.setAttribute('style', 'border-collapse: collapse; border-spacing: 0');
+        this.domElement.appendChild(this.table);
         this.setId(id);
+    },
+    /**
+     * 
+     * @returns {element.FormRow}
+     */
+    FormRow: function () {
+        this.domElement = dom.createNode('tr');
+    },
+    /**
+     * 
+     * @param {type} header
+     * @returns {element.FormHeader}
+     */
+    FormHeader: function (header) {
+        this.domElement = dom.createNode('th', header);
+    },
+    /**
+     * 
+     * @returns {element.FormCell}
+     */
+    FormCell: function () {
+        this.domElement = dom.createNode('td');
     },
     /**
      * 
@@ -174,6 +199,32 @@ var element = {
         this.select.setAttribute('id', id + '-select');
         this.dataList.appendChild(this.select);
         this.domElement.appendChild(this.dataList);
+    },
+    HiddenField: function (name) {
+        this.domElement = dom.createNode('input');
+        this.domElement.setAttribute('name', name);
+        this.domElement.setAttribute('type', 'hidden');
+    }
+};
+
+/**********  PROTOTYPE **********/
+
+element.HiddenField.prototype = {
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
+    getValue: function () {
+        return this.value;
+    },
+    setValue: function (value) {
+        this.value = value !== null && value !== undefined ? value : '';
+        this.domElement.setAttribute('value', this.value);
+    },
+    getElement: function () {
+        return this.domElement;
     }
 };
 element.DataList.prototype = {
@@ -181,6 +232,11 @@ element.DataList.prototype = {
         this.value = value !== null && value !== undefined ? value : '';
         this.list.setAttribute('value', this.value);
     },
+    /**
+     * 
+     * @param {type} items "[{ 'name': 'namn', 'description','beskrivning'}]"
+     * @returns {undefined}
+     */
     setDataList: function (items) {
         this.items = items || null;
         if (this.items !== null) {
@@ -201,8 +257,14 @@ element.DataList.prototype = {
     setCssClass: function (cssClass) {
         this.cssClass = cssClass || null;
         if (this.cssClass !== null) {
-            this.domElement.setAttribute('class', this.cssClass);
+            this.list.setAttribute('class', this.cssClass);
         }
+    },
+    setStyle: function (style) {
+        this.list.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.list.setAttribute('title', tooltip);
     },
     getElement: function () {
         return this.domElement;
@@ -233,6 +295,12 @@ element.NumberChooserField.prototype = {
             this.domElement.setAttribute('class', this.cssClass);
         }
     },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    },
     getElement: function () {
         return this.domElement;
     }
@@ -259,6 +327,12 @@ element.SearchField.prototype = {
             this.domElement.setAttribute('class', this.cssClass);
         }
     },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    },
     getElement: function () {
         return this.domElement;
     }
@@ -266,6 +340,9 @@ element.SearchField.prototype = {
 element.Form.prototype = {
     addElement: function (childElement) {
         this.domElement.appendChild(childElement);
+    },
+    addRow: function (formRow) {
+        this.table.appendChild(formRow);
     },
     setId: function (id) {
         this.id = id || null;
@@ -297,16 +374,124 @@ element.Form.prototype = {
             this.domElement.setAttribute('class', this.cssClass);
         }
     },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
+element.FormRow.prototype = {
+    addElement: function (element) {
+        this.domElement.appendChild(element);
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
+element.FormHeader.prototype = {
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    },
+    setColSpan: function (colSpan) {
+        this.colSpan = colSpan;
+        if (this.colSpan !== undefined && this.colSpan !== null && parseInt(this.colSpan) !== NaN) {
+            this.domElement.setAttribute('colspan', this.colSpan);
+        }
+    },
+    setRowSpan: function (rowSpan) {
+        this.rowSpan = rowSpan;
+        if (this.rowSPan !== undefined && this.rowSpan !== null && parseInt(this.rowSpan) !== NaN) {
+            this.domElement.setAttribute('rowspan', this.rowSpan);
+        }
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
+element.FormCell.prototype = {
+    addElement: function (element) {
+        this.domElement.appendChild(element);
+    },
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    },
+    setColSpan: function (colSpan) {
+        this.colSpan = colSpan;
+        if (this.colSpan !== undefined && this.colSpan !== null && parseInt(this.colSpan) !== NaN) {
+            this.domElement.setAttribute('colspan', this.colSpan);
+        }
+    },
+    setRowSpan: function (rowSpan) {
+        this.rowSpan = rowSpan;
+        if (this.rowSPan !== undefined && this.rowSpan !== null && parseInt(this.rowSpan) !== NaN) {
+            this.domElement.setAttribute('rowspan', this.rowSpan);
+        }
+    },
     getElement: function () {
         return this.domElement;
     }
 };
 element.FileUploader.prototype = {
-    getElement: function () {
-        return this.domElement;
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
     },
     setTooltip: function (tooltip) {
         this.domElement.setAttribute('title', tooltip);
+    },
+    getElement: function () {
+        return this.domElement;
     }
 };
 element.FileChooser.prototype = {
@@ -321,6 +506,12 @@ element.FileChooser.prototype = {
         if (this.cssClass !== null) {
             this.domElement.setAttribute('class', this.cssClass);
         }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
     },
     getElement: function () {
         return this.domElement;
@@ -341,6 +532,12 @@ element.SelectList.prototype = {
         if (this.cssClass !== null) {
             this.domElement.setAttribute('class', this.cssClass);
         }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
     },
     setSelectedIndex: function (selectedIndex) {
         this.selectedIndex = selectedIndex || null;
@@ -367,6 +564,12 @@ element.TextField.prototype = {
         if (this.cssClass !== null) {
             this.domElement.setAttribute('class', this.cssClass);
         }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
     },
     setValue: function (value) {
         this.value = value || '';
@@ -395,6 +598,18 @@ element.TextArea.prototype = {
     getName: function () {
         return this.name;
     },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
+    },
     getElement: function () {
         return this.domElement;
     }
@@ -403,8 +618,14 @@ element.Label.prototype = {
     setCssClass: function (cssClass) {
         this.cssClass = cssClass || null;
         if (this.cssClass !== null) {
-            this.domElement.setAttribute('class', cssClass);
+            this.domElement.setAttribute('class', this.cssClass);
         }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
     },
     getElement: function () {
         return this.domElement;
@@ -419,17 +640,23 @@ element.Border.prototype = {
             dom.setText(legendNode, this.legend);
         }
     },
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
     setCssClass: function (cssClass) {
         this.cssClass = cssClass || null;
         if (this.cssClass !== null) {
             this.domElement.setAttribute('class', this.cssClass);
         }
     },
-    setId: function (id) {
-        this.id = id || null;
-        if (this.id !== null) {
-            this.domElement.setAttribute('id', this.id);
-        }
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
     },
     addChild: function (element) {
         this.domElement.appendChild(element);
@@ -454,11 +681,17 @@ element.IconButton.prototype = {
             this.domElement.setAttribute('id', this.id);
         }
     },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
     setTooltip: function (tooltip) {
         this.domElement.setAttribute('title', tooltip);
-    },
-    setCssClass: function (cssClass) {
-        this.domElement.setAttribute('class', cssClass);
     },
     getElement: function () {
         return this.domElement;

@@ -126,7 +126,7 @@ public class AbcDocumentParser {
                 if (key == null) {
                     key = p;
                 } else {
-                    properties.put(key, p.replaceAll("\"", ""));
+                    properties.put(key, p.trim().replaceAll("\"", ""));
                     key = null;
                 }
             }
@@ -162,14 +162,29 @@ public class AbcDocumentParser {
 
     private void setValueFromLine(Tune tune, String line) {
         String field = line.substring(0, 1);
-        String value = getFieldValue(line);
+        String value = getFieldValue(line).trim();
         switch (field) {
+            case "A":
+                // Area, not implemented. (Deprecated i abc, används för förattare i Folkwikin)
+                break;
+            case "B":
+                tune.setBibliography(value);
+                break;
             case "C":
                 if (value.toLowerCase().startsWith("efter")) {
-                    tune.setOriginator(value);
+                    tune.setSource(value);
                 } else {
                     tune.setComposer(value);
                 }
+                break;
+            case "D":
+                tune.setDiscography(value);
+                break;
+            case "F":
+                tune.setUri(value);
+                break;
+            case "G":
+                // TODO: Group, not implemented, do not use this field
                 break;
             case "H":
                 tune.setHistory(value);
@@ -190,7 +205,7 @@ public class AbcDocumentParser {
                 tune.setRegion(value);
                 break;
             case "P":
-                // TODO: Parts, not implemented
+                // TODO: Parts, not implemented, do not use this field
                 break;
             case "Q":
                 tune.setTempo(value);

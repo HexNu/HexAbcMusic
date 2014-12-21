@@ -32,8 +32,6 @@ public class AbcTune implements Tune {
     @Column
     private String subheader;
     @Column
-    private String originator;
-    @Column
     private String composer;
     @Column
     private String source;
@@ -47,6 +45,12 @@ public class AbcTune implements Tune {
     private String transcriber;
     @Column
     private String rythm;
+    @Column
+    private String bibliography;
+    @Column
+    private String discography;
+    @Column
+    private String uri;
     @Column
     private String meter;
     @Column
@@ -111,16 +115,6 @@ public class AbcTune implements Tune {
     }
 
     @Override
-    public String getOriginator() {
-        return originator;
-    }
-
-    @Override
-    public void setOriginator(String originator) {
-        this.originator = originator;
-    }
-
-    @Override
     public String getRythm() {
         return rythm;
     }
@@ -178,6 +172,36 @@ public class AbcTune implements Tune {
     @Override
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public String getBibliography() {
+        return bibliography;
+    }
+
+    @Override
+    public void setBibliography(String bibliography) {
+        this.bibliography = bibliography;
+    }
+
+    @Override
+    public String getDiscography() {
+        return discography;
+    }
+
+    @Override
+    public void setDiscography(String discography) {
+        this.discography = discography;
+    }
+
+    @Override
+    public String getUri() {
+        return uri;
+    }
+
+    @Override
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     @Override

@@ -1,7 +1,11 @@
 package hex.music.api.dto;
 
 import hex.music.core.domain.Tune;
+import hex.music.fw.domain.SearchResult;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.UriBuilder;
 
 /**
@@ -43,6 +47,16 @@ public class LinkDTOBuilder {
 
     public LinkDTO createTuneEditLink(Tune tune) {
         LinkDTO linkDTO = new LinkDTO("edit", createURI("tunes/abc/edit/" + tune.getId()));
+        return linkDTO;
+    }
+
+    public LinkDTO createFwTuneDownloadLink(SearchResult result) {
+        LinkDTO linkDTO = new LinkDTO("download", createURI("tunes/fw/download/" + result.getFwId()));
+        return linkDTO;
+    }
+
+    public LinkDTO createFwTunePageLink(SearchResult result) {
+        LinkDTO linkDTO = new LinkDTO("view-page", UriBuilder.fromPath(result.getPageUrl()).build());
         return linkDTO;
     }
 }

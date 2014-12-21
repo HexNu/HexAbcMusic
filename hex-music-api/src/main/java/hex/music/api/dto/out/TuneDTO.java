@@ -15,13 +15,15 @@ public class TuneDTO extends AbstractDTO {
     private final String title;
     private final String subheader;
     private final String composer;
-    private final String originator;
+    private final String source;
     private final String rythm;
     private final String region;
     private final String history;
     private final String notes;
     private final String transcriber;
-    private final String source;
+    private final String bibliography;
+    private final String discography;
+    private final String uri;
     private final String meter;
     private final String unitNoteLength;
     private final KeyDTO key;
@@ -32,13 +34,15 @@ public class TuneDTO extends AbstractDTO {
         this.title = tune.getTitle();
         this.subheader = tune.getSubheader();
         this.composer = tune.getComposer();
-        this.originator = tune.getOriginator();
+        this.source = tune.getSource();
         this.rythm = tune.getRythm();
         this.region = tune.getRegion();
         this.history = tune.getHistory();
         this.notes = tune.getNotes();
         this.transcriber = tune.getTranscriber();
-        this.source = tune.getSource();
+        this.bibliography = tune.getBibliography();
+        this.discography = tune.getDiscography();
+        this.uri = tune.getUri();
         this.meter = tune.getMeter();
         this.unitNoteLength = tune.getUnitNoteLength();
         this.key = new KeyDTO(tune.getKey());
@@ -63,8 +67,8 @@ public class TuneDTO extends AbstractDTO {
         return composer;
     }
 
-    public String getOriginator() {
-        return originator;
+    public String getSource() {
+        return source;
     }
 
     public String getRythm() {
@@ -87,8 +91,16 @@ public class TuneDTO extends AbstractDTO {
         return transcriber;
     }
 
-    public String getSource() {
-        return source;
+    public String getBiliography() {
+        return bibliography;
+    }
+
+    public String getDiscography() {
+        return discography;
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     public String getMeter() {

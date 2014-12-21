@@ -49,15 +49,12 @@ public class AbcDocumentProducer {
         createKeyValueRow(result, Field.T, data.getTitle());
         createKeyValueRow(result, Field.T, data.getSubheader());
         createKeyValueRow(result, Field.C, data.getComposer());
-        if (data.getOriginator() != null) {
-            createKeyValueRow(result, Field.C, "efter " + data.getOriginator());
-        }
         createKeyValueRow(result, Field.Q, data.getTempo());
     }
 
     private void createKeyValueRow(StringBuilder result, Field key, String value) {
         if (value != null) {
-            result.append(key.name()).append(":").append(value).append("\n");
+            result.append(key.name()).append(": ").append(value).append("\n");
         }
     }
 
@@ -68,6 +65,9 @@ public class AbcDocumentProducer {
         createKeyValueRow(result, Field.H, data.getHistory());
         createKeyValueRow(result, Field.N, data.getNotes());
         createKeyValueRow(result, Field.Z, data.getTranscriber());
+        createKeyValueRow(result, Field.B, data.getBibliography());
+        createKeyValueRow(result, Field.D, data.getDiscography());
+        createKeyValueRow(result, Field.F, data.getUri());
         createKeyValueRow(result, Field.M, data.getMeter());
         createKeyValueRow(result, Field.L, data.getUnitNoteLength());
         createMusicKeyRow(result);

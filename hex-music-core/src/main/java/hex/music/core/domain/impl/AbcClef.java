@@ -22,18 +22,16 @@ public class AbcClef implements Clef {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private Type type = DEFAULT_TYPE;
     @Column
-    private int transpose;
+    private int transpose = DEFAULT_TRANSPOSE;
     @Column
-    private String middle;
+    private String middle = DEFAULT_MIDDLE;
 
     public AbcClef() {
-        this(DEFAULT_TYPE, DEFAULT_TRANSPOSE);
     }
 
     public AbcClef(Type type) {
-        this(type, DEFAULT_TRANSPOSE);
     }
 
     public AbcClef(Type type, int transpose) {

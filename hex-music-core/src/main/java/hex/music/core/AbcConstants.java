@@ -11,7 +11,10 @@ public interface AbcConstants {
 
     public enum Field {
 
+        B,
         C,
+        D,
+        F,
         H,
         J,
         K,

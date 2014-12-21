@@ -7,10 +7,10 @@ import java.util.List;
  *
  * @author hln
  */
-public class GetExistingOriginatorsCommand extends AbstractServiceCommand<List<String>> {
+public class GetExistingTranscribersCommand extends AbstractServiceCommand<List<String>> {
 
     @Override
     public List<String> execute() {
-        return getDaoFactory().getTuneDao().getOriginators();
+        return getDaoFactory().getTuneDao().getTranscribers();
     }
 }

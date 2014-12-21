@@ -72,24 +72,6 @@ public interface Tune extends DomainEntity {
     void setComposer(String composer);
 
     /**
-     * The musician that the tune originates from.
-     *
-     * i. e. Katrina Lundstet. If the composer is known, use that field.
-     *
-     * Field in abc: C
-     *
-     * @return
-     */
-    String getOriginator();
-
-    /**
-     * Field in abc: C
-     *
-     * @param originator
-     */
-    void setOriginator(String originator);
-
-    /**
      * The type of rythm.
      *
      * i.e. Polska, Vals et al.
@@ -128,7 +110,7 @@ public interface Tune extends DomainEntity {
     /**
      * The source for the tune.
      *
-     * i.e. Svenska låtar Hälsingland nr 633
+     * i.e. efter Pekkos-Helmer
      *
      * Field in abc: S
      *
@@ -198,6 +180,60 @@ public interface Tune extends DomainEntity {
     void setTranscriber(String transcriber);
 
     /**
+     * The printed source for the tune.
+     *
+     * i.e B:Svenska låtar, Jämtland och Härjedalen, nr 211
+     *
+     * Field in abc: B
+     *
+     * @return
+     */
+    String getBibliography();
+
+    /**
+     * Field in abc: B
+     *
+     * @param bibliography
+     */
+    void setBibliography(String bibliography);
+
+    /**
+     * Recording information for the tune.
+     *
+     * i.e På tre man hand, Jonas Olsson, Fredrik Lind...
+     *
+     * Field in abc: D
+     *
+     * @return
+     */
+    String getDiscography();
+
+    /**
+     * Field in abc: D
+     *
+     * @param discography
+     */
+    void setDiscography(String discography);
+
+    /**
+     * Where the tune or file can be located.
+     *
+     * i.e http://folkwiki.se/Musik/991
+     *
+     * Field in abc: F
+     *
+     * @return
+     */
+    String getUri();
+
+    /**
+     * Field in abc: F
+     *
+     * @param uri
+     */
+    void setUri(String uri);
+
+    /**
      * The meter for the tune.
      *
      * i.e. 2/4, 9/8
@@ -252,12 +288,6 @@ public interface Tune extends DomainEntity {
     void setKey(Key key);
 
     /**
-     * The tempo for the tune in beats per minute.
-     *
-     * i.e. 1/4=112
-     *
-     * Also used when converted to midi file. Default tempo is 1/4=120
-     *
      * Field in abc: Q
      *
      * @return
@@ -265,6 +295,12 @@ public interface Tune extends DomainEntity {
     String getTempo();
 
     /**
+     * The tempo for the tune in beats per minute.
+     *
+     * i.e. 1/4=112
+     *
+     * Also used when converted to midi file. Default tempo is 1/4=120
+     *
      * Field in abc: Q
      *
      * @param tempo

@@ -7,6 +7,7 @@ package hex.music.core.domain;
 public interface Clef extends DomainEntity {
 
     public static final int DEFAULT_TRANSPOSE = 0;
+    public static final String DEFAULT_MIDDLE = "B";
     public static final Type DEFAULT_TYPE = Type.TREBLE;
 
     Type getType();

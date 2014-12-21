@@ -28,7 +28,7 @@ public class TuneDao extends GenericDao<Tune, Long> {
         return getManager().createNativeQuery("SELECT DISTINCT `composer` FROM `Tune`  WHERE `composer` IS NOT NULL ORDER BY `composer`").getResultList();
     }
 
-    public List<String> getOriginators() {
+    public List<String> getSources() {
         return getManager().createNativeQuery("SELECT DISTINCT `originator` FROM `Tune`  WHERE `originator` IS NOT NULL ORDER BY `originator`").getResultList();
     }
 
@@ -38,5 +38,9 @@ public class TuneDao extends GenericDao<Tune, Long> {
 
     public List<String> getRythms() {
         return getManager().createNativeQuery("SELECT DISTINCT `rythm` FROM `Tune`  WHERE `rythm` IS NOT NULL ORDER BY `rythm`").getResultList();
+    }
+
+    public List<String> getTranscribers() {
+        return getManager().createNativeQuery("SELECT DISTINCT `transcriber` FROM `Tune`  WHERE `transcriber` IS NOT NULL ORDER BY `transcriber`").getResultList();
     }
 }

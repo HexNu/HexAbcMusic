@@ -1,13 +1,17 @@
 package hex.music.api.resource;
 
+import hex.music.api.dto.out.ClefTypeListItemDTO;
 import hex.music.api.dto.out.KeySignatureListItemDTO;
 import hex.music.api.dto.out.ListItemDTO;
+import hex.music.core.domain.Clef;
 import hex.music.core.domain.Key;
+import hex.music.service.command.tune.GetAvailableClefsCommand;
 import hex.music.service.command.tune.GetAvailableKeysCommand;
 import hex.music.service.command.tune.GetExistingComposersCommand;
-import hex.music.service.command.tune.GetExistingOriginatorsCommand;
+import hex.music.service.command.tune.GetExistingSourcesCommand;
 import hex.music.service.command.tune.GetExistingRegionsCommand;
 import hex.music.service.command.tune.GetExistingRythmsCommand;
+import hex.music.service.command.tune.GetExistingTranscribersCommand;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.GET;
@@ -36,6 +40,18 @@ public class AutoCompleteResource extends AbstractResource {
     }
 
     @GET
+    @Path("clefs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClefList() {
+        List<Clef.Type> clefs = commandExecutor.execute(new GetAvailableClefsCommand(), getKey());
+        List<ClefTypeListItemDTO> result = new ArrayList<>();
+        clefs.stream().forEach((c) -> {
+            result.add(new ClefTypeListItemDTO(c));
+        });
+        return Response.ok(result).build();
+    }
+
+    @GET
     @Path("composers")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getComposerList() {
@@ -44,10 +60,10 @@ public class AutoCompleteResource extends AbstractResource {
     }
 
     @GET
-    @Path("originators")
+    @Path("source")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOriginatorList() {
-        List<String> resultList = commandExecutor.execute(new GetExistingOriginatorsCommand(), getKey());
+        List<String> resultList = commandExecutor.execute(new GetExistingSourcesCommand(), getKey());
         return createAndReturnResponse(resultList);
     }
 
@@ -64,6 +80,14 @@ public class AutoCompleteResource extends AbstractResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRythmList() {
         List<String> resultList = commandExecutor.execute(new GetExistingRythmsCommand(), getKey());
+        return createAndReturnResponse(resultList);
+    }
+
+    @GET
+    @Path("transcribers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTranscriberList() {
+        List<String> resultList = commandExecutor.execute(new GetExistingTranscribersCommand(), getKey());
         return createAndReturnResponse(resultList);
     }
 
