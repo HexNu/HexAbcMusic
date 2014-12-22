@@ -29,7 +29,7 @@ public class TuneDao extends GenericDao<Tune, Long> {
     }
 
     public List<String> getSources() {
-        return getManager().createNativeQuery("SELECT DISTINCT `originator` FROM `Tune`  WHERE `originator` IS NOT NULL ORDER BY `originator`").getResultList();
+        return getManager().createNativeQuery("SELECT DISTINCT `source` FROM `Tune`  WHERE `source` IS NOT NULL ORDER BY `source`").getResultList();
     }
 
     public List<String> getRegions() {
