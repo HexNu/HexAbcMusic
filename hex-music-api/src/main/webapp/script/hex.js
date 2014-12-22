@@ -251,3 +251,4 @@ hex = {
 };
 hex.actions.createMenu();
 hex.actions.populateAllLists();
+alert('Välkommen');

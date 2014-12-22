@@ -62,7 +62,7 @@ public class AutoCompleteResource extends AbstractResource {
     @GET
     @Path("source")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOriginatorList() {
+    public Response getSourceList() {
         List<String> resultList = commandExecutor.execute(new GetExistingSourcesCommand(), getKey());
         return createAndReturnResponse(resultList);
     }

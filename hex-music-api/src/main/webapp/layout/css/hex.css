@@ -28,6 +28,7 @@ div.voice-editor {background-color: #FFF; opacity: 1;}
 .left-form-container {width: 14em; float: left}
 .right-form-container {width: 14em; float: right}*/
 #editor-area {background-color: #F9F9F9; padding: 10px; position: absolute; top: 100px; left: 400px;}
+#edit-form * input, #edit-form * textarea {font-family: Verdana, Helvetica, sans-serif; font-size: 11px;}
 /**** FIL-IMPORT  ****/
 #file-upload-form {display: inline}
 #file-upload {display: none}

@@ -55,6 +55,9 @@ var element = {
     FormCell: function () {
         this.domElement = dom.createNode('td');
     },
+    VoiceMenu: function () {
+        this.domElement = dom.createNode('td');
+    },
     /**
      * 
      * @param {type} fieldName
@@ -243,7 +246,7 @@ element.DataList.prototype = {
             this.clearDataList();
             for (var i = 0; i < this.items.length; i++) {
                 var opt = dom.createNode('option');
-                if (this.items[i].description !== undefined && this.items[i].description !== null) {
+                if (this.items[i].description !== null && this.items[i].description !== undefined) {
                     opt.setAttribute('label', this.items[i].description);
                 }
                 opt.setAttribute('value', this.items[i].name);
@@ -477,6 +480,29 @@ element.FormCell.prototype = {
         return this.domElement;
     }
 };
+element.VoiceMenu.prototype = {
+    addElement: function (element) {
+        this.domElement.appendChild(element);
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setColSpan: function (colSpan) {
+        this.colSpan = colSpan;
+        if (this.colSpan !== undefined && this.colSpan !== null && parseInt(this.colSpan) !== NaN) {
+            this.domElement.setAttribute('colspan', this.colSpan);
+        }
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
 element.FileUploader.prototype = {
     setCssClass: function (cssClass) {
         this.cssClass = cssClass || null;
@@ -589,10 +615,10 @@ element.TextArea.prototype = {
             this.domElement.setAttribute('id', this.id);
         }
     },
-    setText: function (text) {
-        this.text = text || null;
-        if (this.text !== null) {
-            this.domElement.value = this.text;
+    setValue: function (value) {
+        this.value = value || null;
+        if (this.value !== null) {
+            this.domElement.value = this.value;
         }
     },
     getName: function () {

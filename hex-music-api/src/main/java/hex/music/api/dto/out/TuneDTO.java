@@ -26,7 +26,12 @@ public class TuneDTO extends AbstractDTO {
     private final String uri;
     private final String meter;
     private final String unitNoteLength;
-    private final KeyDTO key;
+    private final String key;
+    private final String clef;
+    private final String transpose;
+    private final String middle;
+
+//    private final KeyDTO key;
     private final List<VoiceDTO> voices = new ArrayList<>();
 
     public TuneDTO(Tune tune) {
@@ -45,7 +50,10 @@ public class TuneDTO extends AbstractDTO {
         this.uri = tune.getUri();
         this.meter = tune.getMeter();
         this.unitNoteLength = tune.getUnitNoteLength();
-        this.key = new KeyDTO(tune.getKey());
+        this.key = tune.getKey().getSignature().getLabel();
+        this.clef = tune.getKey().getClef().getType().getLabel();
+        this.transpose = String.valueOf(tune.getKey().getClef().getTranspose());
+        this.middle = String.valueOf(tune.getKey().getClef().getMiddle());
         tune.getVoices().stream().forEach((voice) -> {
             voices.add(new VoiceDTO(voice));
         });
@@ -91,7 +99,7 @@ public class TuneDTO extends AbstractDTO {
         return transcriber;
     }
 
-    public String getBiliography() {
+    public String getBibliography() {
         return bibliography;
     }
 
@@ -111,8 +119,20 @@ public class TuneDTO extends AbstractDTO {
         return unitNoteLength;
     }
 
-    public KeyDTO getKey() {
+    public String getKey() {
         return key;
+    }
+
+    public String getClef() {
+        return clef;
+    }
+
+    public String getTranspose() {
+        return transpose;
+    }
+
+    public String getMiddle() {
+        return middle;
     }
 
     public List<VoiceDTO> getVoices() {

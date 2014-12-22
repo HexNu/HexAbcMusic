@@ -11,12 +11,16 @@ public class KeyDTO extends AbstractDTO {
 
     private final String id;
     private final String signature;
-    private final ClefDTO clef;
+    private final String clefType;
+    private final String transpose;
+    private final String middle;
 
     public KeyDTO(Key key) {
         this.id = String.valueOf(key.getId());
-        this.clef = new ClefDTO(key.getClef());
         this.signature = key.getSignature().getCode();
+        this.clefType = key.getClef().getType().getLabel();
+        this.transpose = String.valueOf(key.getClef().getTranspose());
+        this.middle = key.getClef().getMiddle();
     }
 
     public String getId() {
@@ -27,7 +31,15 @@ public class KeyDTO extends AbstractDTO {
         return signature;
     }
 
-    public ClefDTO getClef() {
-        return clef;
+    public String getClefType() {
+        return clefType;
+    }
+
+    public String getTranspose() {
+        return transpose;
+    }
+
+    public String getMiddle() {
+        return middle;
     }
 }
