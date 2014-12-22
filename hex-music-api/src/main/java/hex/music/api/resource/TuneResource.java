@@ -1,20 +1,23 @@
 package hex.music.api.resource;
 
 import hex.music.api.dto.LinkDTOBuilder;
+import hex.music.api.dto.out.LimitedTuneListDTO;
 import hex.music.api.dto.out.TuneDTO;
-import hex.music.api.dto.out.TuneListDTO;
-import hex.music.api.dto.out.TuneListItemDTO;
 import hex.music.core.AbcConstants;
 import hex.music.core.domain.Tune;
+import hex.music.core.domain.impl.ResultListWrapper;
 import hex.music.service.command.tune.CreateTunesFromAbcDocCommand;
 import hex.music.service.command.tune.GetAbcDocCommand;
 import hex.music.service.command.tune.GetAllTunesCommand;
 import hex.music.service.command.tune.GetTuneCommand;
+import hex.music.service.command.tune.GetLimitedTuneListCommand;
+import hex.music.service.command.tune.SearchTunesCommand;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,16 +37,22 @@ public class TuneResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTuneList() {
-        TuneListDTO result = new TuneListDTO();
+    public Response getLimitedTuneList(@DefaultValue("25") @QueryParam("limit") String limit, 
+            @DefaultValue("0") @QueryParam("offset") String offset,
+            @QueryParam("q") String q) {
+        ResultListWrapper wrapper; 
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());
-        List<Tune> tunes = commandExecutor.execute(new GetAllTunesCommand(), getKey());
-        tunes.stream().forEach((tune) -> {
-            result.addTuneListItem(new TuneListItemDTO(tune, linkDTOBuilder));
-        });
+        if (q == null) {
+            wrapper = commandExecutor.execute(new GetLimitedTuneListCommand(Integer.valueOf(limit), 
+                    Integer.valueOf(offset)), getKey());
+        } else {
+            wrapper = commandExecutor.execute(new SearchTunesCommand(Integer.valueOf(limit), 
+                    Integer.valueOf(offset), q), getKey());
+        }
+        LimitedTuneListDTO result = new LimitedTuneListDTO(wrapper, linkDTOBuilder);
         return Response.ok(result).build();
     }
-    
+
     @GET
     @Path("download")
     public Response downloadAllAbcTune(@PathParam("id") String id) throws UnsupportedEncodingException {

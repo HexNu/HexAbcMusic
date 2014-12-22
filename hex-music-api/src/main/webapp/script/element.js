@@ -365,8 +365,15 @@ element.Form.prototype = {
     addElement: function (childElement) {
         this.domElement.appendChild(childElement);
     },
-    addRow: function (formRow) {
-        this.table.appendChild(formRow);
+    addBody: function (body) {
+        this.table.appendChild(body);
+    },
+    addRow: function (formRow, body) {
+        if (body !== undefined && body !== null) {
+            body.appendChild(formRow);
+        } else {
+            this.table.appendChild(formRow);
+        }
     },
     setId: function (id) {
         this.id = id || null;

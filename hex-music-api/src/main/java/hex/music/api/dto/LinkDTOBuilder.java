@@ -3,9 +3,6 @@ package hex.music.api.dto;
 import hex.music.core.domain.Tune;
 import hex.music.fw.domain.SearchResult;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.UriBuilder;
 
 /**
@@ -33,6 +30,30 @@ public class LinkDTOBuilder {
 
     public LinkDTO createLink(String rel, String path) {
         return new LinkDTO(rel, createURI(path));
+    }
+
+    public LinkDTO createPreviousLink(Integer previous, Integer limit, String query) {
+        if (previous == null) {
+            return null;
+        }
+        String url = "tunes/abc/?limit=" + limit + "&offset=" + previous;
+        if (query != null) {
+            url += "q=" + query;
+        }
+        LinkDTO linkDTO = new LinkDTO("previous", createURI(url));
+        return linkDTO;
+    }
+
+    public LinkDTO createNextLink(Integer next, Integer limit, String query) {
+        if (next == null) {
+            return null;
+        }
+        String url = "tunes/abc/?limit=" + limit + "&offset=" + next;
+        if (query != null) {
+            url += "q=" + query;
+        }
+        LinkDTO linkDTO = new LinkDTO("next", createURI(url));
+        return linkDTO;
     }
 
     public LinkDTO createTuneDownloadLink(Tune tune) {

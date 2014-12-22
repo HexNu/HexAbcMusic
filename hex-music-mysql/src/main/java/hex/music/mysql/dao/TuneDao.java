@@ -2,6 +2,8 @@ package hex.music.mysql.dao;
 
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.impl.AbcTune;
+import hex.music.core.domain.impl.ResultListWrapper;
+import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -13,6 +15,23 @@ public class TuneDao extends GenericDao<Tune, Long> {
 
     public TuneDao(EntityManager entityManager) {
         super(AbcTune.class, entityManager);
+    }
+
+    public ResultListWrapper getLimitedTuneList(int limit, int offset) {
+        String condition = "FROM `Tune`";
+        List<Tune> resultList = (List<Tune>) getManager().createNativeQuery("SELECT * " + condition
+                + " ORDER BY `title` LIMIT " + limit + " OFFSET " + offset, AbcTune.class).getResultList();
+        BigInteger max = (BigInteger) getManager().createNativeQuery("SELECT count(*) " + condition).getSingleResult();
+        ResultListWrapper result = getLimitedResult(resultList, limit, offset, condition, null);
+        return result;
+    }
+
+    public ResultListWrapper getSearchResult(int limit, int offset, String query) {
+        String condition = "FROM `Tune` WHERE LOWER(`title`) LIKE ('%" + query.toLowerCase() + "%') ";
+        List<Tune> resultList = (List<Tune>) getManager().createNativeQuery("SELECT * " + condition
+                + "ORDER BY `title` LIMIT " + limit + " OFFSET " + offset, AbcTune.class).getResultList();
+        ResultListWrapper result = getLimitedResult(resultList, limit, offset, condition, query);
+        return result;
     }
 
     @Override
@@ -42,5 +61,15 @@ public class TuneDao extends GenericDao<Tune, Long> {
 
     public List<String> getTranscribers() {
         return getManager().createNativeQuery("SELECT DISTINCT `transcriber` FROM `Tune`  WHERE `transcriber` IS NOT NULL ORDER BY `transcriber`").getResultList();
+    }
+
+    private ResultListWrapper getLimitedResult(List<Tune> resultList, int limit, int offset, String condition, String query) {
+        BigInteger max = (BigInteger) getManager().createNativeQuery("SELECT count(*) " + condition).getSingleResult();
+        ResultListWrapper result = new ResultListWrapper(resultList, limit, query);
+        Integer previous = offset - limit >= 0 ? offset - limit : null;
+        result.setPrevious(previous);
+        Integer next = offset + limit < max.intValue() ? offset + limit : null;
+        result.setNext(next);
+        return result;
     }
 }
