@@ -54,7 +54,14 @@ public class AbcDocumentProducer {
 
     private void createKeyValueRow(StringBuilder result, Field key, String value) {
         if (value != null) {
-            result.append(key.name()).append(": ").append(value).append("\n");
+            if (value.contains("\n")) {
+                String[] values = value.split("\\n");
+                for (String v : values) {
+                    result.append(key.name()).append(": ").append(v).append("\n");
+                }
+            } else {
+                result.append(key.name()).append(": ").append(value).append("\n");
+            }
         }
     }
 

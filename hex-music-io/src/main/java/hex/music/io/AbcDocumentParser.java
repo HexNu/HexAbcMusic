@@ -187,7 +187,11 @@ public class AbcDocumentParser {
                 // TODO: Group, not implemented, do not use this field
                 break;
             case "H":
-                tune.setHistory(value);
+                if (tune.getHistory() == null) {
+                    tune.setHistory(value);
+                } else {
+                    tune.setHistory(tune.getHistory() + "\n" + value);
+                }
                 break;
             case "K":
                 tune.setKey(handleKeyProperties(line));
@@ -199,7 +203,11 @@ public class AbcDocumentParser {
                 tune.setMeter(value);
                 break;
             case "N":
-                tune.setNotes(value);
+                if (tune.getNotes()== null) {
+                    tune.setNotes(value);
+                } else {
+                    tune.setNotes(tune.getNotes()+ "\n" + value);
+                }
                 break;
             case "O":
                 tune.setRegion(value);
