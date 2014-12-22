@@ -1,6 +1,26 @@
 var element = {
     /**
      * 
+     * @param {type} url
+     * @param {type} imageName
+     * @param {type} altText
+     * @returns {undefined}
+     */
+    IconLink: function (url, imageName, altText) {
+        this.domElement = dom.createNode('a');
+        this.domElement.setAttribute('href', url);
+        this.image = dom.createNode('img');
+        this.image.setAttribute('src', 'layout/images/icons/16x16/' + imageName + '.png');
+        this.image.setAttribute('width', '16');
+        this.image.setAttribute('height', '16');
+        this.setStyle('border:none');
+        if (altText) {
+            this.image.setAttribute('alt', altText);
+        }
+        this.domElement.appendChild(this.image);
+    },
+    /**
+     * 
      * @param {type} name
      * @returns {element.NumberChooserField}
      */
@@ -88,7 +108,7 @@ var element = {
         });
         this.fileChooser.getElement().setAttribute('style', 'display:none');
         this.domElement.appendChild(this.fileChooser.getElement());
-        this.fileChooserTrigger = new element.IconButton('document_import', 'Importera');
+        this.fileChooserTrigger = new element.IconButton('page_white_get_A', 'Importera');
         this.fileChooserTrigger.addIconClickedAction(function () {
             $(fileChooserId).click();
         });
@@ -177,6 +197,7 @@ var element = {
         this.domElement.setAttribute('src', this.getImageUrl());
         this.domElement.setAttribute('width', '16');
         this.domElement.setAttribute('height', '16');
+        this.setStyle('cursor:pointer;');
         if (altText) {
             this.domElement.setAttribute('alt', altText);
         }
@@ -648,7 +669,7 @@ element.Label.prototype = {
         }
     },
     setStyle: function (style) {
-        this.domElement.setAttribute('style', style);
+        this.image.setAttribute('style', style);
     },
     setTooltip: function (tooltip) {
         this.domElement.setAttribute('title', tooltip);
@@ -686,6 +707,32 @@ element.Border.prototype = {
     },
     addChild: function (element) {
         this.domElement.appendChild(element);
+    },
+    getElement: function () {
+        return this.domElement;
+    }
+};
+element.IconLink.prototype = {
+    setId: function (id) {
+        this.id = id || null;
+        if (this.id !== null) {
+            this.domElement.setAttribute('id', this.id);
+        }
+    },
+    setTarget: function (target) {
+        this.domElement.setAttribute('target', target);
+    },
+    setCssClass: function (cssClass) {
+        this.cssClass = cssClass || null;
+        if (this.cssClass !== null) {
+            this.domElement.setAttribute('class', this.cssClass);
+        }
+    },
+    setStyle: function (style) {
+        this.domElement.setAttribute('style', style);
+    },
+    setTooltip: function (tooltip) {
+        this.domElement.setAttribute('title', tooltip);
     },
     getElement: function () {
         return this.domElement;

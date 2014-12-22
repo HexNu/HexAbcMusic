@@ -112,23 +112,20 @@ hex = {
                         if (j > 0) {
                             dom.appendText(descriptionNode, ' | ');
                         }
-                        var linkNode = dom.createNode('a', '');
+                        var fwLink;
                         if (jsonData[i].links[j].rel === 'view-page') {
-                            dom.appendText(linkNode, 'FolkWiki');
-                            linkNode.setAttribute('href', jsonData[i].links[j].uri);
-                            linkNode.setAttribute('target', 'FW');
-                            linkNode.setAttribute('title', 'Gå till låtens sida på FolkWiki');
+                            fwLink = new element.IconLink(jsonData[i].links[j].uri, 'FW_link', 'FolkWiki');
+                            fwLink.setTarget('FW');
+                            fwLink.setTooltip('Gå till låtens sida på FolkWiki');
                         } else {
-                            dom.appendText(linkNode, 'Hämta');
-                            linkNode.setAttribute('href', 'javascript:void(0)');
-                            linkNode.setAttribute('title', 'Ladda hem låten från FolkWiki');
-                            linkNode.setAttribute('link', jsonData[i].links[j].uri);
-                            linkNode.addEventListener('click', function (event) {
+                            fwLink = new element.IconButton('FW_put', 'Hämta');
+                            fwLink.setTooltip('Ladda hem låten från FolkWiki');
+                            fwLink.getElement().setAttribute('link', jsonData[i].links[j].uri);
+                            fwLink.addIconClickedAction(function (event) {
                                 hex.actions.edit(event.target.getAttribute('link'));
                             });
                         }
-                        linkNode.setAttribute('class', 'list-link');
-                        descriptionNode.appendChild(linkNode);
+                        descriptionNode.appendChild(fwLink.getElement());
                     }
                     $('list').appendChild(descriptionNode);
                 }
@@ -146,18 +143,23 @@ hex = {
                     if (j > 0) {
                         dom.appendText(descriptionNode, ' | ');
                     }
-                    var linkNode = dom.createNode('a', tunes[i].links[j].rel);
+                    var link;
                     if (tunes[i].links[j].rel === 'edit') {
-                        linkNode.setAttribute('href', 'javascript:void(0)');
-                        linkNode.setAttribute('link', tunes[i].links[j].uri);
-                        linkNode.addEventListener('click', function (event) {
+                        link = new element.IconButton('music_notes_edit', 'Redigera');
+                        link.getElement().setAttribute('link', tunes[i].links[j].uri);
+                        link.setTooltip('Redigera låten');
+                        link.addIconClickedAction(function (event) {
                             hex.actions.edit(event.target.getAttribute('link'));
                         });
+                    } else if (tunes[i].links[j].rel === 'download') {
+                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_download', 'Ladda hem');
+                        link.setTooltip('Ladda hem ABC-koden till din dator');
                     } else {
-                        linkNode.setAttribute('href', tunes[i].links[j].uri);
+                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_link', 'Granska');
+                        link.setTooltip('Visa ABC-koden');
+                        link.setTarget('abc_preview');
                     }
-                    linkNode.setAttribute('class', 'list-link');
-                    descriptionNode.appendChild(linkNode);
+                    descriptionNode.appendChild(link.getElement());
                 }
                 $('list').appendChild(descriptionNode);
             }
@@ -208,9 +210,9 @@ hex = {
             searchField.setId('search-box');
             searchField.setCssClass('search-box');
             var searchTuneButton = new element.IconButton('magnifier', 'Sök');
-            var searchFwButton = new element.IconButton('magnifier_fw', 'FW-sök');
+            var searchFwButton = new element.IconButton('FW_search', 'FW-sök');
             searchFwButton.setTooltip('Sök efter låtar på FolkWiki');
-            searchFwButton.getElement().setAttribute('accesskey','f');
+            searchFwButton.getElement().setAttribute('accesskey', 'f');
             searchFwButton.addIconClickedAction(function () {
                 hex.actions.listFwSearchResults();
             });
@@ -227,7 +229,7 @@ hex = {
             this.add(tuneListTrigger.getElement());
         },
         addExportTrigger: function () {
-            var exportTrigger = new element.IconButton('document_export', 'Exportera');
+            var exportTrigger = new element.IconButton('page_white_put_A', 'Exportera');
             exportTrigger.setTooltip('Ladda ner alla låtar som en abc-fil till din dator.');
             exportTrigger.addIconClickedAction(function () {
                 hex.actions.downloadAll();
@@ -240,7 +242,7 @@ hex = {
             this.add(importTrigger.getElement());
         },
         addNewTunewButton: function () {
-            var addTuneTrigger = new element.IconButton('add', 'Ny låt');
+            var addTuneTrigger = new element.IconButton('music_notes_add', 'Ny låt');
             addTuneTrigger.setTooltip('Lägg till en låt');
             addTuneTrigger.addIconClickedAction(function () {
                 hex.actions.edit();

@@ -37,7 +37,7 @@ public class AbcDocumentProducer {
 
     private String createResult() {
         StringBuilder result = new StringBuilder();
-        result.append("X:").append(data.getId()).append("\n");
+        result.append("X: ").append(data.getId()).append("\n");
         createTuneHeader(result);
         createTuneMetaData(result);
         createTuneBody(result);
@@ -81,7 +81,7 @@ public class AbcDocumentProducer {
     }
 
     private void createMusicKeyRow(StringBuilder result) {
-        result.append("K:").append(data.getKey().getSignature().getCode());
+        result.append("K: ").append(data.getKey().getSignature().getCode());
         Clef clef = data.getKey().getClef();
         if (!clef.getType().equals(Clef.DEFAULT_TYPE)) {
             result.append(" clef=").append(clef.getType().getCode());
@@ -97,7 +97,7 @@ public class AbcDocumentProducer {
 
     private void createTuneBody(StringBuilder result) {
         data.getVoices().stream().map((voice) -> {
-            result.append("V:").append(voice.getVoiceId() != null ? voice.getVoiceId() : Voice.DEFAULT_VOICE_ID);
+            result.append("V: ").append(voice.getVoiceId() != null ? voice.getVoiceId() : Voice.DEFAULT_VOICE_ID);
             if (data.getVoices().size() > 1) {
                 if (voice.getName() != null) {
                     result.append(" name=\"").append(voice.getName()).append("\"");
