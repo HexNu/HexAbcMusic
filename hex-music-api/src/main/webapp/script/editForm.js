@@ -21,7 +21,7 @@ var TuneEditor = function (tune) {
     this.meta.setAttribute('id', 'meta-body');
     this.form.addBody(this.meta);
     currentTuneEditor.voices = [];
-    this.idField = new element.HiddenField('id');
+    this.idField = new element.HiddenField('tuneId');
     if (tune.id !== null) {
         this.idField.setValue(tune.id);
     }
@@ -51,6 +51,7 @@ TuneEditor.prototype = {
     save: function () {
         var tf = this.getElement();
         var tuneToSave = {};
+        tuneToSave.id = tf['tuneId'].value;
         var setTuneFieldValue = function (field) {
             if (tf[field]) {
                 tuneToSave[field] = tf[field].value;
