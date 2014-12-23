@@ -53,6 +53,17 @@ var element = {
         this.domElement.appendChild(this.table);
         this.setId(id);
     },
+    FormTitleMenuBar: function () {
+        this.domElement = dom.createNode('thead');
+        this.headerRow = dom.createNode('tr');
+        this.titleCell = dom.createNode('th');
+        this.titleCell.setAttribute('style','text-align: left; padding-left: 1.2em;');
+        this.headerRow.appendChild(this.titleCell);
+        this.menuCell = dom.createNode('td');
+        this.menuCell.setAttribute('style', 'text-align: right; padding-rignt: 3px');
+        this.headerRow.appendChild(this.menuCell);
+        this.domElement.appendChild(this.headerRow);
+    },
     /**
      * 
      * @returns {element.FormRow}
@@ -211,10 +222,10 @@ var element = {
     DataList: function (name, id) {
         // Här kan det vara buggigt...
         this.domElement = dom.createNode('div');
-        this.domElement.setAttribute('id', id);
+        this.domElement.setAttribute('id', id + '-row');
         this.list = dom.createNode('input');
         this.list.setAttribute('name', name);
-        this.list.setAttribute('id', id + '-input');
+        this.list.setAttribute('id', id);
         this.list.setAttribute('list', id + '-datalist');
         this.domElement.appendChild(this.list);
         this.dataList = dom.createNode('datalist');
@@ -362,6 +373,9 @@ element.SearchField.prototype = {
     }
 };
 element.Form.prototype = {
+    setTitleMenuBar: function (menuTitleBar) {
+        this.table.appendChild(menuTitleBar);
+    },
     addElement: function (childElement) {
         this.domElement.appendChild(childElement);
     },
@@ -412,6 +426,23 @@ element.Form.prototype = {
         this.domElement.setAttribute('title', tooltip);
     },
     getElement: function () {
+        return this.domElement;
+    }
+};
+element.FormTitleMenuBar.prototype = {
+    setTitleColSpan: function (colSpan) {
+        this.titleCell.setAttribute('colspan', colSpan);
+    },
+    setTitle: function (title) {
+        this.titleCell.innerHTML = title || '';
+    },
+    setMenuColSpan: function (colSpan) {
+        this.menuCell.setAttribute('colspan', colSpan);
+    },
+    addMenuElement: function (element) {
+        this.menuCell.appendChild(element);
+    },
+    getElement: function() {
         return this.domElement;
     }
 };
