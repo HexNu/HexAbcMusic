@@ -27,9 +27,9 @@ public class AbcVoice implements Voice {
     @Column
     private String name;
     @Column
-    private String shortName;
+    private String subname;
     @Column
-    private String voiceId;
+    private String voiceCode;
     @Column(length = 32 * KB)
     private String body;
     @Column
@@ -74,22 +74,22 @@ public class AbcVoice implements Voice {
 
     @Override
     public String getSubname() {
-        return shortName;
+        return subname;
     }
 
     @Override
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public void setSubname(String subname) {
+        this.subname = subname;
     }
 
     @Override
-    public String getVoiceId() {
-        return voiceId;
+    public String getVoiceCode() {
+        return voiceCode;
     }
 
     @Override
-    public void setVoiceId(String voiceId) {
-        this.voiceId = voiceId;
+    public void setVoiceCode(String voiceCode) {
+        this.voiceCode = voiceCode;
     }
 
     @Override

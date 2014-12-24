@@ -148,5 +148,14 @@ public interface Key extends DomainEntity {
             }
             return DEFAULT_TYPE;
         }
+
+        public static Signature getByString(String signatureString) {
+            for (Signature t : values()) {
+                if (t.getLabel().equalsIgnoreCase(signatureString)) {
+                    return t;
+                }
+            }
+            return getByCode(signatureString);
+        }
     }
 }

@@ -94,13 +94,13 @@ public interface Clef extends DomainEntity {
             return DEFAULT_TYPE;
         }
 
-        public static Type getByLabel(String label) {
+        public static Type getByString(String typeString) {
             for (Type t : values()) {
-                if (t.getLabel().equals(label)) {
+                if (t.getLabel().equals(typeString)) {
                     return t;
                 }
             }
-            return DEFAULT_TYPE;
+            return getByCode(typeString);
         }
     }
 }
