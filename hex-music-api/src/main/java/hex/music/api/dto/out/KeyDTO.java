@@ -9,14 +9,14 @@ import hex.music.core.domain.Key;
  */
 public class KeyDTO extends AbstractDTO {
 
-    private final String id;
+    private final String keyId;
     private final String signature;
     private final String clefType;
     private final String transpose;
     private final String middle;
 
     public KeyDTO(Key key) {
-        this.id = String.valueOf(key.getId());
+        this.keyId = String.valueOf(key.getId());
         this.signature = key.getSignature().getCode();
         this.clefType = key.getClef().getType().getLabel();
         this.transpose = String.valueOf(key.getClef().getTranspose());
@@ -24,7 +24,7 @@ public class KeyDTO extends AbstractDTO {
     }
 
     public String getId() {
-        return id;
+        return keyId;
     }
 
     public String getSignature() {

@@ -26,7 +26,9 @@ public class TuneDTO extends AbstractDTO {
     private final String uri;
     private final String meter;
     private final String unitNoteLength;
+    private final String keyId;
     private final String key;
+    private final String clefId;
     private final String clef;
     private final String transpose;
     private final String middle;
@@ -50,7 +52,9 @@ public class TuneDTO extends AbstractDTO {
         this.uri = tune.getUri();
         this.meter = tune.getMeter();
         this.unitNoteLength = tune.getUnitNoteLength();
+        this.keyId = String.valueOf(tune.getKey().getId());
         this.key = tune.getKey().getSignature().getLabel();
+        this.clefId = String.valueOf(tune.getKey().getClef().getId());
         this.clef = tune.getKey().getClef().getType().getLabel();
         this.transpose = String.valueOf(tune.getKey().getClef().getTranspose());
         this.middle = String.valueOf(tune.getKey().getClef().getMiddle());
@@ -119,10 +123,16 @@ public class TuneDTO extends AbstractDTO {
         return unitNoteLength;
     }
 
+    public String getKeyId() {
+        return keyId;
+    }
     public String getKey() {
         return key;
     }
 
+    public String getClefId() {
+        return clefId;
+    }
     public String getClef() {
         return clef;
     }

@@ -9,20 +9,20 @@ import hex.music.core.domain.Clef;
  */
 public class ClefDTO extends AbstractDTO {
 
-    private final String id;
+    private final String clefId;
     private final String middle;
     private final String transpose;
     private final String type;
 
     public ClefDTO(Clef clef) {
-        this.id = String.valueOf(clef.getId());
+        this.clefId = String.valueOf(clef.getId());
         this.middle = clef.getMiddle();
         this.transpose = String.valueOf(clef.getTranspose());
         this.type = clef.getType().getLabel();
     }
 
     public String getId() {
-        return id;
+        return clefId;
     }
 
     public String getMiddle() {

@@ -9,30 +9,32 @@ import hex.music.core.domain.Voice;
  */
 public class VoiceDTO extends AbstractDTO {
 
-    private final String id;
-    private final String body;
+    private final String voiceId;
+    private final String voiceCode;
     private final String name;
     private final String subname;
-    private final String voiceId;
     private final String voiceIndex;
+    private final String clefId;
     private final String clef;
     private final String transpose;
     private final String middle;
+    private final String body;
 
     public VoiceDTO(Voice voice) {
-        this.id = String.valueOf(voice.getId());
+        this.voiceId = String.valueOf(voice.getId());
+        this.voiceCode = voice.getVoiceCode();
         this.name = voice.getName();
         this.subname = voice.getSubname();
-        this.voiceId = voice.getVoiceId();
         this.voiceIndex = String.valueOf(voice.getVoiceIndex());
-        this.body = voice.getBody();
+        this.clefId = String.valueOf(voice.getClef().getId());
         this.clef = voice.getClef().getType().getLabel();
         this.transpose = String.valueOf(voice.getClef().getTranspose());
         this.middle = voice.getClef().getMiddle();
+        this.body = voice.getBody();
     }
 
-    public String getId() {
-        return id;
+    public String getVoiceId() {
+        return voiceId;
     }
 
     public String getBody() {
@@ -47,12 +49,16 @@ public class VoiceDTO extends AbstractDTO {
         return subname;
     }
 
-    public String getVoiceId() {
-        return voiceId;
+    public String getVoiceCode() {
+        return voiceCode;
     }
 
     public String getVoiceIndex() {
         return voiceIndex;
+    }
+
+    public String getClefId() {
+        return clefId;
     }
 
     public String getClef() {

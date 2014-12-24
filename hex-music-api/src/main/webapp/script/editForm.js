@@ -26,6 +26,16 @@ var TuneEditor = function (tune) {
         this.idField.setValue(tune.id);
     }
     this.form.addElement(this.idField.getElement());
+    this.keyIdField = new element.HiddenField('keyId');
+    if (tune.keyId !== null) {
+        this.keyIdField.setValue(tune.keyId);
+    }
+    this.form.addElement(this.keyIdField.getElement());
+    this.clefIdField = new element.HiddenField('clefId');
+    if (tune.clefId !== null) {
+        this.clefIdField.setValue(tune.clefId);
+    }
+    this.form.addElement(this.clefIdField.getElement());
     this.createMetaRow(tune, ['title']);
     this.createMetaRow(tune, ['subheader']);
     this.createMetaRow(tune, ['composer']);
@@ -52,6 +62,7 @@ TuneEditor.prototype = {
         var tf = this.getElement();
         var tuneToSave = {};
         tuneToSave.id = tf['tuneId'].value;
+        tuneToSave.keyId = tf['keyId'].value;
         var setTuneFieldValue = function (field) {
             if (tf[field]) {
                 tuneToSave[field] = tf[field].value;
@@ -73,7 +84,7 @@ TuneEditor.prototype = {
                 setVoiceFieldValue(voiceFields[j], i);
             }
         }
-        alert(JSON.stringify(tuneToSave));
+        alert(JSON.stringify(tuneToSave)); // Här ska webbservice anropas
     },
     createEmptyTune: function () {
         var tune = {};
@@ -97,7 +108,17 @@ TuneEditor.prototype = {
         tbody.setAttribute('id', 'voice-' + voiceCounter);
         this.form.addBody(tbody);
         this.createVoiceHeaderRow(6, tbody);
-        this.createVoiceRow(voice, ['voiceId', 'name', 'subname'], tbody);
+        this.voiceIdField = new element.HiddenField('voiceId-' + voiceCounter);
+        if (voice.voiceId !== null) {
+            this.voiceIdField.setValue(voice.voiceId);
+        }
+        this.form.addElement(this.voiceIdField.getElement());
+        this.clefIdField = new element.HiddenField('clefId-' + voiceCounter);
+        if (voice.clefId !== null) {
+            this.clefIdField.setValue(voice.clefId);
+        }
+        this.form.addElement(this.clefIdField.getElement());
+        this.createVoiceRow(voice, ['voiceCode', 'name', 'subname'], tbody);
         this.createVoiceRow(voice, ['clef', 'transpose', 'voiceIndex'], tbody);
         this.createVoiceBodyRow(voice.body, 6, tbody);
     },
@@ -184,7 +205,11 @@ TuneEditor.prototype = {
         var field = null;
         var list;
         var fieldKey = key.split('-')[0];
-        if (fields[fieldKey].autocomplete !== null && fields[fieldKey].autocomplete !== undefined) {
+        if (fields[fieldKey].hidden !== null && fields[fieldKey].hidden === true) {
+            field = new element.HiddenField(key);
+            field.setId(key);
+        }
+        if (field === null && fields[fieldKey].autocomplete !== null && fields[fieldKey].autocomplete !== undefined) {
             field = new element.DataList(key, key);
             list = hex.lists[fields[fieldKey].autocomplete];
             if (list !== null && list.length > 0) {
@@ -192,19 +217,15 @@ TuneEditor.prototype = {
             }
             field.setStyle('width: ' + this.getFieldWidth(wide));
         }
-        if (field === null) {
-            if (fields[fieldKey].numeric) {
-                field = new element.NumberChooserField(key);
-                field.setId(key);
-                field.setStyle('width: ' + this.getFieldWidth(wide) + '; text-align: right');
-            }
+        if (field === null && fields[fieldKey].numeric) {
+            field = new element.NumberChooserField(key);
+            field.setId(key);
+            field.setStyle('width: ' + this.getFieldWidth(wide) + '; text-align: right');
         }
-        if (field === null) {
-            if (fields[fieldKey].multirow) {
-                field = new element.TextArea(key, 3, 90);
-                field.setId(key);
-                field.setStyle('width: ' + this.getFieldWidth(wide) + '; height: 3.6em');
-            }
+        if (field === null && fields[fieldKey].multirow) {
+            field = new element.TextArea(key, 3, 90);
+            field.setId(key);
+            field.setStyle('width: ' + this.getFieldWidth(wide) + '; height: 3.6em');
         }
         if (field === null) {
             field = new element.TextField(key);
@@ -215,6 +236,9 @@ TuneEditor.prototype = {
     }
 };
 var fields = {
+    'id': {
+        'hidden': true
+    },
     'title': {
         'label': 'Titel',
         'tooltip': 'Låtens huvudtitel'
@@ -284,6 +308,9 @@ var fields = {
         'label': 'Tempo',
         'tooltip': 'Ange tempot. Ex 1/4 = 112'
     },
+    'keyId': {
+        'hidden': true
+    },
     'key': {
         'label': 'Tonart',
         'tooltip': 'Am, Bb, Ddor',
@@ -304,6 +331,9 @@ var fields = {
         'tooltip': 'Vilket nottecken som ska gälla för mittlinjen.'
     },
     'voiceId': {
+        'hidden': true
+    },
+    'voiceCode': {
         'label': 'Stämm-id',
         'tooltip': 'Benämning för stämman, t ex S1 (för stämma 1), A (för alt)'
     },
@@ -322,6 +352,6 @@ var fields = {
 };
 var tuneFields = ['title', 'subheader', 'composer', 'source', 'rythm',
     'region', 'history', 'notes', 'transcriber', 'bibliography', 'discography',
-    'uri', 'meter', 'unitNoteLength', 'tempo', 'key', 'clef', 'transpose', 'middle'];
-var voiceFields = ['voiceId', 'name', 'subname', 'clef', 'transpose', 'voiceIndex',
+    'uri', 'meter', 'unitNoteLength', 'tempo', 'keyId', 'key', 'clefId', 'clef', 'transpose', 'middle'];
+var voiceFields = ['voiceId', 'voiceCode', 'name', 'subname', 'clefId', 'clef', 'transpose', 'voiceIndex',
     'transpose', 'body', 'middle'];
