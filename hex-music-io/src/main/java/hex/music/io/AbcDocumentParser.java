@@ -106,13 +106,13 @@ public class AbcDocumentParser {
     private Voice handleVoiceProperties(String line) {
         Map<String, String> properties = createPropertyMap(line.substring(2));
         Voice result = new AbcVoice();
-        result.setVoiceId(properties.get("fieldValue"));
+        result.setVoiceCode(properties.get("fieldValue"));
         result.setClef(createClef(properties));
         if (properties.containsKey("name")) {
             result.setName(properties.get("name"));
         }
         if (properties.containsKey("subname")) {
-            result.setShortName(properties.get("subname"));
+            result.setSubname(properties.get("subname"));
         }
         return result;
     }

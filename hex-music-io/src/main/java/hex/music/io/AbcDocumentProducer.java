@@ -97,7 +97,7 @@ public class AbcDocumentProducer {
 
     private void createTuneBody(StringBuilder result) {
         data.getVoices().stream().map((voice) -> {
-            result.append("V: ").append(voice.getVoiceId() != null ? voice.getVoiceId() : Voice.DEFAULT_VOICE_ID);
+            result.append("V: ").append(voice.getVoiceCode() != null ? voice.getVoiceCode() : Voice.DEFAULT_VOICE_CODE);
             if (data.getVoices().size() > 1) {
                 if (voice.getName() != null) {
                     result.append(" name=\"").append(voice.getName()).append("\"");
