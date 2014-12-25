@@ -1,13 +1,13 @@
 package hex.music.service.command.tune;
 
-import hex.music.core.domain.impl.ResultListWrapper;
+import hex.music.core.domain.TuneListWrapper;
 import hex.music.service.command.AbstractServiceCommand;
 
 /**
  *
  * @author hln
  */
-public class GetLimitedTuneListCommand extends AbstractServiceCommand<ResultListWrapper> {
+public class GetLimitedTuneListCommand extends AbstractServiceCommand<TuneListWrapper> {
 
     private final int limit;
     private final int offset;
@@ -18,8 +18,8 @@ public class GetLimitedTuneListCommand extends AbstractServiceCommand<ResultList
     }
 
     @Override
-    public ResultListWrapper execute() {
-        ResultListWrapper tunes = getDaoFactory().getTuneDao().getLimitedTuneList(limit, offset);
+    public TuneListWrapper execute() {
+        TuneListWrapper tunes = getDaoFactory().getTuneDao().getLimitedTuneList(limit, offset);
         return tunes;
     }
 }

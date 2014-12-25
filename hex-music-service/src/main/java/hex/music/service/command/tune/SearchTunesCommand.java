@@ -1,5 +1,6 @@
 package hex.music.service.command.tune;
 
+import hex.music.core.domain.TuneListWrapper;
 import hex.music.core.domain.impl.ResultListWrapper;
 import hex.music.service.command.AbstractServiceCommand;
 
@@ -7,7 +8,7 @@ import hex.music.service.command.AbstractServiceCommand;
  *
  * @author hln
  */
-public class SearchTunesCommand extends AbstractServiceCommand<ResultListWrapper> {
+public class SearchTunesCommand extends AbstractServiceCommand<TuneListWrapper> {
 
     private final Integer limit;
     private final Integer offset;
@@ -20,7 +21,7 @@ public class SearchTunesCommand extends AbstractServiceCommand<ResultListWrapper
     }
 
     @Override
-    public ResultListWrapper execute() {
+    public TuneListWrapper execute() {
         if (query == null) {
             return getDaoFactory().getTuneDao().getLimitedTuneList(limit, offset);
         } else {

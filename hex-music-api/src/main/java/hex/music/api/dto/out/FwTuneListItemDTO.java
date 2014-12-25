@@ -8,11 +8,11 @@ import hex.music.fw.domain.SearchResult;
  *
  * @author hln
  */
-public class FwSearchResultDTO extends AbstractDTO {
+public class FwTuneListItemDTO extends AbstractDTO {
 
     private final String title;
 
-    public FwSearchResultDTO(SearchResult searchResult, LinkDTOBuilder linkBuilder) {
+    public FwTuneListItemDTO(SearchResult searchResult, LinkDTOBuilder linkBuilder) {
         addLink(linkBuilder.createFwTunePageLink(searchResult));
         addLink(linkBuilder.createFwTuneDownloadLink(searchResult));
         this.title = searchResult.getText();

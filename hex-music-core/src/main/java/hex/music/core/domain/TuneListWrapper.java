@@ -21,4 +21,6 @@ public interface TuneListWrapper {
     List<Tune> getTunes();
 
     String getQuery();
+
+    String getNotesQuery();
 }

@@ -14,12 +14,14 @@ public class ResultListWrapper implements TuneListWrapper {
     private final Integer limit;
     private Integer previous;
     private Integer next;
-    private String query;
+    private final String query;
+    private final String notesQuery;
 
-    public ResultListWrapper(List<Tune> tunes, Integer limit, String query) {
+    public ResultListWrapper(List<Tune> tunes, Integer limit, String query, String notesQuery) {
         this.tunes = tunes;
         this.limit = limit;
         this.query = query;
+        this.notesQuery = notesQuery;
     }
 
     @Override
@@ -55,5 +57,10 @@ public class ResultListWrapper implements TuneListWrapper {
     @Override
     public String getQuery() {
         return query;
+    }
+
+    @Override
+    public String getNotesQuery() {
+        return notesQuery;
     }
 }

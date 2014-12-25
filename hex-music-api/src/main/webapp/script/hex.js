@@ -101,47 +101,14 @@ hex = {
         generateKeyList: function (jsonData) {
             hex.lists.keys = jsonData;
         },
-        generateFwSearchResultList: function (jsonData) {
-            hex.actions.clearList();
-            $('list-area').appendChild(dom.createNode('h3', 'Sökresultat'));
-            if (jsonData.length > 0) {
-                var list = dom.createNode('dl');
-                var numberOfResultString = jsonData.length + ' träff';
-                if (jsonData.length > 1) {
-                    numberOfResultString += 'ar';
-                }
-                dom.setText(title, titleText + ' - Sökresultat från FolkWiki - ' + numberOfResultString);
-                for (var i = 0; i < jsonData.length; i++) {
-                    var itemNode = dom.createNode('dt', jsonData[i].title);
-                    list.appendChild(itemNode);
-                    var descriptionNode = dom.createNode('dd');
-                    for (var j = 0; j < jsonData[i].links.length; j++) {
-                        if (j > 0) {
-                            dom.appendText(descriptionNode, ' ');
-                        }
-                        var fwLink;
-                        if (jsonData[i].links[j].rel === 'view-fw-page') {
-                            fwLink = new element.IconLink(jsonData[i].links[j].uri, 'FW_link', 'FolkWiki');
-                            fwLink.setTarget('FW');
-                            fwLink.setTooltip('Gå till låtens sida på FolkWiki');
-                        } else {
-                            fwLink = new element.IconButton('FW_put', 'Hämta');
-                            fwLink.setTooltip('Ladda hem låten från FolkWiki');
-                            fwLink.getElement().setAttribute('link', jsonData[i].links[j].uri);
-                            fwLink.addIconClickedAction(function (event) {
-                                hex.actions.edit(event.target.getAttribute('link'));
-                            });
-                        }
-                        descriptionNode.appendChild(fwLink.getElement());
-                    }
-                    list.appendChild(descriptionNode);
-                }
-                $('list-area').appendChild(list);
-            }
-        },
         generateList: function (jsonData) {
             var resultListing = new ResultListing(jsonData);
-            resultListing.setTitle('Låtar')
+            resultListing.setTitle('Låtar');
+            $('list-area').appendChild(resultListing.getElement());
+        },
+        generateFwSearchResultList: function (jsonData) {
+            var resultListing = new ResultListing(jsonData);
+            resultListing.setTitle('Sökresultat');
             $('list-area').appendChild(resultListing.getElement());
         },
         createMenu: function () {

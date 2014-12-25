@@ -1,6 +1,7 @@
 package hex.music.mysql.dao;
 
 import hex.music.core.domain.Tune;
+import hex.music.core.domain.TuneListWrapper;
 import hex.music.core.domain.Voice;
 import hex.music.core.domain.impl.AbcTune;
 import hex.music.core.domain.impl.ResultListWrapper;
@@ -27,29 +28,29 @@ public class TuneDao extends GenericDao<Tune, Long> {
         super(AbcTune.class, entityManager);
     }
 
-    public ResultListWrapper getLimitedTuneList(int limit, int offset) {
+    public TuneListWrapper getLimitedTuneList(int limit, int offset) {
         String condition = "FROM `Tune` AS t ";
         List<Tune> resultList = (List<Tune>) getManager().createNativeQuery("SELECT t.* " + condition
                 + " ORDER BY t.`title` LIMIT " + limit + " OFFSET " + offset, AbcTune.class).getResultList();
         BigInteger max = (BigInteger) getManager().createNativeQuery("SELECT count(*) " + condition).getSingleResult();
-        ResultListWrapper result = getLimitedResult(resultList, limit, offset, condition, null);
+        TuneListWrapper result = getLimitedResult(resultList, limit, offset, condition, null, null);
         return result;
     }
 
-    public ResultListWrapper getSearchResult(int limit, int offset, String query) {
+    public TuneListWrapper getSearchResult(int limit, int offset, String query) {
         String condition = "FROM `Tune` AS t  WHERE " + createCondition(query);
         List<Tune> resultList = (List<Tune>) getManager().createNativeQuery("SELECT t.* " + condition
                 + " ORDER BY t.`title` LIMIT " + limit + " OFFSET " + offset, AbcTune.class).getResultList();
-        ResultListWrapper result = getLimitedResult(resultList, limit, offset, condition, query);
+        TuneListWrapper result = getLimitedResult(resultList, limit, offset, condition, query, null);
         return result;
     }
 
-    public ResultListWrapper getNoteSearchResult(int limit, int offset, String query) {
+    public TuneListWrapper getNoteSearchResult(int limit, int offset, String notes) {
         String condition = "FROM `Tune` AS t INNER JOIN Voice AS v ON t.`id` = v.`tune_id` WHERE v.`searchString` LIKE '%"
-                + createNoteSearchString(query) + "%'";
+                + createNoteSearchString(notes) + "%'";
         String nativeQuery = "SELECT t.* " + condition + " ORDER BY t.`title` LIMIT " + limit + " OFFSET " + offset;
         List<Tune> resultList = (List<Tune>) getManager().createNativeQuery(nativeQuery, AbcTune.class).getResultList();
-        ResultListWrapper result = getLimitedResult(resultList, limit, offset, condition, query);
+        TuneListWrapper result = getLimitedResult(resultList, limit, offset, condition, null, notes);
         return result;
     }
 
@@ -147,9 +148,9 @@ public class TuneDao extends GenericDao<Tune, Long> {
         return result.toString();
     }
 
-    private ResultListWrapper getLimitedResult(List<Tune> resultList, int limit, int offset, String condition, String query) {
+    private TuneListWrapper getLimitedResult(List<Tune> resultList, int limit, int offset, String condition, String query, String notes) {
         BigInteger max = (BigInteger) getManager().createNativeQuery("SELECT count(*) " + condition).getSingleResult();
-        ResultListWrapper result = new ResultListWrapper(resultList, limit, query);
+        TuneListWrapper result = new ResultListWrapper(resultList, limit, query, notes);
         Integer previous = offset - limit >= 0 ? offset - limit : null;
         result.setPrevious(previous);
         Integer next = offset + limit < max.intValue() ? offset + limit : null;

@@ -1,13 +1,13 @@
 package hex.music.service.command.tune;
 
-import hex.music.core.domain.impl.ResultListWrapper;
+import hex.music.core.domain.TuneListWrapper;
 import hex.music.service.command.AbstractServiceCommand;
 
 /**
  *
  * @author hln
  */
-public class SearchInNotesCommand extends AbstractServiceCommand<ResultListWrapper> {
+public class SearchInNotesCommand extends AbstractServiceCommand<TuneListWrapper> {
 
     private final Integer limit;
     private final Integer offset;
@@ -20,7 +20,7 @@ public class SearchInNotesCommand extends AbstractServiceCommand<ResultListWrapp
     }
 
     @Override
-    public ResultListWrapper execute() {
+    public TuneListWrapper execute() {
         return getDaoFactory().getTuneDao().getNoteSearchResult(limit, offset, query);
     }
 }

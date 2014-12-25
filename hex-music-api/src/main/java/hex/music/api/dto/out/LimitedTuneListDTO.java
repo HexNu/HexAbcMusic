@@ -1,7 +1,6 @@
 package hex.music.api.dto.out;
 
 import hex.music.api.dto.AbstractDTO;
-import hex.music.api.dto.LinkDTO;
 import hex.music.api.dto.LinkDTOBuilder;
 import hex.music.core.domain.TuneListWrapper;
 import java.util.ArrayList;
@@ -17,10 +16,10 @@ public class LimitedTuneListDTO extends AbstractDTO {
 
     public LimitedTuneListDTO(TuneListWrapper listWrapper, LinkDTOBuilder linkBuilder) {
         if (listWrapper.getPrevious() != null) {
-            addLink(linkBuilder.createPreviousLink(listWrapper.getPrevious(), listWrapper.getLimit(), listWrapper.getQuery()));
+            addLink(linkBuilder.createPreviousLink(listWrapper.getPrevious(), listWrapper.getLimit(), listWrapper.getQuery(), listWrapper.getNotesQuery()));
         }
         if (listWrapper.getNext() != null) {
-            addLink(linkBuilder.createNextLink(listWrapper.getNext(), listWrapper.getLimit(), listWrapper.getQuery()));
+            addLink(linkBuilder.createNextLink(listWrapper.getNext(), listWrapper.getLimit(), listWrapper.getQuery(), listWrapper.getNotesQuery()));
         }
         tunes = new ArrayList<>();
         listWrapper.getTunes().stream().forEach((t) -> {

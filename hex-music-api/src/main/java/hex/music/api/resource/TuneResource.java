@@ -5,6 +5,7 @@ import hex.music.api.dto.out.LimitedTuneListDTO;
 import hex.music.api.dto.out.TuneDTO;
 import hex.music.core.AbcConstants;
 import hex.music.core.domain.Tune;
+import hex.music.core.domain.TuneListWrapper;
 import hex.music.core.domain.impl.ResultListWrapper;
 import hex.music.service.command.tune.CreateTunesFromAbcDocCommand;
 import hex.music.service.command.tune.GetAbcDocCommand;
@@ -43,7 +44,7 @@ public class TuneResource extends AbstractResource {
             @DefaultValue("0") @QueryParam("offset") String offset,
             @QueryParam("q") String q,
             @QueryParam("notes") String notes) {
-        ResultListWrapper wrapper;
+        TuneListWrapper wrapper;
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());
         if (q != null) {
             wrapper = commandExecutor.execute(new SearchTunesCommand(Integer.valueOf(limit),

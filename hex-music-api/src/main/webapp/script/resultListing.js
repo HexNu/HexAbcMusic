@@ -9,16 +9,20 @@ var ResultListing = function (jsonData) {
     this.tuneList = new List(tunes);
     this.domElement.appendChild(this.tuneList.getElement());
     this.bottomNavigation = new Navigation(links);
-    this.bottomNavigation.getElement().setAttribute('style','padding: 12px 5px 5px 5px; border-top: dashed grey 1px');
+    this.bottomNavigation.getElement().setAttribute('style', 'padding: 12px 5px 5px 5px; border-top: dashed grey 1px');
     this.domElement.appendChild(this.bottomNavigation.getElement());
 };
 var List = function (tunes) {
     this.domElement = dom.createNode('dl');
     if (tunes !== null) {
         for (var i = 0; i < tunes.length; i++) {
-            var itemNode = dom.createNode('dt', tunes[i].title || 'Utan titel');
-            itemNode.setAttribute('style', 'padding-top: 3px; font-weight: bold; border-top: dashed grey 1px');
-            this.domElement.appendChild(itemNode);
+            var titleNode = dom.createNode('dt', tunes[i].title || 'Utan titel');
+            titleNode.setAttribute('style', 'padding-top: 3px; font-weight: bold; border-top: dashed grey 1px');
+            this.domElement.appendChild(titleNode);
+            if (hasValue(tunes[i].subheader)) {
+                var subheaderNode = dom.createNode('dt', tunes[i].subheader);
+                this.domElement.appendChild(subheaderNode);
+            }
             var sourceInfo = null;
             if (hasValue(tunes[i].composer)) {
                 sourceInfo = 'av ' + tunes[i].composer;
@@ -37,9 +41,13 @@ var List = function (tunes) {
             if (hasValue(tunes[i].region)) {
                 info += tunes[i].region + ' - ';
             }
-            info += tunes[i].keySignature;
-            var informationNode = dom.createNode('dd', info);
-            this.domElement.appendChild(informationNode);
+            if (hasValue(tunes[i].keySignature)) {
+                info += tunes[i].keySignature;
+            }
+            if (info !== '') {
+                var informationNode = dom.createNode('dd', info);
+                this.domElement.appendChild(informationNode);
+            }
             var itemLinksNode = dom.createNode('dd');
             itemLinksNode.setAttribute('style', 'margin-bottom: 3px');
             for (var j = 0; j < tunes[i].links.length; j++) {
@@ -63,23 +71,20 @@ var List = function (tunes) {
                     case 'view-abc':
                         link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_link', 'Granska');
                         link.setTooltip('Visa ABC-koden');
-                        link.setTarget('abc_preview');
+                        link.setTarget('view-abc');
                         break;
                     case 'download-fw':
                         link = new element.IconButton('FW_put', 'Hämta');
-                        link.setTooltip('Ladda hem låten från FolkWiki');
-                        link.getElement().setAttribute('link', jsonData[i].links[j].uri);
+                        link.setTooltip('Ladda hem låten från FolkWiki till HexAbc');
+                        link.getElement().setAttribute('link', tunes[i].links[j].uri);
                         link.addIconClickedAction(function (event) {
                             hex.actions.edit(event.target.getAttribute('link'));
                         });
                         break;
                     case 'view-fw-page':
-                        link = new element.IconButton('FW_put', 'Hämta');
+                        link = new element.IconLink(tunes[i].links[j].uri, 'FW_link', 'Hämta');
                         link.setTooltip('Ladda hem låten från FolkWiki');
-                        link.getElement().setAttribute('link', jsonData[i].links[j].uri);
-                        link.addIconClickedAction(function (event) {
-                            hex.actions.edit(event.target.getAttribute('link'));
-                        });
+                        link.setTarget('view-fw-page');
                         break;
                 }
                 itemLinksNode.appendChild(link.getElement());
@@ -105,7 +110,7 @@ var Navigation = function (links) {
     this.previousButton;
     if (previousUri !== null) {
         this.previousButton = new element.IconButton('resultset_previous', 'Föregående');
-        this.previousButton.setTooltip('Föregående resultat');
+        this.previousButton.setTooltip('Föregående låtar');
         this.previousButton.addIconClickedAction(function () {
             hex.actions.listTunes(previousUri);
         });
@@ -117,7 +122,7 @@ var Navigation = function (links) {
     this.nextButton;
     if (nextUri !== null) {
         this.nextButton = new element.IconButton('resultset_next', 'Nästa');
-        this.nextButton.setTooltip('Nästa resultat ' + nextUri);
+        this.nextButton.setTooltip('Nästa låtar');
         this.nextButton.addIconClickedAction(function () {
             hex.actions.listTunes(nextUri);
         });

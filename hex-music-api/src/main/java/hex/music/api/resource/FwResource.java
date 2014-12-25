@@ -1,14 +1,14 @@
 package hex.music.api.resource;
 
 import hex.music.api.dto.LinkDTOBuilder;
-import hex.music.api.dto.out.FwSearchResultDTO;
+import hex.music.api.dto.out.FwTuneListDTO;
+import hex.music.api.dto.out.FwTuneListItemDTO;
 import hex.music.api.dto.out.TuneDTO;
 import hex.music.core.domain.Tune;
 import hex.music.fw.domain.SearchResult;
 import hex.music.service.command.tune.DownloadFromFwCommand;
 import hex.music.service.command.tune.GetTuneCommand;
 import hex.music.service.command.tune.SearchTunesOnFolkWikiCommand;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,9 +30,9 @@ public class FwResource extends AbstractResource {
     public Response getKeyList(@QueryParam("search") String search) {
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());
         List<SearchResult> searchResults = commandExecutor.execute(new SearchTunesOnFolkWikiCommand(search), getKey());
-        List<FwSearchResultDTO> result = new ArrayList<>();
+        FwTuneListDTO result = new FwTuneListDTO();
         searchResults.stream().forEach((s) -> {
-            result.add(new FwSearchResultDTO(s, linkDTOBuilder));
+            result.addFwSearchListItem(new FwTuneListItemDTO(s, linkDTOBuilder));
         });
         return Response.ok(result).build();
     }

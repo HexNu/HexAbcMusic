@@ -32,25 +32,31 @@ public class LinkDTOBuilder {
         return new LinkDTO(rel, createURI(path));
     }
 
-    public LinkDTO createPreviousLink(Integer previous, Integer limit, String query) {
+    public LinkDTO createPreviousLink(Integer previous, Integer limit, String query, String notes) {
         if (previous == null) {
             return null;
         }
         String url = "tunes/abc/?limit=" + limit + "&offset=" + previous;
         if (query != null) {
-            url += "q=" + query;
+            url += "&q=" + query;
+        }
+        if (notes != null) {
+            url += "&notes=" + notes;
         }
         LinkDTO linkDTO = new LinkDTO("previous", createURI(url));
         return linkDTO;
     }
 
-    public LinkDTO createNextLink(Integer next, Integer limit, String query) {
+    public LinkDTO createNextLink(Integer next, Integer limit, String query, String notes) {
         if (next == null) {
             return null;
         }
         String url = "tunes/abc/?limit=" + limit + "&offset=" + next;
         if (query != null) {
-            url += "q=" + query;
+            url += "&q=" + query;
+        }
+        if (notes != null) {
+            url += "&notes=" + notes;
         }
         LinkDTO linkDTO = new LinkDTO("next", createURI(url));
         return linkDTO;
