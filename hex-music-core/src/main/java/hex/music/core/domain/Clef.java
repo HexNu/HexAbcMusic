@@ -43,7 +43,7 @@ public interface Clef extends DomainEntity {
     public enum Type {
 
         TREBLE("G-klav", "treble"),
-        ALTO("C- eller Altklav)", "alto"),
+        ALTO("C- eller Altklav", "alto"),
         BASS("Basklav", "bass"),
         TREBLE_8VA("G-klav 8va", "treble+8"),
         TREBLE_8VA_BASSO("G-klav 8va basso", "treble-8"),
