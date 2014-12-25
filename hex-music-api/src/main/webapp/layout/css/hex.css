@@ -12,23 +12,9 @@ h1  {position: absolute; top: 30px; left: 30px;}
 .list-link {font-size: smaller;}
 #list-area {background-color: #CCC; padding: 10px; position: absolute; top: 100px; left: 10px;}
 #list h3 {margin: 0}
+dd {margin-left: 10px}
 /**** EDITOR  ****/
-/*textarea {font-family: monospace; font-size: 10px;}
-input[type='number'] {text-align: right;}
-div.voice-editor {background-color: #FFF; opacity: 1;}
-.editor {width: 56em; min-height: 40em;}
-.editor * label {width: 8em; padding-top: 3px; display: block; float: left; text-align: right; vertical-align: bottom; padding-right: 0.3em}
-.long-text-field {width: 30em;}
-.short-text-field {width: 5em;}
-.short-fields-row {width: 28em;}
-.short-fields-row table {border-collapse: collapse; border-spacing: 0};
-.short-fields-row * td {padding: 0 0 8px 0;}
-.short-fields-row * td label {padding: 0}
-.short-fields-row * td input {margin: 0; width: 30px}
-.left-form-container {width: 14em; float: left}
-.right-form-container {width: 14em; float: right}*/
 #editor-area {background-color: #F9F9F9; padding: 10px; position: absolute; top: 100px; left: 400px;}
-#edit-form * input, #edit-form * textarea {font-family: Verdana, Helvetica, sans-serif; font-size: 11px;}
 /**** FIL-IMPORT  ****/
 #file-upload-form {display: inline}
 #file-upload {display: none}

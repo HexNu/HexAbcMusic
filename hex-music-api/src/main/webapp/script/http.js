@@ -1,33 +1,37 @@
 var http = {
-    xmlHttpRequest: function (url, action, method, async) {
-        if (async === undefined || async === null) {
-            async = true;
-        }
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+    Get: function (url, action, async) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
                 if (action !== undefined && action !== null) {
-                    action(JSON.parse(xmlHttp.responseText));
+                    action(JSON.parse(httpRequest.responseText));
                 }
             }
         };
-        xmlHttp.open(method, url, async);
-        xmlHttp.send();
+        httpRequest.open(http.Method.GET, url, async || true);
+        httpRequest.send();
     },
-    Get: function (url, action, async) {
-        http.xmlHttpRequest(url, action, this.Method.GET, async);
+    JsonHTTPRequest: function (url, jsonData, method, action, async) {
+        var jsonString = JSON.stringify(jsonData);
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.setRequestHeader("Content-Length", jsonString.length);
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                alert(httpRequest.responseText);
+                if (action !== undefined && action !== null) {
+                    action(JSON.parse(httpRequest.responseText));
+                }
+            }
+        };
+        httpRequest.open(method, url, async || true);
+        httpRequest.send(jsonString);
     },
-    Put: function (url, action, formData) {
-        http.xmlHttpRequest(url, action, this.Method.PUT);
+    PostJson: function (url, jsonData, action, async) {
+        http.JsonHTTPRequest(url, jsonData, http.Method.POST, action, async);
     },
-    Post: function (url, action, formData) {
-        http.xmlHttpRequest(url, action, this.Method.POST);
-    },
-    Head: function (url, action) {
-        http.xmlHttpRequest(url, action, this.Method.HEAD);
-    },
-    Delete: function (url, action) {
-        http.xmlHttpRequest(url, action, this.Method.DELETE);
+    PutJson: function (url, jsonData, action, async) {
+        http.JsonHTTPRequest(url, jsonData, http.Method.PUT, action, async);
     },
     Method: {
         GET: 'GET',

@@ -52,18 +52,24 @@ hex = {
         transcribers: null
     },
     actions: {
+        updateTune: function (tuneJson) {
+            http.PutJson('resources/tunes/abc/' + tuneJson.id, tuneJson, null, true);
+        },
+        saveNewTune: function (tuneJson) {
+            http.PostJson('resources/tunes/abc/', tuneJson, null, true);
+        },
         populateAllLists: function () {
             hex.actions.clearList();
             hex.actions.getAutoCompleteData();
         },
         getAutoCompleteData: function () {
-            http.Get('resources/tunes/abc/composers', hex.actions.generateComposerList, http.Method.GET);
-            http.Get('resources/tunes/abc/keys', hex.actions.generateKeyList, http.Method.GET);
-            http.Get('resources/tunes/abc/clefs', hex.actions.generateClefList, http.Method.GET);
-            http.Get('resources/tunes/abc/sources', hex.actions.generateSourceList, http.Method.GET);
-            http.Get('resources/tunes/abc/regions', hex.actions.generateRegionList, http.Method.GET);
-            http.Get('resources/tunes/abc/rythms', hex.actions.generateRythmList, http.Method.GET);
-            http.Get('resources/tunes/abc/transcribers', hex.actions.generateTranscriberList, http.Method.GET);
+            http.Get('resources/tunes/abc/composers', hex.actions.generateComposerList);
+            http.Get('resources/tunes/abc/keys', hex.actions.generateKeyList);
+            http.Get('resources/tunes/abc/clefs', hex.actions.generateClefList);
+            http.Get('resources/tunes/abc/sources', hex.actions.generateSourceList);
+            http.Get('resources/tunes/abc/regions', hex.actions.generateRegionList);
+            http.Get('resources/tunes/abc/rythms', hex.actions.generateRythmList);
+            http.Get('resources/tunes/abc/transcribers', hex.actions.generateTranscriberList);
         },
         clearEditorArea: function () {
             dom.clearNode('editor-area');
@@ -110,7 +116,7 @@ hex = {
                     var descriptionNode = dom.createNode('dd');
                     for (var j = 0; j < jsonData[i].links.length; j++) {
                         if (j > 0) {
-                            dom.appendText(descriptionNode, ' | ');
+                            dom.appendText(descriptionNode, ' ');
                         }
                         var fwLink;
                         if (jsonData[i].links[j].rel === 'view-page') {
@@ -141,7 +147,7 @@ hex = {
                 var descriptionNode = dom.createNode('dd');
                 for (var j = 0; j < tunes[i].links.length; j++) {
                     if (j > 0) {
-                        dom.appendText(descriptionNode, ' | ');
+                        dom.appendText(descriptionNode, ' ');
                     }
                     var link;
                     if (tunes[i].links[j].rel === 'edit') {

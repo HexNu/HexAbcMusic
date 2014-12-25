@@ -84,7 +84,11 @@ TuneEditor.prototype = {
                 setVoiceFieldValue(voiceFields[j], i);
             }
         }
-        alert(JSON.stringify(tuneToSave)); // Här ska webbservice anropas
+        if (tuneToSave.id !== '') {
+            hex.actions.updateTune(tuneToSave);
+        } else {
+            hex.actions.saveNewTune(tuneToSave);
+        }
     },
     createEmptyTune: function () {
         var tune = {};
@@ -150,7 +154,7 @@ TuneEditor.prototype = {
         this.cell = new element.FormCell();
         this.cell.setColSpan(colSpan);
         this.textArea = new element.TextArea('body-' + voiceCounter, 10, 90);
-        this.textArea.setStyle('width: 100%; font-family: monospace; font-size: 10px;');
+        this.textArea.setStyle(TEXT_AREA_FONT + 'width: 100%;');
         this.textArea.setValue(body);
         this.cell.addElement(this.textArea.getElement());
         this.row.addElement(this.cell.getElement());
@@ -215,26 +219,28 @@ TuneEditor.prototype = {
             if (list !== null && list.length > 0) {
                 field.setDataList(list);
             }
-            field.setStyle('width: ' + this.getFieldWidth(wide));
+            field.setStyle(INPUT_FIELD_FONT + 'width: ' + this.getFieldWidth(wide));
         }
         if (field === null && fields[fieldKey].numeric) {
             field = new element.NumberChooserField(key);
             field.setId(key);
-            field.setStyle('width: ' + this.getFieldWidth(wide) + '; text-align: right');
+            field.setStyle(INPUT_FIELD_FONT + 'width: ' + this.getFieldWidth(wide) + '; text-align: right');
         }
         if (field === null && fields[fieldKey].multirow) {
             field = new element.TextArea(key, 3, 90);
             field.setId(key);
-            field.setStyle('width: ' + this.getFieldWidth(wide) + '; height: 3.6em');
+            field.setStyle(INPUT_FIELD_FONT + 'width: ' + this.getFieldWidth(wide) + '; height: 3.6em;');
         }
         if (field === null) {
             field = new element.TextField(key);
             field.setId(key);
-            field.setStyle('width: ' + this.getFieldWidth(wide));
+            field.setStyle(INPUT_FIELD_FONT + 'width: ' + this.getFieldWidth(wide));
         }
         return field;
     }
 };
+var INPUT_FIELD_FONT = 'font-family: Verdana, Helvetica, sans-serif; font-size: 11px;';
+var TEXT_AREA_FONT = 'font-family: monospace; font-size: 10px;';
 var fields = {
     'id': {
         'hidden': true
