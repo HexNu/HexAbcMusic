@@ -1,5 +1,5 @@
 var http = {
-    Get: function (url, action, async) {
+    Get: function (url, action) {
         var httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState === 4 && httpRequest.status === 200) {
@@ -8,7 +8,7 @@ var http = {
                 }
             }
         };
-        httpRequest.open(http.Method.GET, url, async || true);
+        httpRequest.open(http.Method.GET, url, true);
         httpRequest.send();
     },
     JsonHTTPRequest: function (url, jsonData, method, action, async) {

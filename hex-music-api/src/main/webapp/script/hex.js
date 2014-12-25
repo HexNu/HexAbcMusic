@@ -78,7 +78,7 @@ hex = {
             dom.clearNode('menu-area');
         },
         clearList: function () {
-            dom.clearNode('list');
+            dom.clearNode('list-area');
         },
         generateComposerList: function (jsonData) {
             hex.lists.composers = jsonData;
@@ -103,8 +103,9 @@ hex = {
         },
         generateFwSearchResultList: function (jsonData) {
             hex.actions.clearList();
-            $('list').appendChild(dom.createNode('h3', 'Sökresultat'));
+            $('list-area').appendChild(dom.createNode('h3', 'Sökresultat'));
             if (jsonData.length > 0) {
+                var list = dom.createNode('dl');
                 var numberOfResultString = jsonData.length + ' träff';
                 if (jsonData.length > 1) {
                     numberOfResultString += 'ar';
@@ -112,7 +113,7 @@ hex = {
                 dom.setText(title, titleText + ' - Sökresultat från FolkWiki - ' + numberOfResultString);
                 for (var i = 0; i < jsonData.length; i++) {
                     var itemNode = dom.createNode('dt', jsonData[i].title);
-                    $('list').appendChild(itemNode);
+                    list.appendChild(itemNode);
                     var descriptionNode = dom.createNode('dd');
                     for (var j = 0; j < jsonData[i].links.length; j++) {
                         if (j > 0) {
@@ -133,17 +134,19 @@ hex = {
                         }
                         descriptionNode.appendChild(fwLink.getElement());
                     }
-                    $('list').appendChild(descriptionNode);
+                    list.appendChild(descriptionNode);
                 }
+                $('list-area').appendChild(list);
             }
         },
         generateList: function (jsonData) {
             var tunes = jsonData.tunes;
             dom.setText(title, titleText + ' - Låtlista - ' + tunes.length + ' låtar');
-            $('list').appendChild(dom.createNode('h3', 'Låtlista'));
+            $('list-area').appendChild(dom.createNode('h3', 'Låtlista'));
+            var list = dom.createNode('dl');
             for (var i = 0; i < tunes.length; i++) {
                 var itemNode = dom.createNode('dt', tunes[i].title + ' - ' + tunes[i].keySignature);
-                $('list').appendChild(itemNode);
+                list.appendChild(itemNode);
                 var descriptionNode = dom.createNode('dd');
                 for (var j = 0; j < tunes[i].links.length; j++) {
                     if (j > 0) {
@@ -167,8 +170,9 @@ hex = {
                     }
                     descriptionNode.appendChild(link.getElement());
                 }
-                $('list').appendChild(descriptionNode);
+                list.appendChild(descriptionNode);
             }
+            $('list-area').appendChild(list);
         },
         createMenu: function () {
             dom.clearNode('menu-area');
@@ -193,7 +197,7 @@ hex = {
         listFwSearchResults: function () {
             hex.actions.clearList();
             var queryString = $('search-box').value;
-            http.Get('resources/tunes/fw/search?q=' + queryString, hex.actions.generateFwSearchResultList);
+            http.Get('resources/tunes/fw?search=' + queryString, hex.actions.generateFwSearchResultList);
         },
         listTunes: function () {
             hex.actions.clearList();
