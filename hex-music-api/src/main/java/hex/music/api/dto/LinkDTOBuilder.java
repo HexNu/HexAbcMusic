@@ -72,12 +72,12 @@ public class LinkDTOBuilder {
     }
 
     public LinkDTO createFwTuneDownloadLink(SearchResult result) {
-        LinkDTO linkDTO = new LinkDTO("download", createURI("tunes/fw/download/" + result.getFwId()));
+        LinkDTO linkDTO = new LinkDTO("download-fw", createURI("tunes/fw/download/" + result.getFwId()));
         return linkDTO;
     }
 
     public LinkDTO createFwTunePageLink(SearchResult result) {
-        LinkDTO linkDTO = new LinkDTO("view-page", UriBuilder.fromPath(result.getPageUrl()).build());
+        LinkDTO linkDTO = new LinkDTO("view-fw-page", UriBuilder.fromPath(result.getPageUrl()).build());
         return linkDTO;
     }
 }

@@ -10,7 +10,7 @@ h1  {position: absolute; top: 30px; left: 30px;}
 #menu-area .search-box {display: inline-block; margin-top: 0px; vertical-align: top;}
 /**** TUNE-LIST ****/
 .list-link {font-size: smaller;}
-#list-area {background-color: #CCC; padding: 10px; position: absolute; top: 100px; left: 10px;}
+#list-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 10px;}
 #list h3 {margin: 0}
 dd {margin-left: 10px}
 /**** EDITOR  ****/

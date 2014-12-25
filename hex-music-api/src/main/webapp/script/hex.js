@@ -58,18 +58,18 @@ hex = {
         saveNewTune: function (tuneJson) {
             http.PostJson('resources/tunes/abc/', tuneJson, null, true);
         },
-        populateAllLists: function () {
+        populateAutoCompleteLists: function () {
             hex.actions.clearList();
             hex.actions.getAutoCompleteData();
         },
         getAutoCompleteData: function () {
-            http.Get('resources/tunes/abc/composers', hex.actions.generateComposerList);
-            http.Get('resources/tunes/abc/keys', hex.actions.generateKeyList);
-            http.Get('resources/tunes/abc/clefs', hex.actions.generateClefList);
-            http.Get('resources/tunes/abc/sources', hex.actions.generateSourceList);
-            http.Get('resources/tunes/abc/regions', hex.actions.generateRegionList);
-            http.Get('resources/tunes/abc/rythms', hex.actions.generateRythmList);
-            http.Get('resources/tunes/abc/transcribers', hex.actions.generateTranscriberList);
+            http.GetJson('resources/tunes/abc/composers', hex.actions.generateComposerList);
+            http.GetJson('resources/tunes/abc/keys', hex.actions.generateKeyList);
+            http.GetJson('resources/tunes/abc/clefs', hex.actions.generateClefList);
+            http.GetJson('resources/tunes/abc/sources', hex.actions.generateSourceList);
+            http.GetJson('resources/tunes/abc/regions', hex.actions.generateRegionList);
+            http.GetJson('resources/tunes/abc/rythms', hex.actions.generateRythmList);
+            http.GetJson('resources/tunes/abc/transcribers', hex.actions.generateTranscriberList);
         },
         clearEditorArea: function () {
             dom.clearNode('editor-area');
@@ -120,7 +120,7 @@ hex = {
                             dom.appendText(descriptionNode, ' ');
                         }
                         var fwLink;
-                        if (jsonData[i].links[j].rel === 'view-page') {
+                        if (jsonData[i].links[j].rel === 'view-fw-page') {
                             fwLink = new element.IconLink(jsonData[i].links[j].uri, 'FW_link', 'FolkWiki');
                             fwLink.setTarget('FW');
                             fwLink.setTooltip('Gå till låtens sida på FolkWiki');
@@ -140,39 +140,9 @@ hex = {
             }
         },
         generateList: function (jsonData) {
-            var tunes = jsonData.tunes;
-            dom.setText(title, titleText + ' - Låtlista - ' + tunes.length + ' låtar');
-            $('list-area').appendChild(dom.createNode('h3', 'Låtlista'));
-            var list = dom.createNode('dl');
-            for (var i = 0; i < tunes.length; i++) {
-                var itemNode = dom.createNode('dt', tunes[i].title + ' - ' + tunes[i].keySignature);
-                list.appendChild(itemNode);
-                var descriptionNode = dom.createNode('dd');
-                for (var j = 0; j < tunes[i].links.length; j++) {
-                    if (j > 0) {
-                        dom.appendText(descriptionNode, ' ');
-                    }
-                    var link;
-                    if (tunes[i].links[j].rel === 'edit') {
-                        link = new element.IconButton('music_notes_edit', 'Redigera');
-                        link.getElement().setAttribute('link', tunes[i].links[j].uri);
-                        link.setTooltip('Redigera låten');
-                        link.addIconClickedAction(function (event) {
-                            hex.actions.edit(event.target.getAttribute('link'));
-                        });
-                    } else if (tunes[i].links[j].rel === 'download') {
-                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_download', 'Ladda hem');
-                        link.setTooltip('Ladda hem ABC-koden till din dator');
-                    } else {
-                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_link', 'Granska');
-                        link.setTooltip('Visa ABC-koden');
-                        link.setTarget('abc_preview');
-                    }
-                    descriptionNode.appendChild(link.getElement());
-                }
-                list.appendChild(descriptionNode);
-            }
-            $('list-area').appendChild(list);
+            var resultListing = new ResultListing(jsonData);
+            resultListing.setTitle('Låtar')
+            $('list-area').appendChild(resultListing.getElement());
         },
         createMenu: function () {
             dom.clearNode('menu-area');
@@ -189,7 +159,7 @@ hex = {
         edit: function (url) {
             hex.actions.clearEditorArea();
             if (url !== undefined && url !== null) {
-                http.Get(url, hex.actions.createTuneEditor);
+                http.GetJson(url, hex.actions.createTuneEditor);
             } else {
                 hex.actions.createTuneEditor(null);
             }
@@ -197,11 +167,12 @@ hex = {
         listFwSearchResults: function () {
             hex.actions.clearList();
             var queryString = $('search-box').value;
-            http.Get('resources/tunes/fw?search=' + queryString, hex.actions.generateFwSearchResultList);
+            http.GetJson('resources/tunes/fw?search=' + queryString, hex.actions.generateFwSearchResultList);
         },
-        listTunes: function () {
+        listTunes: function (uri) {
             hex.actions.clearList();
-            http.Get('resources/tunes/abc', hex.actions.generateList);
+            uri = uri || 'resources/tunes/abc';
+            http.GetJson(uri, hex.actions.generateList);
         }
     },
     menu: {
@@ -262,5 +233,6 @@ hex = {
     }
 };
 hex.actions.createMenu();
-hex.actions.populateAllLists();
-alert('Välkommen');
+alert('Laddar data...');
+hex.actions.populateAutoCompleteLists();
+alert('Klar!');

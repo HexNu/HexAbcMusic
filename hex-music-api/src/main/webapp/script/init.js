@@ -7,6 +7,7 @@ var init = function () {
     head.appendChild(createScriptNode('script/dom.js'));
     head.appendChild(createScriptNode('script/element.js'));
     head.appendChild(createScriptNode('script/editForm.js'));
+    head.appendChild(createScriptNode('script/resultListing.js'));
     head.appendChild(createScriptNode('script/http.js'));
     head.appendChild(createScriptNode('script/hex.js'));
 };

@@ -1,16 +1,4 @@
 var http = {
-    Get: function (url, action) {
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function () {
-            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-                if (action !== undefined && action !== null) {
-                    action(JSON.parse(httpRequest.responseText));
-                }
-            }
-        };
-        httpRequest.open(http.Method.GET, url, true);
-        httpRequest.send();
-    },
     JsonHTTPRequest: function (url, jsonData, method, action, async) {
         var jsonString = JSON.stringify(jsonData);
         var httpRequest = new XMLHttpRequest();
@@ -26,6 +14,18 @@ var http = {
         };
         httpRequest.open(method, url, async || true);
         httpRequest.send(jsonString);
+    },
+    GetJson: function (url, action) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                if (action !== undefined && action !== null) {
+                    action(JSON.parse(httpRequest.responseText));
+                }
+            }
+        };
+        httpRequest.open(http.Method.GET, decodeURIComponent(url), true);
+        httpRequest.send();
     },
     PostJson: function (url, jsonData, action, async) {
         http.JsonHTTPRequest(url, jsonData, http.Method.POST, action, async);

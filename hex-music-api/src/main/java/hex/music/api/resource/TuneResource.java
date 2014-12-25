@@ -38,7 +38,7 @@ public class TuneResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLimitedTuneList(@DefaultValue("25") @QueryParam("limit") String limit, 
+    public Response getLimitedTuneList(@DefaultValue("10") @QueryParam("limit") String limit, 
             @DefaultValue("0") @QueryParam("offset") String offset,
             @QueryParam("q") String q) {
         ResultListWrapper wrapper; 

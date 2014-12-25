@@ -1,4 +1,11 @@
 var element = {
+    Spacer: function(width, height) {
+        this.domElement = dom.createNode('img');
+        this.domElement.setAttribute('src', 'layout/images/spacer.png');
+        this.domElement.setAttribute('width', width);
+        this.domElement.setAttribute('height', height);
+        this.domElement.setAttribute('alt','');
+    },
     /**
      * 
      * @param {type} url
@@ -243,7 +250,11 @@ var element = {
 };
 
 /**********  PROTOTYPE **********/
-
+element.Spacer.prototype = {
+    getElement: function() {
+        return this.domElement;
+    }
+};
 element.HiddenField.prototype = {
     setId: function (id) {
         this.id = id || null;
