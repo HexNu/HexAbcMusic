@@ -1,29 +1,37 @@
 package hex.music.api.dto.in;
 
+import hex.music.core.domain.Clef;
 import hex.music.core.domain.Voice;
+import hex.music.core.domain.impl.AbcClef;
 import hex.music.core.domain.impl.AbcVoice;
 
 /**
  *
  * @author hln
  */
-public class SaveVoiceDTO {
+public class UpdateVoiceDTO {
 
     private Long voiceId;
     private String voiceCode;
     private String name;
     private String subname;
-    private SaveClefDTO clef;
+    private Long clefId;
+    private String clef;
+    private Integer transpose;
+    private String middle;
     private Integer voiceIndex;
     private String body;
 
-    public SaveVoiceDTO(String voiceId, String voiceCode, String name, String subname, String clefId, String clef,
+    public UpdateVoiceDTO(String voiceId, String voiceCode, String name, String subname, String clefId, String clef,
             String transpose, String middle, String voiceIndex, String body) {
         this.voiceId = voiceId == null || voiceId.equals("") ? null : Long.valueOf(voiceId);
         this.voiceCode = voiceCode;
         this.name = name;
         this.subname = subname;
-        this.clef = new SaveClefDTO(clefId, clef, transpose, middle);
+        this.clefId = clef == null || voiceId.equals("") ? null : Long.valueOf(voiceId);
+        this.clef = clef;
+        this.middle = middle;
+        this.voiceIndex = voiceIndex == null || voiceIndex.equals("") ? null : Integer.valueOf(voiceIndex);
         this.voiceIndex = voiceIndex == null || voiceIndex.equals("") ? null : Integer.valueOf(voiceIndex);
         this.body = body;
     }
@@ -48,20 +56,36 @@ public class SaveVoiceDTO {
         this.subname = subname;
     }
 
-    public SaveClefDTO getClef() {
+    public String getClef() {
         return clef;
     }
 
-    public void setClef(SaveClefDTO clef) {
+    public void setClef(String clef) {
         this.clef = clef;
+    }
+
+    public Long getClefId() {
+        return clefId;
+    }
+
+    public void setClefId(String clefId) {
+        this.clefId = clefId == null || clefId.equals("") ? null : Long.valueOf(clefId);
+    }
+
+    public Integer getTranspose() {
+        return transpose;
+    }
+
+    public void setTranspose(String transpose) {
+        this.transpose = transpose == null || transpose.equals("") ? null : Integer.valueOf(transpose);
     }
 
     public Integer getVoiceIndex() {
         return voiceIndex;
     }
 
-    public void setVoiceIndex(Integer voiceIndex) {
-        this.voiceIndex = voiceIndex;
+    public void setVoiceIndex(String voiceIndex) {
+        this.voiceIndex = voiceIndex == null || voiceIndex.equals("") ? null : Integer.valueOf(voiceIndex);
     }
 
     public String getBody() {
@@ -72,8 +96,8 @@ public class SaveVoiceDTO {
         this.body = body;
     }
 
-    public void setVoiceId(Long voiceId) {
-        this.voiceId = voiceId;
+    public void setVoiceId(String voiceId) {
+        this.voiceId = voiceId == null || voiceId.equals("") ? null : Long.valueOf(voiceId);
     }
 
     public void setName(String name) {
@@ -92,7 +116,12 @@ public class SaveVoiceDTO {
         result.setSubname(subname);
         result.setVoiceIndex(voiceIndex);
         result.setBody(body);
-        result.setClef(clef.getDomainObject());
+        Clef voiceClef = new AbcClef();
+        voiceClef.setId(clefId);
+        voiceClef.setType(Clef.Type.getByString(clef));
+        voiceClef.setTranspose(transpose);
+        voiceClef.setMiddle(middle);
+        result.setClef(voiceClef);
         return result;
     }
 }

@@ -1,14 +1,18 @@
 package hex.music.api.dto.in;
 
+import hex.music.core.domain.Clef;
+import hex.music.core.domain.Key;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
+import hex.music.core.domain.impl.AbcClef;
+import hex.music.core.domain.impl.AbcKey;
 import hex.music.core.domain.impl.AbcTune;
 
 /**
  *
  * @author hln
  */
-public class SaveTuneDTO {
+public class UpdateTuneDTO {
 
     private Long id;
     private String title;
@@ -26,15 +30,23 @@ public class SaveTuneDTO {
     private String meter;
     private String unitNoteLength;
     private String tempo;
-    private SaveKeyDTO key;
-    private SaveVoiceDTO[] voices;
+    private Long keyId;
+    private String key;
+    private Long clefId;
+    private String clef;
+    private Integer transpose;
+    private String middle;
+    private UpdateVoiceDTO[] voices;
 
-    public SaveTuneDTO() {
+    public UpdateTuneDTO() {
     }
 
-    public SaveTuneDTO(String tuneId, String title, String subheader, String composer, String source, String rythm, String region, String history,
+//    public UpdateTuneDTO(String tuneId, String title, String subheader, String composer, String source, String rythm, String region, String history,
+//            String notes, String transcriber, String bibliography, String discography, String uri, String meter, String unitNoteLength,
+//            String tempo, String keyId, String key, String clefId, String clef, String transpose, String middle) {
+    public UpdateTuneDTO(String tuneId, String title, String subheader, String composer, String source, String rythm, String region, String history,
             String notes, String transcriber, String bibliography, String discography, String uri, String meter, String unitNoteLength,
-            String tempo, String keyId, String key, String clefId, String clef, String transpose, String middle, SaveVoiceDTO[] voices) {
+            String tempo, String keyId, String key, String clefId, String clef, String transpose, String middle, UpdateVoiceDTO[] voices) {
         this.id = tuneId == null || tuneId.equals("") ? null : Long.valueOf(tuneId);
         this.title = title;
         this.subheader = subheader;
@@ -51,16 +63,20 @@ public class SaveTuneDTO {
         this.meter = meter;
         this.unitNoteLength = unitNoteLength;
         this.tempo = tempo;
-        this.key = new SaveKeyDTO(keyId, key, clefId, clef, transpose, middle);
+        this.keyId = keyId == null || keyId.equals("") ? null : Long.valueOf(keyId);
+        this.key = key;
+        this.clefId = clefId == null || clefId.equals("") ? null : Long.valueOf(clefId);
+        this.clef = clef;
+        this.transpose = transpose == null || transpose.equals("") ? null : Integer.valueOf(transpose);
+        this.middle = middle;
         this.voices = voices;
     }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null || id.equals("") ? null : Long.valueOf(id);
     }
 
     public String getTitle() {
@@ -183,19 +199,59 @@ public class SaveTuneDTO {
         this.tempo = tempo;
     }
 
-    public SaveKeyDTO getKey() {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(SaveKeyDTO key) {
+    public void setKey(String key) {
         this.key = key;
     }
 
-    public SaveVoiceDTO[] getVoices() {
+    public Long getKeyId() {
+        return keyId;
+    }
+
+    public void setKeyId(String keyId) {
+        this.keyId = keyId == null || keyId.equals("") ? null : Long.valueOf(keyId);
+    }
+
+    public String getClef() {
+        return clef;
+    }
+
+    public void setClef(String clef) {
+        this.clef = clef;
+    }
+
+    public Long getClefId() {
+        return clefId;
+    }
+
+    public void setClefId(String clefId) {
+        this.clefId = clefId == null || clefId.equals("") ? null : Long.valueOf(clefId);
+    }
+
+    public Integer getTranspose() {
+        return transpose;
+    }
+
+    public void setTranspose(String transpose) {
+        this.transpose = transpose == null || transpose.equals("") ? null : Integer.valueOf(transpose);
+    }
+
+    public String getMiddle() {
+        return middle;
+    }
+
+    public void setMiddle(String middle) {
+        this.middle = middle;
+    }
+
+    public UpdateVoiceDTO[] getVoices() {
         return voices;
     }
 
-    public void setVoices(SaveVoiceDTO[] voices) {
+    public void setVoices(UpdateVoiceDTO[] voices) {
         this.voices = voices;
     }
 
@@ -217,8 +273,17 @@ public class SaveTuneDTO {
         result.setMeter(meter);
         result.setUnitNoteLength(unitNoteLength);
         result.setTempo(tempo);
-        result.setKey(key.getDomainObject());
-        for (SaveVoiceDTO voiceDto : voices) {
+        Key tuneKey = new AbcKey();
+        tuneKey.setId(keyId);
+        tuneKey.setSignature(Key.Signature.getByString(key));
+        Clef tuneClef = new AbcClef();
+        tuneClef.setId(clefId);
+        tuneClef.setType(Clef.Type.getByString(clef));
+        tuneClef.setTranspose(transpose);
+        tuneClef.setMiddle(middle);
+        tuneKey.setClef(tuneClef);
+        result.setKey(tuneKey);
+        for (UpdateVoiceDTO voiceDto : voices) {
             Voice voice = voiceDto.getDomainObject();
             result.addVoice(voice);
             voice.setTune(result);
