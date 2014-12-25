@@ -10,11 +10,11 @@ h1  {position: absolute; top: 30px; left: 30px;}
 #menu-area .search-box {display: inline-block; margin-top: 0px; vertical-align: top;}
 /**** TUNE-LIST ****/
 .list-link {font-size: smaller;}
-#list-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 10px;}
+#list-area {background-color: #EEE; padding: 10px; position: absolute; top: 100px; left: 10px; border: darkgreen solid 2px; border-radius: 12px}
 #list h3 {margin: 0}
 dd {margin-left: 10px}
 /**** EDITOR  ****/
-#editor-area {background-color: #F9F9F9; padding: 10px; position: absolute; top: 100px; left: 400px;}
+#editor-area {background-color: #F9F9F9; padding: 10px; position: absolute; top: 100px; left: 400px; border: darkgreen solid 2px; border-radius: 12px; visibility: hidden;}
 /**** FIL-IMPORT  ****/
 #file-upload-form {display: inline}
 #file-upload {display: none}

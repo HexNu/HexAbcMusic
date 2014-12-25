@@ -73,6 +73,7 @@ hex = {
         },
         clearEditorArea: function () {
             dom.clearNode('editor-area');
+            $('editor-area').style.visibility = 'hidden';
         },
         clearMenuArea: function () {
             dom.clearNode('menu-area');
@@ -119,6 +120,7 @@ hex = {
             hex.actions.clearEditorArea();
             var editForm = new TuneEditor(jsonData);
             $('editor-area').appendChild(editForm.getElement());
+            $('editor-area').style.visibility = 'visible';
         },
         downloadAll: function () {
             location.href = 'resources/tunes/abc/download';

@@ -1,5 +1,3 @@
-var currentTuneEditor;
-var voiceCounter = 0;
 var TuneEditor = function (tune) {
     voiceCounter = 0;
     if (tune === null) {
@@ -11,7 +9,18 @@ var TuneEditor = function (tune) {
     this.menuTitleBar.setTitleColSpan(3);
     this.menuTitleBar.setMenuColSpan(3);
     this.menuTitleBar.setTitle(tune.title || 'Ny låt');
-    this.saveButton = new element.IconButton('disk', 'Spara');
+    this.cancelButton = new element.IconButton('cancel', 'Avbryt');
+    this.cancelButton.setTooltip('Avbryt redigeringen');
+    this.cancelButton.setAccessKey('Z');
+    this.cancelButton.addIconClickedAction(function () {
+        if (confirm('Vill du avbryta redigeringen utan att spara ändringarna?')) {
+            hex.actions.clearEditorArea();
+        }
+    });
+    this.menuTitleBar.addMenuElement(this.cancelButton.getElement());
+    this.saveButton = new element.IconButton('accept', 'Spara');
+    this.saveButton.setTooltip('Spara ändringarna');
+    this.saveButton.setAccessKey('S');
     this.saveButton.addIconClickedAction(function () {
         currentTuneEditor.save();
     });
@@ -356,6 +365,8 @@ var fields = {
         'tooltip': 'Sorteringsordningen för stämman. Anges inget sorteras de efter den ordning de lagts in.'
     }
 };
+var currentTuneEditor;
+var voiceCounter = 0;
 var tuneFields = ['title', 'subheader', 'composer', 'source', 'rythm',
     'region', 'history', 'notes', 'transcriber', 'bibliography', 'discography',
     'uri', 'meter', 'unitNoteLength', 'tempo', 'keyId', 'key', 'clefId', 'clef', 'transpose', 'middle'];

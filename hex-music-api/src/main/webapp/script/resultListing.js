@@ -2,6 +2,7 @@ var ResultListing = function (jsonData) {
     var links = jsonData.links || null;
     var tunes = jsonData.tunes || null;
     this.domElement = dom.createNode('div');
+    this.domElement.setAttribute('style', 'width: 300px; overflow: hidden')
     this.header = dom.createNode('h3');
     this.domElement.appendChild(this.header);
     this.topNavigation = new Navigation(links);
@@ -17,10 +18,13 @@ var List = function (tunes) {
     if (tunes !== null) {
         for (var i = 0; i < tunes.length; i++) {
             var titleNode = dom.createNode('dt', tunes[i].title || 'Utan titel');
-            titleNode.setAttribute('style', 'padding-top: 3px; font-weight: bold; border-top: dashed grey 1px');
+            titleNode.setAttribute('title', tunes[i].title || '')
+            titleNode.setAttribute('style', 'padding-top: 3px; font-weight: bold; border-top: dashed grey 1px; white-space: nowrap');
             this.domElement.appendChild(titleNode);
             if (hasValue(tunes[i].subheader)) {
                 var subheaderNode = dom.createNode('dt', tunes[i].subheader);
+                subheaderNode.setAttribute('title', tunes[i].subheader);
+                subheaderNode.setAttribute('style', 'white-space: nowrap');
                 this.domElement.appendChild(subheaderNode);
             }
             var sourceInfo = null;
@@ -31,7 +35,8 @@ var List = function (tunes) {
             }
             if (sourceInfo !== null) {
                 var sourceInfoNode = dom.createNode('dd', sourceInfo);
-                sourceInfoNode.setAttribute('style', 'font-style: italic');
+                sourceInfoNode.setAttribute('title', sourceInfo);
+                sourceInfoNode.setAttribute('style', 'font-style: italic; white-space: nowrap');
                 this.domElement.appendChild(sourceInfoNode);
             }
             var info = '';
@@ -46,6 +51,8 @@ var List = function (tunes) {
             }
             if (info !== '') {
                 var informationNode = dom.createNode('dd', info);
+                informationNode.setAttribute('title', info);
+                informationNode.setAttribute('style', 'white-space: nowrap');
                 this.domElement.appendChild(informationNode);
             }
             var itemLinksNode = dom.createNode('dd');

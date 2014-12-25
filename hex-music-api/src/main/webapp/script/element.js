@@ -56,7 +56,7 @@ var element = {
     Form: function (id) {
         this.domElement = dom.createNode('form');
         this.table = dom.createNode('table');
-        this.table.setAttribute('style', 'border-collapse: collapse; border-spacing: 0');
+        this.table.setAttribute('style', 'border-collapse: collapse; border-spacing: 0; margin-right: 10px;');
         this.domElement.appendChild(this.table);
         this.setId(id);
     },
@@ -783,6 +783,9 @@ element.IconLink.prototype = {
     setTooltip: function (tooltip) {
         this.domElement.setAttribute('title', tooltip);
     },
+    setAccessKey: function(accesskey) {
+        this.domElement.setAttribute('accesskey', accesskey);
+    },
     getElement: function () {
         return this.domElement;
     }
@@ -815,10 +818,13 @@ element.IconButton.prototype = {
     setTooltip: function (tooltip) {
         this.domElement.setAttribute('title', tooltip);
     },
-    getElement: function () {
-        return this.domElement;
+    setAccessKey: function(accesskey) {
+        this.domElement.setAttribute('accesskey', accesskey);
     },
     addIconClickedAction: function (action) {
         this.domElement.addEventListener('click', action);
+    },
+    getElement: function () {
+        return this.domElement;
     }
 };
