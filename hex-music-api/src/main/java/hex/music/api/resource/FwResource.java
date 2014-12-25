@@ -26,11 +26,10 @@ import javax.ws.rs.core.Response;
 public class FwResource extends AbstractResource {
 
     @GET
-    @Path("search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKeyList(@QueryParam("q") String q) {
+    public Response getKeyList(@QueryParam("search") String search) {
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());
-        List<SearchResult> searchResults = commandExecutor.execute(new SearchTunesOnFolkWikiCommand(q), getKey());
+        List<SearchResult> searchResults = commandExecutor.execute(new SearchTunesOnFolkWikiCommand(search), getKey());
         List<FwSearchResultDTO> result = new ArrayList<>();
         searchResults.stream().forEach((s) -> {
             result.add(new FwSearchResultDTO(s, linkDTOBuilder));
