@@ -33,7 +33,6 @@ public class TuneDTO extends AbstractDTO {
     private final String transpose;
     private final String middle;
 
-//    private final KeyDTO key;
     private final List<VoiceDTO> voices = new ArrayList<>();
 
     public TuneDTO(Tune tune) {

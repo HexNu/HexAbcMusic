@@ -48,5 +48,9 @@ public interface Voice extends DomainEntity {
 
     void setBody(String body);
 
+    String getSearchString();
+
+    void setSearchString(String searchString);
+
     void addBodyLine(String line);
 }

@@ -17,6 +17,11 @@ public class TuneListItemDTO extends AbstractDTO {
     private final String source;
     private final String rythm;
     private final String region;
+    private final String history;
+    private final String notes;
+    private final String transcriber;
+    private final String bibliography;
+    private final String discography;
     private final String keySignature;
 
     public TuneListItemDTO(Tune tune, LinkDTOBuilder linkBuilder) {
@@ -31,6 +36,11 @@ public class TuneListItemDTO extends AbstractDTO {
         rythm = tune.getRythm() != null ? tune.getRythm() : "";
         region = tune.getRegion() != null ? tune.getRegion() : "";
         keySignature = tune.getKey().getSignature().getCode();
+        history = tune.getHistory();
+        notes = tune.getNotes();
+        transcriber = tune.getTranscriber();
+        bibliography = tune.getBibliography();
+        discography = tune.getDiscography();
     }
 
     public String getId() {
@@ -63,5 +73,25 @@ public class TuneListItemDTO extends AbstractDTO {
 
     public String getKeySignature() {
         return keySignature;
+    }
+
+    public String getHistory() {
+        return history;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public String getTranscriber() {
+        return transcriber;
+    }
+
+    public String getBibliography() {
+        return bibliography;
+    }
+
+    public String getDiscography() {
+        return discography;
     }
 }

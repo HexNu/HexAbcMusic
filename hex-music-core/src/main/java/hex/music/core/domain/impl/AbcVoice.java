@@ -32,6 +32,8 @@ public class AbcVoice implements Voice {
     private String voiceCode;
     @Column(length = 32 * KB)
     private String body;
+    @Column(length = 8 * KB)
+    private String searchString;
     @Column
     private int voiceIndex;
     @OneToOne(cascade = CascadeType.ALL, targetEntity = AbcClef.class)
@@ -138,5 +140,15 @@ public class AbcVoice implements Voice {
             body = "";
         }
         body += line + "\n";
+    }
+
+    @Override
+    public String getSearchString() {
+        return searchString;
+    }
+
+    @Override
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
     }
 }

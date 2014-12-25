@@ -11,6 +11,7 @@ import hex.music.service.command.tune.GetAbcDocCommand;
 import hex.music.service.command.tune.GetAllTunesCommand;
 import hex.music.service.command.tune.GetTuneCommand;
 import hex.music.service.command.tune.GetLimitedTuneListCommand;
+import hex.music.service.command.tune.SearchInNotesCommand;
 import hex.music.service.command.tune.SearchTunesCommand;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -38,17 +39,21 @@ public class TuneResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLimitedTuneList(@DefaultValue("10") @QueryParam("limit") String limit, 
+    public Response getLimitedTuneList(@DefaultValue("10") @QueryParam("limit") String limit,
             @DefaultValue("0") @QueryParam("offset") String offset,
-            @QueryParam("q") String q) {
-        ResultListWrapper wrapper; 
+            @QueryParam("q") String q,
+            @QueryParam("notes") String notes) {
+        ResultListWrapper wrapper;
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());
-        if (q == null) {
-            wrapper = commandExecutor.execute(new GetLimitedTuneListCommand(Integer.valueOf(limit), 
-                    Integer.valueOf(offset)), getKey());
-        } else {
-            wrapper = commandExecutor.execute(new SearchTunesCommand(Integer.valueOf(limit), 
+        if (q != null) {
+            wrapper = commandExecutor.execute(new SearchTunesCommand(Integer.valueOf(limit),
                     Integer.valueOf(offset), q), getKey());
+        } else if (notes != null) {
+            wrapper = commandExecutor.execute(new SearchInNotesCommand(Integer.valueOf(limit),
+                    Integer.valueOf(offset), notes), getKey());
+        } else {
+            wrapper = commandExecutor.execute(new GetLimitedTuneListCommand(Integer.valueOf(limit),
+                    Integer.valueOf(offset)), getKey());
         }
         LimitedTuneListDTO result = new LimitedTuneListDTO(wrapper, linkDTOBuilder);
         return Response.ok(result).build();
@@ -106,7 +111,7 @@ public class TuneResource extends AbstractResource {
         System.out.println(jsonData);
         return Response.ok().build();
     }
-    
+
     @POST
     @Path("upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)

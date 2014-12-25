@@ -1,109 +1,105 @@
 var ResultListing = function (jsonData) {
-    var links = jsonData.links;
-    var tunes = jsonData.tunes;
+    var links = jsonData.links || null;
+    var tunes = jsonData.tunes || null;
     this.domElement = dom.createNode('div');
     this.header = dom.createNode('h3');
     this.domElement.appendChild(this.header);
-    this.topNavigation = null;
-    if (links !== null) {
-        this.topNavigation = new Navigation(links);
-        this.domElement.appendChild(this.topNavigation.getElement());
-    }
-    this.tuneList = null;
-    if (tunes !== null) {
-        this.tuneList = new List(tunes);
-        this.domElement.appendChild(this.tuneList.getElement());
-    }
-    this.bottomNavigation = null;
-    if (links !== null) {
-        this.bottomNavigation = new Navigation(links);
-        this.domElement.appendChild(this.bottomNavigation.getElement());
-    }
+    this.topNavigation = new Navigation(links);
+    this.domElement.appendChild(this.topNavigation.getElement());
+    this.tuneList = new List(tunes);
+    this.domElement.appendChild(this.tuneList.getElement());
+    this.bottomNavigation = new Navigation(links);
+    this.bottomNavigation.getElement().setAttribute('style','padding: 12px 5px 5px 5px; border-top: dashed grey 1px');
+    this.domElement.appendChild(this.bottomNavigation.getElement());
 };
 var List = function (tunes) {
     this.domElement = dom.createNode('dl');
-    for (var i = 0; i < tunes.length; i++) {
-        var itemNode = dom.createNode('dt', tunes[i].title || 'Utan titel');
-        itemNode.setAttribute('style', 'padding-top: 3px; font-weight: bold; border-top: dashed grey 1px');
-        this.domElement.appendChild(itemNode);
-        var sourceInfo = null;
-        if (hasValue(tunes[i].composer)) {
-            sourceInfo = 'av ' + tunes[i].composer;
-        } else if (hasValue(tunes[i].source)) {
-            sourceInfo = tunes[i].source;
-        }
-        if (sourceInfo !== null) {
-            var sourceInfoNode = dom.createNode('dd', sourceInfo);
-            sourceInfoNode.setAttribute('style', 'font-style: italic');
-            this.domElement.appendChild(sourceInfoNode);
-        }
-        var info = '';
-        if (hasValue(tunes[i].rythm)) {
-            info += tunes[i].rythm + ' - ';
-        }
-        if (hasValue(tunes[i].region)) {
-            info += tunes[i].region + ' - ';
-        }
-        info += tunes[i].keySignature;
-        var informationNode = dom.createNode('dd', info);
-        this.domElement.appendChild(informationNode);
-        var itemLinksNode = dom.createNode('dd');
-        itemLinksNode.setAttribute('style', 'margin-bottom: 3px');
-        for (var j = 0; j < tunes[i].links.length; j++) {
-            if (j > 0) {
-                dom.appendText(itemLinksNode, ' ');
+    if (tunes !== null) {
+        for (var i = 0; i < tunes.length; i++) {
+            var itemNode = dom.createNode('dt', tunes[i].title || 'Utan titel');
+            itemNode.setAttribute('style', 'padding-top: 3px; font-weight: bold; border-top: dashed grey 1px');
+            this.domElement.appendChild(itemNode);
+            var sourceInfo = null;
+            if (hasValue(tunes[i].composer)) {
+                sourceInfo = 'av ' + tunes[i].composer;
+            } else if (hasValue(tunes[i].source)) {
+                sourceInfo = tunes[i].source;
             }
-            var link;
-            switch (tunes[i].links[j].rel) {
-                case 'edit':
-                    link = new element.IconButton('music_notes_edit', 'Redigera');
-                    link.getElement().setAttribute('link', tunes[i].links[j].uri);
-                    link.setTooltip('Redigera låten');
-                    link.addIconClickedAction(function (event) {
-                        hex.actions.edit(event.target.getAttribute('link'));
-                    });
-                    break;
-                case 'download':
-                    link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_download', 'Ladda hem');
-                    link.setTooltip('Ladda hem ABC-koden till din dator');
-                    break;
-                case 'view-abc':
-                    link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_link', 'Granska');
-                    link.setTooltip('Visa ABC-koden');
-                    link.setTarget('abc_preview');
-                    break;
-                case 'download-fw':
-                    link = new element.IconButton('FW_put', 'Hämta');
-                    link.setTooltip('Ladda hem låten från FolkWiki');
-                    link.getElement().setAttribute('link', jsonData[i].links[j].uri);
-                    link.addIconClickedAction(function (event) {
-                        hex.actions.edit(event.target.getAttribute('link'));
-                    });
-                    break;
-                case 'view-fw-page':
-                    link = new element.IconButton('FW_put', 'Hämta');
-                    link.setTooltip('Ladda hem låten från FolkWiki');
-                    link.getElement().setAttribute('link', jsonData[i].links[j].uri);
-                    link.addIconClickedAction(function (event) {
-                        hex.actions.edit(event.target.getAttribute('link'));
-                    });
-                    break;
+            if (sourceInfo !== null) {
+                var sourceInfoNode = dom.createNode('dd', sourceInfo);
+                sourceInfoNode.setAttribute('style', 'font-style: italic');
+                this.domElement.appendChild(sourceInfoNode);
             }
-            itemLinksNode.appendChild(link.getElement());
+            var info = '';
+            if (hasValue(tunes[i].rythm)) {
+                info += tunes[i].rythm + ' - ';
+            }
+            if (hasValue(tunes[i].region)) {
+                info += tunes[i].region + ' - ';
+            }
+            info += tunes[i].keySignature;
+            var informationNode = dom.createNode('dd', info);
+            this.domElement.appendChild(informationNode);
+            var itemLinksNode = dom.createNode('dd');
+            itemLinksNode.setAttribute('style', 'margin-bottom: 3px');
+            for (var j = 0; j < tunes[i].links.length; j++) {
+                if (j > 0) {
+                    dom.appendText(itemLinksNode, ' ');
+                }
+                var link;
+                switch (tunes[i].links[j].rel) {
+                    case 'edit':
+                        link = new element.IconButton('music_notes_edit', 'Redigera');
+                        link.getElement().setAttribute('link', tunes[i].links[j].uri);
+                        link.setTooltip('Redigera låten');
+                        link.addIconClickedAction(function (event) {
+                            hex.actions.edit(event.target.getAttribute('link'));
+                        });
+                        break;
+                    case 'download':
+                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_download', 'Ladda hem');
+                        link.setTooltip('Ladda hem ABC-koden till din dator');
+                        break;
+                    case 'view-abc':
+                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_link', 'Granska');
+                        link.setTooltip('Visa ABC-koden');
+                        link.setTarget('abc_preview');
+                        break;
+                    case 'download-fw':
+                        link = new element.IconButton('FW_put', 'Hämta');
+                        link.setTooltip('Ladda hem låten från FolkWiki');
+                        link.getElement().setAttribute('link', jsonData[i].links[j].uri);
+                        link.addIconClickedAction(function (event) {
+                            hex.actions.edit(event.target.getAttribute('link'));
+                        });
+                        break;
+                    case 'view-fw-page':
+                        link = new element.IconButton('FW_put', 'Hämta');
+                        link.setTooltip('Ladda hem låten från FolkWiki');
+                        link.getElement().setAttribute('link', jsonData[i].links[j].uri);
+                        link.addIconClickedAction(function (event) {
+                            hex.actions.edit(event.target.getAttribute('link'));
+                        });
+                        break;
+                }
+                itemLinksNode.appendChild(link.getElement());
+            }
+            this.domElement.appendChild(itemLinksNode);
         }
-        this.domElement.appendChild(itemLinksNode);
     }
 };
 var Navigation = function (links) {
     this.domElement = dom.createNode('div');
-    this.domElement.setAttribute('style', 'padding-left: 10px');
+    this.domElement.setAttribute('style', 'padding: 5px 5px 0');
     var nextUri = null;
     var previousUri = null;
-    for (var i = 0; i < links.length; i++) {
-        if (links[i].rel === 'previous') {
-            previousUri = links[i].uri;
-        } else if (links[i].rel === 'next') {
-            nextUri = links[i].uri;
+    if (links !== null) {
+        for (var i = 0; i < links.length; i++) {
+            if (links[i].rel === 'previous') {
+                previousUri = links[i].uri;
+            } else if (links[i].rel === 'next') {
+                nextUri = links[i].uri;
+            }
         }
     }
     this.previousButton;
