@@ -32,6 +32,18 @@ public class LinkDTOBuilder {
         return new LinkDTO(rel, createURI(path));
     }
 
+    public LinkDTO createPreviousFwLink(Integer previous, Integer limit, String query) {
+        if (previous == null) {
+            return null;
+        }
+        String url = "tunes/fw/?limit=" + limit + "&offset=" + previous;
+        if (query != null) {
+            url += "&q=" + query;
+        }
+        LinkDTO linkDTO = new LinkDTO("previous", createURI(url));
+        return linkDTO;
+    }
+
     public LinkDTO createPreviousLink(Integer previous, Integer limit, String query, String notes) {
         if (previous == null) {
             return null;
@@ -44,6 +56,18 @@ public class LinkDTOBuilder {
             url += "&notes=" + notes;
         }
         LinkDTO linkDTO = new LinkDTO("previous", createURI(url));
+        return linkDTO;
+    }
+
+    public LinkDTO createNextFwLink(Integer next, Integer limit, String query) {
+        if (next == null) {
+            return null;
+        }
+        String url = "tunes/fw/?limit=" + limit + "&offset=" + next;
+        if (query != null) {
+            url += "&q=" + query;
+        }
+        LinkDTO linkDTO = new LinkDTO("next", createURI(url));
         return linkDTO;
     }
 

@@ -47,7 +47,7 @@ public class ResultCache {
 
     public SearchResultListWrapper getPagedResult(int limit, int offset) {
         SearchResultListWrapper result = new SearchResultListWrapper(limit, null, null, queryString);
-        if (offset > limit) {
+        if (offset >= limit) {
             result.setPrevious(offset - limit);
         }
         if (offset + limit < resultList.size()) {

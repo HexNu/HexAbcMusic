@@ -32,12 +32,9 @@ public class FwResource extends AbstractResource {
             @DefaultValue("0") @QueryParam("offset") String offset,
             @QueryParam("q") String q) {
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());
-        SearchResultListWrapper searchResults = commandExecutor.execute(new SearchTunesOnFolkWikiCommand(Integer.valueOf(limit), 
+        SearchResultListWrapper wrapper = commandExecutor.execute(new SearchTunesOnFolkWikiCommand(Integer.valueOf(limit),
                 Integer.valueOf(offset), q), getKey());
-        FwTuneListDTO result = new FwTuneListDTO();
-        searchResults.getResults().stream().forEach((s) -> {
-            result.addFwSearchListItem(new FwTuneListItemDTO(s, linkDTOBuilder));
-        });
+        FwTuneListDTO result = new FwTuneListDTO(wrapper, linkDTOBuilder);
         return Response.ok(result).build();
     }
 
