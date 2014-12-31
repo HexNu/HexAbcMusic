@@ -171,19 +171,19 @@ hex = {
             searchField.setCssClass('search-box');
             var searchTuneButton = new element.IconButton('magnifier', 'Sök');
             searchTuneButton.setTooltip('Sök efter låtar på HexAbc. [X]');
-            searchTuneButton.getElement().setAttribute('accesskey', 'x');
+            searchTuneButton.setAccessKey('x');
             searchTuneButton.addIconClickedAction(function () {
                 hex.actions.listSearchResults();
             });
             var searchNotesButton = new element.IconButton('music_notes_magnify', 'Sök i noter');
             searchNotesButton.setTooltip('Sök med noter \"abc\" på HexAbc. [N]');
-            searchNotesButton.getElement().setAttribute('accesskey', 'n');
+            searchNotesButton.setAccessKey('n');
             searchNotesButton.addIconClickedAction(function () {
                 hex.actions.listNoteSearchResults();
             });
             var searchFwButton = new element.IconButton('FW_search', 'FW-sök');
             searchFwButton.setTooltip('Sök efter låtar på FolkWiki. [F]');
-            searchFwButton.getElement().setAttribute('accesskey', 'f');
+            searchFwButton.setAccessKey('f');
             searchFwButton.addIconClickedAction(function () {
                 hex.actions.listFwSearchResults();
             });
