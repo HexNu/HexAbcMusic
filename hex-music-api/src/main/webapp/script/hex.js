@@ -136,7 +136,7 @@ hex = {
         listFwSearchResults: function () {
             hex.actions.clearList();
             var queryString = $('search-box').value;
-            http.GetJson('resources/tunes/fw?search=' + queryString, hex.actions.generateFwSearchResultList);
+            http.GetJson('resources/tunes/fw?q=' + queryString, hex.actions.generateFwSearchResultList);
         },
         listSearchResults: function () {
             hex.actions.clearList();

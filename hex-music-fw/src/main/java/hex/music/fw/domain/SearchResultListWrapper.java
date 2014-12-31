@@ -15,11 +15,9 @@ public class SearchResultListWrapper {
     private Integer next;
     private final String query;
 
-    public SearchResultListWrapper(Integer limit, Integer previous, Integer next, String query) {
+    public SearchResultListWrapper(Integer limit, String query) {
         this.results = new ArrayList<>();
         this.limit = limit;
-        this.previous = previous;
-        this.next = next;
         this.query = query;
     }
     

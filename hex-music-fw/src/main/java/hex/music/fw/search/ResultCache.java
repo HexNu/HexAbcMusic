@@ -30,7 +30,7 @@ public class ResultCache {
     }
 
     public boolean queryMatches(String query) {
-        return queryString.equals(query);
+        return query != null && queryString.equals(query);
     }
 
     public String getQueryString() {
@@ -38,7 +38,7 @@ public class ResultCache {
     }
 
     public void setQueryString(String queryString) {
-        this.queryString = queryString;
+        this.queryString = queryString != null ? queryString : "";
     }
 
     public void setResults(List<SearchResult> resultList) {
@@ -46,7 +46,7 @@ public class ResultCache {
     }
 
     public SearchResultListWrapper getPagedResult(int limit, int offset) {
-        SearchResultListWrapper result = new SearchResultListWrapper(limit, null, null, queryString);
+        SearchResultListWrapper result = new SearchResultListWrapper(limit, queryString);
         if (offset >= limit) {
             result.setPrevious(offset - limit);
         }

@@ -2,7 +2,6 @@ package hex.music.api.resource;
 
 import hex.music.api.dto.LinkDTOBuilder;
 import hex.music.api.dto.out.FwTuneListDTO;
-import hex.music.api.dto.out.FwTuneListItemDTO;
 import hex.music.api.dto.out.TuneDTO;
 import hex.music.core.domain.Tune;
 import hex.music.fw.domain.SearchResultListWrapper;
@@ -28,7 +27,7 @@ public class FwResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKeyList(@DefaultValue("10") @QueryParam("limit") String limit,
+    public Response search(@DefaultValue("10") @QueryParam("limit") String limit,
             @DefaultValue("0") @QueryParam("offset") String offset,
             @QueryParam("q") String q) {
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());

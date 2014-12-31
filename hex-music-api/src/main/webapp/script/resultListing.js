@@ -90,7 +90,7 @@ var List = function (tunes) {
                         break;
                     case 'view-fw-page':
                         link = new element.IconLink(tunes[i].links[j].uri, 'FW_link', 'Hämta');
-                        link.setTooltip('Ladda hem låten från FolkWiki');
+                        link.setTooltip('Titta på låten på FolkWiki');
                         link.setTarget('view-fw-page');
                         break;
                 }
