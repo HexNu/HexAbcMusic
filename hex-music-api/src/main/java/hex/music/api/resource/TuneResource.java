@@ -6,7 +6,6 @@ import hex.music.api.dto.out.TuneDTO;
 import hex.music.core.AbcConstants;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.TuneListWrapper;
-import hex.music.core.domain.impl.ResultListWrapper;
 import hex.music.service.command.tune.CreateTunesFromAbcDocCommand;
 import hex.music.service.command.tune.GetAbcDocCommand;
 import hex.music.service.command.tune.GetAllTunesCommand;
