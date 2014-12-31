@@ -8,14 +8,13 @@ import se.digitman.lightxml.XmlNode;
  *
  * @author hln
  */
-public class DownloadLinks extends AbstractFwPageReader<Map<String, String>> {
+public class DownloadLinks extends AbstractFwPageReader {
 
     public DownloadLinks(String tuneId) {
         super("Musik/" + tuneId);
     }
 
-    @Override
-    public Map<String, String> execute() {
+    public Map<String, String> get() {
         Map<String, String> result = new HashMap<>();
         getAbcLinksNode().getChildren("a").stream().forEach((linkNode) -> {
             result.put(linkNode.getText(), linkNode.getAttribute("href"));
@@ -37,6 +36,6 @@ public class DownloadLinks extends AbstractFwPageReader<Map<String, String>> {
     }
 
     public static void main(String[] args) {
-        new DownloadLinks("1956").execute();
+        new DownloadLinks("1956").get();
     }
 }

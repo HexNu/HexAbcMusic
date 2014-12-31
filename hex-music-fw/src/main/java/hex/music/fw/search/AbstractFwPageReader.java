@@ -14,9 +14,9 @@ import se.digitman.lightxml.XmlNode;
 /**
  *
  * @author hln
- * @param <T>
+ *
  */
-public abstract class AbstractFwPageReader<T> {
+public abstract class AbstractFwPageReader {
 
     private static final String BASE_URL = "http://www.folkwiki.se/";
     private final XmlNode wikiRootNode;
@@ -31,13 +31,11 @@ public abstract class AbstractFwPageReader<T> {
         this(path, null);
     }
 
-    public abstract T execute();
-
     private XmlNode createWikiRootNode(String path) {
         try {
             String url = BASE_URL + path;
             if (param != null) {
-                url += URLEncoder.encode(param, "UTF-8"); 
+                url += URLEncoder.encode(param, "UTF-8");
             }
             URLConnection connection = new URL(url).openConnection();
             InputStream stream = connection.getInputStream();
@@ -72,5 +70,4 @@ public abstract class AbstractFwPageReader<T> {
         }
         return null;
     }
-
 }
