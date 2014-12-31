@@ -29,7 +29,7 @@ public class DownloadFromFwCommand extends AbstractServiceCommand<List<Tune>> {
     @Override
     public List<Tune> execute() {
         try {
-            Map<String, String> linkMap = new DownloadLinks(tuneId).execute();
+            Map<String, String> linkMap = new DownloadLinks(tuneId).get();
             String url = linkMap.get("abc");
             URLConnection connection = new URL(url).openConnection();
             InputStream stream = connection.getInputStream();
