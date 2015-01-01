@@ -16,6 +16,7 @@ import hex.music.service.command.tune.SearchTunesCommand;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -61,13 +62,25 @@ public class TuneResource extends AbstractResource {
 
     @GET
     @Path("download")
-    public Response downloadAllAbcTune(@PathParam("id") String id) throws UnsupportedEncodingException {
-        List<Tune> tunes = commandExecutor.execute(new GetAllTunesCommand(), getKey());
-        String abcString = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
-        InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
-        return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
-                .header("Content-Disposition", "attachment; filename=\"Alla låtar.abc\"")
-                .build();
+    public Response downloadAllAbcTune(@QueryParam("tunes") String tuneIds) throws UnsupportedEncodingException {
+        if (tuneIds == null || tuneIds.equals("")) {
+            List<Tune> tunes = commandExecutor.execute(new GetAllTunesCommand(), getKey());
+            String abcString = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
+            InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
+            return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
+                    .header("Content-Disposition", "attachment; filename=\"Alla låtar.abc\"")
+                    .build();
+        } else {
+            List<Tune> tunes = new ArrayList<>();
+            for (String id : tuneIds.split(",")) {
+                tunes.add(commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey()));
+            }
+            String abcString = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
+            InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
+            return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
+                    .header("Content-Disposition", "attachment; filename=\"Valda låtar.abc\"")
+                    .build();
+        }
     }
 
     @GET
