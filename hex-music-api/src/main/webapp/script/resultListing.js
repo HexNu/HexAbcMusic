@@ -1,13 +1,14 @@
-var ResultListing = function (jsonData) {
+var ResultListing = function (jsonData, isHex) {
     var links = jsonData.links || null;
     var tunes = jsonData.tunes || null;
     this.domElement = dom.createNode('div');
-    this.domElement.setAttribute('style', 'width: 300px; overflow: hidden')
+    this.domElement.setAttribute('style', 'width: 300px; overflow: hidden');
     this.header = dom.createNode('h3');
     this.domElement.appendChild(this.header);
     this.topNavigation = new Navigation(links);
     this.domElement.appendChild(this.topNavigation.getElement());
     this.tuneList = new List(tunes);
+    this.tuneList.setIsHex(isHex);
     this.domElement.appendChild(this.tuneList.getElement());
     this.bottomNavigation = new Navigation(links);
     this.bottomNavigation.getElement().setAttribute('style', 'padding: 12px 5px 5px 5px; border-top: dashed grey 1px');
@@ -18,7 +19,7 @@ var List = function (tunes) {
     if (tunes !== null) {
         for (var i = 0; i < tunes.length; i++) {
             var titleNode = dom.createNode('dt', tunes[i].title || 'Utan titel');
-            titleNode.setAttribute('title', tunes[i].title || '')
+            titleNode.setAttribute('title', tunes[i].title || '');
             titleNode.setAttribute('style', 'padding-top: 3px; font-weight: bold; border-top: dashed grey 1px; white-space: nowrap');
             this.domElement.appendChild(titleNode);
             if (hasValue(tunes[i].subheader)) {
@@ -96,6 +97,16 @@ var List = function (tunes) {
                 }
                 itemLinksNode.appendChild(link.getElement());
             }
+            if (this.isHex()) {
+                link = new element.IconButton('document_import', 'Lägg till lista');
+                link.setTooltip('Lägg till låten i din lista.');
+                link.getElement().setAttribute('tune-id', tunes[i].id);
+                link.getElement().setAttribute('tune-title', tunes[i].title);
+                link.addIconClickedAction(function(event) {
+                    hex.actions.addToTuneCollection(event.target.getAttribute('tune-id'), event.target.getAttribute('tune-title'));
+                });
+                itemLinksNode.appendChild(link.getElement());
+            }
             this.domElement.appendChild(itemLinksNode);
         }
     }
@@ -145,11 +156,20 @@ ResultListing.prototype = {
     setTitle: function (text) {
         this.header.innerHTML = text;
     },
+    getTitle: function() {
+        return this.header.innerHTML;
+    },
     getElement: function () {
         return this.domElement;
     }
 };
 List.prototype = {
+    setIsHex: function(isHex) {
+        this.isHex = isHex;
+    },
+    isHex: function() {
+        return this.isHex;
+    },
     getElement: function () {
         return this.domElement;
     }

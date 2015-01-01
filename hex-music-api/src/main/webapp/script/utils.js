@@ -1,8 +1,23 @@
 var $ = function (id) {
     return document.getElementById(id);
 };
+var StringBuilder = function (string) {
+    this.array = [];
+    this.append(string);
+};
+StringBuilder.prototype = {
+    append: function (string) {
+        if (string !== undefined && string !== null) {
+            this.array[this.array.length] = string;
+        }
+    },
+    toString: function (delimiter) {
+        delimiter = delimiter !== undefined && delimiter !== null ? delimiter : '';
+        return this.array.join(delimiter);
+    }
+};
 var dom = {
-    clearNode: function(nodeId) {
+    clearNode: function (nodeId) {
         $(nodeId).innerHTML = '';
     },
     createNode: function (name, text) {

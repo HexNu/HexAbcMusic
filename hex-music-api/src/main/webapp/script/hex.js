@@ -51,7 +51,17 @@ hex = {
         rythms: null,
         transcribers: null
     },
+    tuneCollections: {
+        current: null
+    },
     actions: {
+        addToTuneCollection: function (id, title) {
+            if (hex.tuneCollections.current === null) {
+                hex.tuneCollections.current = new TuneCollection('Låtsamling');
+            }
+            hex.tuneCollections.current.add(id, title);
+            alert(hex.tuneCollections.current.getIdsAsString());
+        },
         updateTune: function (tuneJson) {
             http.PutJson('resources/tunes/abc/' + tuneJson.id, tuneJson, null, true);
         },
@@ -103,12 +113,12 @@ hex = {
             hex.lists.keys = jsonData;
         },
         generateList: function (jsonData) {
-            var resultListing = new ResultListing(jsonData);
+            var resultListing = new ResultListing(jsonData, true);
             resultListing.setTitle('Låtar');
             $('list-area').appendChild(resultListing.getElement());
         },
         generateFwSearchResultList: function (jsonData) {
-            var resultListing = new ResultListing(jsonData);
+            var resultListing = new ResultListing(jsonData, false);
             resultListing.setTitle('Sökresultat');
             $('list-area').appendChild(resultListing.getElement());
         },
