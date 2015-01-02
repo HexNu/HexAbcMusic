@@ -113,7 +113,7 @@ var List = function (tunes) {
                 link.setTooltip('Lägg till låten i din lista.');
                 link.getElement().setAttribute('tune-id', tunes[i].id);
                 link.getElement().setAttribute('tune-title', tunes[i].title);
-                link.addIconClickedAction(function(event) {
+                link.addIconClickedAction(function (event) {
                     hex.actions.addToTuneCollection(event.target.getAttribute('tune-id'), event.target.getAttribute('tune-title'));
                 });
                 itemLinksNode.appendChild(link.getElement());
@@ -121,6 +121,9 @@ var List = function (tunes) {
             this.domElement.appendChild(itemLinksNode);
         }
     }
+    var hasValue = function (field) {
+        return field !== undefined && field !== null && field !== '';
+    };
 };
 /**
  * 
@@ -172,7 +175,7 @@ ResultListing.prototype = {
     setTitle: function (text) {
         this.header.innerHTML = text;
     },
-    getTitle: function() {
+    getTitle: function () {
         return this.header.innerHTML;
     },
     getElement: function () {
@@ -180,10 +183,10 @@ ResultListing.prototype = {
     }
 };
 List.prototype = {
-    setIsHex: function(isHex) {
+    setIsHex: function (isHex) {
         this.isHex = isHex;
     },
-    isHex: function() {
+    isHex: function () {
         return this.isHex;
     },
     getElement: function () {
@@ -203,7 +206,4 @@ NavigationBar.prototype = {
     getElement: function () {
         return this.domElement;
     }
-};
-var hasValue = function (field) {
-    return field !== undefined && field !== null && field !== '';
 };

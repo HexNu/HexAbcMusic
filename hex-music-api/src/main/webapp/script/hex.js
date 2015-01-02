@@ -60,7 +60,7 @@ hex = {
                 hex.tuneCollections.current = new TuneCollection('Låtsamling');
             }
             hex.tuneCollections.current.add(id, title);
-            alert(hex.tuneCollections.current.getIdsAsString());
+            alert(new Date().toLocaleDateString() + '\n'+ hex.tuneCollections.current.getTitle() + ': ' + hex.tuneCollections.current.getIdsAsString());
         },
         updateTune: function (tuneJson) {
             http.PutJson('resources/tunes/abc/' + tuneJson.id, tuneJson, null, true);
