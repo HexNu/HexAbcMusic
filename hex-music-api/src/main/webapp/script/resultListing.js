@@ -1,3 +1,9 @@
+/**
+ * 
+ * @param {JSON} jsonData
+ * @param {boolean} isHex
+ * @returns {ResultListing}
+ */
 var ResultListing = function (jsonData, isHex) {
     var links = jsonData.links || null;
     var tunes = jsonData.tunes || null;
@@ -5,15 +11,20 @@ var ResultListing = function (jsonData, isHex) {
     this.domElement.setAttribute('style', 'width: 300px; overflow: hidden');
     this.header = dom.createNode('h3');
     this.domElement.appendChild(this.header);
-    this.topNavigation = new Navigation(links);
+    this.topNavigation = new NavigationBar(links);
     this.domElement.appendChild(this.topNavigation.getElement());
     this.tuneList = new List(tunes);
     this.tuneList.setIsHex(isHex);
     this.domElement.appendChild(this.tuneList.getElement());
-    this.bottomNavigation = new Navigation(links);
-    this.bottomNavigation.getElement().setAttribute('style', 'padding: 12px 5px 5px 5px; border-top: dashed grey 1px');
+    this.bottomNavigation = new NavigationBar(links);
+    this.bottomNavigation.setStyle('padding: 12px 5px 5px 5px; border-top: dashed grey 1px');
     this.domElement.appendChild(this.bottomNavigation.getElement());
 };
+/**
+ * 
+ * @param {JSON} tunes
+ * @returns {List}
+ */
 var List = function (tunes) {
     this.domElement = dom.createNode('dl');
     if (tunes !== null) {
@@ -111,7 +122,12 @@ var List = function (tunes) {
         }
     }
 };
-var Navigation = function (links) {
+/**
+ * 
+ * @param {JSON} links
+ * @returns {NavigationBar}
+ */
+var NavigationBar = function (links) {
     this.domElement = dom.createNode('div');
     this.domElement.setAttribute('style', 'padding: 5px 5px 0');
     var nextUri = null;
@@ -174,12 +190,15 @@ List.prototype = {
         return this.domElement;
     }
 };
-Navigation.prototype = {
+NavigationBar.prototype = {
     setSpacerWidth: function (width) {
         this.spacer.getElement().setAttribute('width', width);
     },
     setSpacerHeight: function (height) {
         this.spacer.getElement().setAttribute('height', height);
+    },
+    setStyle: function (style) {
+        this.getElement().setAttribute('style', style);
     },
     getElement: function () {
         return this.domElement;
