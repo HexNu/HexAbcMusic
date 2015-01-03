@@ -87,7 +87,12 @@ public class LinkDTOBuilder {
     }
 
     public LinkDTO createTuneDownloadLink(Tune tune) {
-        LinkDTO linkDTO = new LinkDTO("download", createURI("tunes/abc/download/" + tune.getId()));
+        LinkDTO linkDTO = new LinkDTO("download-abc", createURI("tunes/abc/download/" + tune.getId()));
+        return linkDTO;
+    }
+
+    public LinkDTO createTuneDownloadPdfLink(Tune tune) {
+        LinkDTO linkDTO = new LinkDTO("download-pdf", createURI("tunes/abc/download/" + tune.getId() + "?format=pdf"));
         return linkDTO;
     }
 

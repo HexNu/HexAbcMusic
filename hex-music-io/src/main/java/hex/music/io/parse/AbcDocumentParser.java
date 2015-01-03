@@ -1,4 +1,4 @@
-package hex.music.io;
+package hex.music.io.parse;
 
 import hex.music.core.AbcConstants;
 import hex.music.core.AbcConstants.Field;

@@ -26,6 +26,9 @@ var ResultListing = function (jsonData, isHex) {
  * @returns {List}
  */
 var List = function (tunes) {
+    var hasValue = function (field) {
+        return field !== undefined && field !== null && field !== '';
+    };
     this.domElement = dom.createNode('dl');
     if (tunes !== null) {
         for (var i = 0; i < tunes.length; i++) {
@@ -83,8 +86,12 @@ var List = function (tunes) {
                             hex.actions.edit(event.target.getAttribute('link'));
                         });
                         break;
-                    case 'download':
-                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_download', 'Ladda hem');
+                    case 'download-pdf':
+                        link = new element.IconLink(tunes[i].links[j].uri, 'file_extension_pdf_down', 'Ladda hem PDF');
+                        link.setTooltip('Ladda hem låten som PDF-fil till din dator');
+                        break;
+                    case 'download-abc':
+                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_down', 'Ladda hem ABC');
                         link.setTooltip('Ladda hem ABC-koden till din dator');
                         break;
                     case 'view-abc':
@@ -109,7 +116,7 @@ var List = function (tunes) {
                 itemLinksNode.appendChild(link.getElement());
             }
             if (this.isHex()) {
-                link = new element.IconButton('document_import', 'Lägg till lista');
+                link = new element.IconButton('application_view_list_add', 'Lägg till lista');
                 link.setTooltip('Lägg till låten i din lista.');
                 link.getElement().setAttribute('tune-id', tunes[i].id);
                 link.getElement().setAttribute('tune-title', tunes[i].title);
@@ -121,9 +128,6 @@ var List = function (tunes) {
             this.domElement.appendChild(itemLinksNode);
         }
     }
-    var hasValue = function (field) {
-        return field !== undefined && field !== null && field !== '';
-    };
 };
 /**
  * 

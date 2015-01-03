@@ -1,4 +1,10 @@
 var element = {
+    /**
+     * 
+     * @param {int} width
+     * @param {int} height
+     * @returns {element.SpacerElement}
+     */
     Spacer: function(width, height) {
         this.domElement = dom.createNode('img');
         this.domElement.setAttribute('src', 'layout/images/spacer.png');
@@ -8,19 +14,19 @@ var element = {
     },
     /**
      * 
-     * @param {type} url
-     * @param {type} imageName
-     * @param {type} altText
-     * @returns {undefined}
+     * @param {String} url
+     * @param {String} imageName
+     * @param {String} altText
+     * @returns {element.IconLink}
      */
     IconLink: function (url, imageName, altText) {
         this.domElement = dom.createNode('a');
-        this.domElement.setAttribute('href', url);
+        this.domElement.setAttribute('href', decodeURIComponent(url));
         this.image = dom.createNode('img');
         this.image.setAttribute('src', 'layout/images/icons/16x16/' + imageName + '.png');
         this.image.setAttribute('width', '16');
         this.image.setAttribute('height', '16');
-        this.setStyle('border:none');
+        this.setStyle('border:none;margin-right:3px;');
         if (altText) {
             this.image.setAttribute('alt', altText);
         }
@@ -28,7 +34,7 @@ var element = {
     },
     /**
      * 
-     * @param {type} name
+     * @param {String} name
      * @returns {element.NumberChooserField}
      */
     NumberChooserField: function (name) {
@@ -38,8 +44,8 @@ var element = {
     },
     /**
      * 
-     * @param {type} name
-     * @param {type} value
+     * @param {String} name
+     * @param {String} value
      * @returns {element.SearchField}
      */
     SearchField: function (name, value) {
@@ -50,7 +56,7 @@ var element = {
     },
     /**
      * 
-     * @param {type} id
+     * @param {String} id
      * @returns {element.Form}
      */
     Form: function (id) {
@@ -60,6 +66,10 @@ var element = {
         this.domElement.appendChild(this.table);
         this.setId(id);
     },
+    /**
+     * 
+     * @returns {element.FormTitleMenuBar}
+     */
     FormTitleMenuBar: function () {
         this.domElement = dom.createNode('thead');
         this.headerRow = dom.createNode('tr');
@@ -80,7 +90,7 @@ var element = {
     },
     /**
      * 
-     * @param {type} header
+     * @param {String} header
      * @returns {element.FormHeader}
      */
     FormHeader: function (header) {
@@ -93,16 +103,22 @@ var element = {
     FormCell: function () {
         this.domElement = dom.createNode('td');
     },
+    /**
+     * 
+     * @returns {element.VoiceMenu}
+     */
     VoiceMenu: function () {
         this.domElement = dom.createNode('td');
     },
     /**
      * 
-     * @param {type} fieldName
-     * @param {type} action
+     * @param {String} fieldName
+     * @param {Function} action
+     * @param {String} iconName
      * @returns {element.FileUploader}
      */
-    FileUploader: function (fieldName, action) {
+    FileUploader: function (fieldName, action, iconName) {
+        this.iconName = iconName || 'page_white_get_A';
         var fileChooserId = fieldName + '-chooser';
         var formId = fieldName;
         this.id = formId;
@@ -126,7 +142,7 @@ var element = {
         });
         this.fileChooser.getElement().setAttribute('style', 'display:none');
         this.domElement.appendChild(this.fileChooser.getElement());
-        this.fileChooserTrigger = new element.IconButton('page_white_get_A', 'Importera');
+        this.fileChooserTrigger = new element.IconButton(this.iconName, 'Importera');
         this.fileChooserTrigger.addIconClickedAction(function () {
             $(fileChooserId).click();
         });
@@ -134,7 +150,7 @@ var element = {
     },
     /**
      * 
-     * @param {type} name
+     * @param {String} name
      * @returns {element.FileChooser}
      */
     FileChooser: function (name) {
@@ -145,7 +161,7 @@ var element = {
     },
     /**
      * 
-     * @param {type} name
+     * @param {String} name
      * @returns {element.SelectList}
      */
     SelectList: function (name) {
@@ -157,7 +173,7 @@ var element = {
     },
     /**
      * 
-     * @param {type} name
+     * @param {String} name
      * @returns {element.TextField}
      */
     TextField: function (name) {
@@ -167,9 +183,9 @@ var element = {
     },
     /**
      * 
-     * @param {type} name
-     * @param {type} rows
-     * @param {type} cols
+     * @param {String} name
+     * @param {int} rows
+     * @param {int} cols
      * @returns {element.TextArea}
      */
     TextArea: function (name, rows, cols) {
@@ -181,8 +197,8 @@ var element = {
     },
     /**
      * 
-     * @param {type} text
-     * @param {type} targetId
+     * @param {String} text
+     * @param {String} targetId
      * @returns {element.Label}
      */
     Label: function (text, targetId) {
@@ -194,8 +210,8 @@ var element = {
     },
     /**
      * 
-     * @param {type} legend
-     * @param {type} cssClass
+     * @param {String} legend
+     * @param {String} cssClass
      * @returns {element.Border}
      */
     Border: function (legend, cssClass) {
@@ -205,8 +221,8 @@ var element = {
     },
     /**
      * 
-     * @param {type} imageName
-     * @param {type} altText
+     * @param {String} imageName
+     * @param {String} altText
      * @returns {element.IconButton}
      */
     IconButton: function (imageName, altText) {
@@ -215,15 +231,15 @@ var element = {
         this.domElement.setAttribute('src', this.getImageUrl());
         this.domElement.setAttribute('width', '16');
         this.domElement.setAttribute('height', '16');
-        this.setStyle('cursor:pointer;');
+        this.setStyle('cursor:pointer;margin-right:3px;');
         if (altText) {
             this.domElement.setAttribute('alt', altText);
         }
     },
     /**
      * 
-     * @param {type} name
-     * @param {type} id
+     * @param {String} name
+     * @param {String} id
      * @returns {element.DataList}
      */
     DataList: function (name, id) {
@@ -242,6 +258,11 @@ var element = {
         this.dataList.appendChild(this.select);
         this.domElement.appendChild(this.dataList);
     },
+    /**
+     * 
+     * @param {String} name
+     * @returns {element.HiddenField}
+     */
     HiddenField: function (name) {
         this.domElement = dom.createNode('input');
         this.domElement.setAttribute('name', name);
@@ -280,8 +301,8 @@ element.DataList.prototype = {
     },
     /**
      * 
-     * @param {type} items "[{ 'name': 'namn', 'description','beskrivning'}]"
-     * @returns {undefined}
+     * @param {JSOON} items "[{ 'name': 'namn', 'description','beskrivning'}]"
+     * @returns {void}
      */
     setDataList: function (items) {
         this.items = items || null;
@@ -321,10 +342,20 @@ element.NumberChooserField.prototype = {
         this.value = value || 0;
         this.domElement.setAttribute('value', this.value);
     },
+    /**
+     * 
+     * @param {int} min
+     * @returns {void}
+     */
     setMin: function (min) {
         this.min = min || 0;
         this.domElement.setAttribute('min', this.min);
     },
+    /**
+     * 
+     * @param {int} max
+     * @returns {void}
+     */
     setMax: function (max) {
         this.max = max || 500;
         this.domElement.setAttribute('min', this.max);
@@ -384,6 +415,11 @@ element.SearchField.prototype = {
     }
 };
 element.Form.prototype = {
+    /**
+     * 
+     * @param {element.FormTitleMenuBar} menuTitleBar
+     * @returns {void}
+     */
     setTitleMenuBar: function (menuTitleBar) {
         this.table.appendChild(menuTitleBar);
     },
@@ -406,7 +442,7 @@ element.Form.prototype = {
             this.domElement.setAttribute('id', this.id);
         }
     },
-    setEncodignType: function (enctype) {
+    setEncodingType: function (enctype) {
         this.enctype = enctype || null;
         if (this.enctype !== null) {
             this.domElement.setAttribute('enctype', this.enctype);
@@ -418,6 +454,11 @@ element.Form.prototype = {
             this.domElement.setAttribute('method', this.method);
         }
     },
+    /**
+     * 
+     * @param {Function} action
+     * @returns {void}
+     */
     setAction: function (action) {
         this.action = action || null;
         if (this.action !== null) {
@@ -513,6 +554,11 @@ element.FormHeader.prototype = {
     }
 };
 element.FormCell.prototype = {
+    /**
+     * 
+     * @param {Element} element
+     * @returns {void}
+     */
     addElement: function (element) {
         this.domElement.appendChild(element);
     },
@@ -534,12 +580,22 @@ element.FormCell.prototype = {
     setTooltip: function (tooltip) {
         this.domElement.setAttribute('title', tooltip);
     },
+    /**
+     * 
+     * @param {int} colSpan
+     * @returns {void}
+     */
     setColSpan: function (colSpan) {
         this.colSpan = colSpan;
         if (this.colSpan !== undefined && this.colSpan !== null && parseInt(this.colSpan) !== NaN) {
             this.domElement.setAttribute('colspan', this.colSpan);
         }
     },
+    /**
+     * 
+     * @param {int} rowSpan
+     * @returns {void}
+     */
     setRowSpan: function (rowSpan) {
         this.rowSpan = rowSpan;
         if (this.rowSPan !== undefined && this.rowSpan !== null && parseInt(this.rowSpan) !== NaN) {
@@ -551,6 +607,11 @@ element.FormCell.prototype = {
     }
 };
 element.VoiceMenu.prototype = {
+    /**
+     * 
+     * @param {Element} element
+     * @returns {void}
+     */
     addElement: function (element) {
         this.domElement.appendChild(element);
     },
@@ -612,6 +673,11 @@ element.FileChooser.prototype = {
     getElement: function () {
         return this.domElement;
     },
+    /**
+     * 
+     * @param {Function} action
+     * @returns {void}
+     */
     addChangeAction: function (action) {
         this.domElement.addEventListener('change', action);
     }
@@ -644,6 +710,11 @@ element.SelectList.prototype = {
     getElement: function () {
         return this.domElement;
     },
+    /**
+     * 
+     * @param {Function} action
+     * @returns {void}
+     */
     addChangeAction: function (action) {
         this.domElement.addEventListener('change', action);
     }
@@ -821,6 +892,11 @@ element.IconButton.prototype = {
     setAccessKey: function(accesskey) {
         this.domElement.setAttribute('accesskey', accesskey);
     },
+    /**
+     * 
+     * @param {Function} action
+     * @returns {void}
+     */
     addIconClickedAction: function (action) {
         this.domElement.addEventListener('click', action);
     },

@@ -2,7 +2,7 @@ package hex.music.service.command.tune;
 
 import hex.music.core.domain.Tune;
 import hex.music.fw.search.DownloadLinks;
-import hex.music.io.AbcDocumentParser;
+import hex.music.io.parse.AbcDocumentParser;
 import hex.music.service.command.AbstractServiceCommand;
 import java.io.IOException;
 import java.io.InputStream;

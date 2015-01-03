@@ -132,8 +132,9 @@ hex = {
             $('editor-area').appendChild(editForm.getElement());
             $('editor-area').style.visibility = 'visible';
         },
-        downloadAll: function () {
-            location.href = 'resources/tunes/abc/download';
+        downloadAll: function (format) {
+            format = format || 'abc';
+            location.href = 'resources/tunes/abc/download?format=' + format;
         },
         edit: function (url) {
             hex.actions.clearEditorArea();
@@ -171,6 +172,7 @@ hex = {
         create: function () {
             this.addSearchBox();
             this.addTuneListTrigger();
+            this.addExportPdfTrigger();
             this.addExportTrigger();
             this.addImportTrigger();
             this.addNewTunewButton();
@@ -210,8 +212,16 @@ hex = {
             });
             this.add(tuneListTrigger.getElement());
         },
+        addExportPdfTrigger: function () {
+            var exportTrigger = new element.IconButton('file_extension_pdf_down', 'Ladda hem PDF');
+            exportTrigger.setTooltip('Ladda ner alla låtar som en pdf-fil till din dator.');
+            exportTrigger.addIconClickedAction(function () {
+                hex.actions.downloadAll('pdf');
+            });
+            this.add(exportTrigger.getElement());
+        },
         addExportTrigger: function () {
-            var exportTrigger = new element.IconButton('page_white_put_A', 'Exportera');
+            var exportTrigger = new element.IconButton('music_notes_down', 'Ladda hem ABC');
             exportTrigger.setTooltip('Ladda ner alla låtar som en abc-fil till din dator.');
             exportTrigger.addIconClickedAction(function () {
                 hex.actions.downloadAll();
@@ -219,7 +229,7 @@ hex = {
             this.add(exportTrigger.getElement());
         },
         addImportTrigger: function () {
-            var importTrigger = new element.FileUploader('file', 'resources/tunes/abc/upload');
+            var importTrigger = new element.FileUploader('file', 'resources/tunes/abc/upload', 'music_notes_up');
             importTrigger.setTooltip('Ladda upp en abc-fil till servern.');
             this.add(importTrigger.getElement());
         },

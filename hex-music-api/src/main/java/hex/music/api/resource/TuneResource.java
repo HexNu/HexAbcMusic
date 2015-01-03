@@ -11,6 +11,8 @@ import hex.music.service.command.tune.GetAbcDocCommand;
 import hex.music.service.command.tune.GetAllTunesCommand;
 import hex.music.service.command.tune.GetTuneCommand;
 import hex.music.service.command.tune.GetLimitedTuneListCommand;
+import hex.music.service.command.tune.GetPdfDocCommand;
+import hex.music.service.command.tune.PreviewAbcDocCommand;
 import hex.music.service.command.tune.SearchInNotesCommand;
 import hex.music.service.command.tune.SearchTunesCommand;
 import java.io.ByteArrayInputStream;
@@ -62,36 +64,52 @@ public class TuneResource extends AbstractResource {
 
     @GET
     @Path("download")
-    public Response downloadAllAbcTune(@QueryParam("tunes") String tuneIds) throws UnsupportedEncodingException {
+    public Response downloadTunes(@QueryParam("tunes") String tuneIds, @DefaultValue("abc") @QueryParam("format") String format) throws UnsupportedEncodingException {
+        InputStream result = null;
+        String resultFileName;
+        List<Tune> tunes;
         if (tuneIds == null || tuneIds.equals("")) {
-            List<Tune> tunes = commandExecutor.execute(new GetAllTunesCommand(), getKey());
-            String abcString = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
-            InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
-            return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
-                    .header("Content-Disposition", "attachment; filename=\"Alla låtar.abc\"")
-                    .build();
+            resultFileName = "Alla låtar";
+            tunes = commandExecutor.execute(new GetAllTunesCommand(), getKey());
         } else {
-            List<Tune> tunes = new ArrayList<>();
+            resultFileName = "Valda låtar";
+            tunes = new ArrayList<>();
             for (String id : tuneIds.split(",")) {
                 tunes.add(commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey()));
             }
-            String abcString = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
-            InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
+        }
+        if (format.equals("abc")) {
+            result = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
+        } else {
+            result = commandExecutor.execute(new GetPdfDocCommand(tunes), getKey());
+        }
+        if (result != null) {
             return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
-                    .header("Content-Disposition", "attachment; filename=\"Valda låtar.abc\"")
+                    .header("Content-Disposition", "attachment; filename=\"" + resultFileName + "." + format + "\"")
                     .build();
         }
+        return Response.noContent().build();
     }
 
     @GET
     @Path("download/{id}")
-    public Response downloadAbcTune(@PathParam("id") String id) throws UnsupportedEncodingException {
+    public Response downloadAbcTune(@PathParam("id") String id, @DefaultValue("abc") @QueryParam("format") String format) {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
-        String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), getKey());
-        InputStream result = new ByteArrayInputStream(abcString.getBytes(AbcConstants.ABC_ENCODING));
-        return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
-                .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + ".abc\"")
-                .build();
+        InputStream result = null;
+        switch (format) {
+            case "abc":
+                result = commandExecutor.execute(new GetAbcDocCommand(tune), getKey());
+                break;
+            case "pdf":
+                result = commandExecutor.execute(new GetPdfDocCommand(tune), getKey());
+                break;
+        }
+        if (result != null) {
+            return Response.ok((Object) result).type(format.equals("abc") ? MediaType.TEXT_PLAIN : MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + "." + format + "\"")
+                    .build();
+        }
+        return Response.noContent().build();
     }
 
     @GET
@@ -107,7 +125,7 @@ public class TuneResource extends AbstractResource {
     @Path("preview/{id}")
     public Response previewAbcCode(@PathParam("id") String id, @QueryParam("view") String view) throws UnsupportedEncodingException {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
-        String abcString = commandExecutor.execute(new GetAbcDocCommand(tune), getKey());
+        String abcString = commandExecutor.execute(new PreviewAbcDocCommand(tune), getKey());
         if (view == null || view.equalsIgnoreCase("abc")) {
             return Response.ok(abcString)
                     .header("Content-Type", "text/plain; charset=iso-8859-1")

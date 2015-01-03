@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {JSON} tune
+ * @returns {TuneEditor}
+ */
 var TuneEditor = function (tune) {
     voiceCounter = 0;
     if (tune === null) {
@@ -250,6 +255,11 @@ TuneEditor.prototype = {
 };
 var INPUT_FIELD_FONT = 'font-family: Verdana, Helvetica, sans-serif; font-size: 11px;';
 var TEXT_AREA_FONT = 'font-family: monospace; font-size: 10px;';
+/**
+ * Template for the TuneEditor fields
+ * 
+ * @type JSON
+ */
 var fields = {
     'id': {
         'hidden': true
@@ -367,8 +377,16 @@ var fields = {
 };
 var currentTuneEditor;
 var voiceCounter = 0;
+/**
+ * Array of fields for the tune meta-data
+ * @type Array
+ */
 var tuneFields = ['title', 'subheader', 'composer', 'source', 'rythm',
     'region', 'history', 'notes', 'transcriber', 'bibliography', 'discography',
     'uri', 'meter', 'unitNoteLength', 'tempo', 'keyId', 'key', 'clefId', 'clef', 'transpose', 'middle'];
+/**
+ * Array of fields for the voices
+ * @type Array
+ */
 var voiceFields = ['voiceId', 'voiceCode', 'name', 'subname', 'clefId', 'clef', 'transpose', 'voiceIndex',
     'transpose', 'body', 'middle'];
