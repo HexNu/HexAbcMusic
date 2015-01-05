@@ -3,6 +3,8 @@ package hex.music.core.domain.impl;
 import hex.music.core.domain.Key;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.Voice;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -12,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -23,6 +26,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Tune")
 public class AbcTune implements Tune {
+
+    private static final int MAXIMUM_FILE_SIZE = 1024 * 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,6 +66,9 @@ public class AbcTune implements Tune {
     private String tempo;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "tune", targetEntity = AbcVoice.class)
     private final List<Voice> voices = new ArrayList<>();
+    @Lob
+    @Column(length = MAXIMUM_FILE_SIZE)
+    private byte[] firstLine;
 
     public AbcTune() {
     }
@@ -252,5 +260,15 @@ public class AbcTune implements Tune {
     @Override
     public void addVoice(Voice voice) {
         voices.add(voice);
+    }
+
+    @Override
+    public InputStream getFirstLine() {
+        return new ByteArrayInputStream(firstLine);
+    }
+
+    @Override
+    public void setFirstLine(byte[] firstLine) {
+        this.firstLine = firstLine;
     }
 }

@@ -1,5 +1,6 @@
 package hex.music.core.domain;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -324,4 +325,15 @@ public interface Tune extends DomainEntity {
      * @param voice
      */
     void addVoice(Voice voice);
+    
+    /**
+     * First line of the first voice in the tune.
+     * 
+     * Stripped of accents, bows and chords
+     * 
+     * @return 
+     */
+    InputStream getFirstLine();
+    
+    void setFirstLine(byte[] start);
 }
