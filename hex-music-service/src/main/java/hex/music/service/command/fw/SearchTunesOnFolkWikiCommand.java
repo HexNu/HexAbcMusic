@@ -1,4 +1,4 @@
-package hex.music.service.command.tune;
+package hex.music.service.command.fw;
 
 import hex.music.fw.domain.SearchResultListWrapper;
 import hex.music.fw.search.TitleSearch;

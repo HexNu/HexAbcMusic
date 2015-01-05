@@ -1,4 +1,4 @@
-package hex.music.service.command.tune;
+package hex.music.service.command.io;
 
 import hex.music.core.domain.Tune;
 import hex.music.io.AbcDocumentProducer;
@@ -24,11 +24,6 @@ public class PreviewAbcDocCommand extends AbstractServiceCommand<String> {
 
     @Override
     public String execute() {
-        StringBuilder result = new StringBuilder();
-        tunes.stream().forEach((tune) -> {
-            result.append(new AbcDocumentProducer(tune).produce());
-        });
-        return result.toString();
+        return new AbcDocumentProducer(tunes).produce();
     }
-
 }
