@@ -3,19 +3,19 @@ package hex.music.api.resource;
 import hex.music.api.dto.LinkDTOBuilder;
 import hex.music.api.dto.out.LimitedTuneListDTO;
 import hex.music.api.dto.out.TuneDTO;
-import hex.music.core.AbcConstants;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.TuneListWrapper;
-import hex.music.service.command.tune.CreateTunesFromAbcDocCommand;
-import hex.music.service.command.tune.GetAbcDocCommand;
+import hex.music.service.command.io.CreateTunesFromAbcDocCommand;
+import hex.music.service.command.io.GetAbcStreamCommand;
+import hex.music.service.command.io.GetZippedMidiFilesStreamCommand;
 import hex.music.service.command.tune.GetAllTunesCommand;
 import hex.music.service.command.tune.GetTuneCommand;
 import hex.music.service.command.tune.GetLimitedTuneListCommand;
-import hex.music.service.command.tune.GetPdfDocCommand;
-import hex.music.service.command.tune.PreviewAbcDocCommand;
+import hex.music.service.command.io.GetPdfStreamCommand;
+import hex.music.service.command.io.GetPsStreamCommand;
+import hex.music.service.command.io.PreviewAbcDocCommand;
 import hex.music.service.command.tune.SearchInNotesCommand;
 import hex.music.service.command.tune.SearchTunesCommand;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  *
  * @author hln
  */
-@Path("tunes/abc")
+@Path("tunes/hex")
 public class TuneResource extends AbstractResource {
 
     @GET
@@ -66,26 +66,20 @@ public class TuneResource extends AbstractResource {
     @Path("download")
     public Response downloadTunes(@QueryParam("tunes") String tuneIds, @DefaultValue("abc") @QueryParam("format") String format) throws UnsupportedEncodingException {
         InputStream result = null;
-        String resultFileName;
-        List<Tune> tunes;
+        String resultFileName = tuneIds == null || tuneIds.equals("") ? "Alla låtar" : "Låtsamling";
+        String resultFileExtension = format.equals("abc") || format.equals("pdf")  || format.equals("ps") ? "." + format : ".zip";
+        List<Tune> tunes = new ArrayList<>();
         if (tuneIds == null || tuneIds.equals("")) {
-            resultFileName = "Alla låtar";
-            tunes = commandExecutor.execute(new GetAllTunesCommand(), getKey());
+            tunes.addAll(commandExecutor.execute(new GetAllTunesCommand(), getKey()));
         } else {
-            resultFileName = "Valda låtar";
-            tunes = new ArrayList<>();
             for (String id : tuneIds.split(",")) {
                 tunes.add(commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey()));
             }
         }
-        if (format.equals("abc")) {
-            result = commandExecutor.execute(new GetAbcDocCommand(tunes), getKey());
-        } else {
-            result = commandExecutor.execute(new GetPdfDocCommand(tunes), getKey());
-        }
+        result = getTunesAsInputStream(format, result, tunes);
         if (result != null) {
             return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
-                    .header("Content-Disposition", "attachment; filename=\"" + resultFileName + "." + format + "\"")
+                    .header("Content-Disposition", "attachment; filename=\"" + resultFileName + resultFileExtension + "\"")
                     .build();
         }
         return Response.noContent().build();
@@ -96,14 +90,7 @@ public class TuneResource extends AbstractResource {
     public Response downloadAbcTune(@PathParam("id") String id, @DefaultValue("abc") @QueryParam("format") String format) {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
         InputStream result = null;
-        switch (format) {
-            case "abc":
-                result = commandExecutor.execute(new GetAbcDocCommand(tune), getKey());
-                break;
-            case "pdf":
-                result = commandExecutor.execute(new GetPdfDocCommand(tune), getKey());
-                break;
-        }
+        result = getTuneAsInputStream(format, result, tune);
         if (result != null) {
             return Response.ok((Object) result).type(format.equals("abc") ? MediaType.TEXT_PLAIN : MediaType.APPLICATION_OCTET_STREAM)
                     .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + "." + format + "\"")
@@ -149,5 +136,30 @@ public class TuneResource extends AbstractResource {
     public Response upploadAbcDoc(@FormDataParam("file") InputStream inputStream) {
         List<Tune> newTunes = commandExecutor.executeInTransaction(new CreateTunesFromAbcDocCommand(inputStream), getKey());
         return Response.ok("Number of tunes created: " + newTunes.size()).build();
+    }
+
+    private InputStream getTunesAsInputStream(String format, InputStream result, List<Tune> tunes) {
+        switch (format) {
+            case "abc":
+                result = commandExecutor.execute(new GetAbcStreamCommand(tunes), getKey());
+                break;
+            case "mid":
+            case "midi":
+                result = commandExecutor.execute(new GetZippedMidiFilesStreamCommand(tunes), getKey());
+                break;
+            case "pdf":
+                result = commandExecutor.execute(new GetPdfStreamCommand(tunes), getKey());
+                break;
+            case "ps":
+                result = commandExecutor.execute(new GetPsStreamCommand(tunes), getKey());
+                break;
+        }
+        return result;
+    }
+
+    private InputStream getTuneAsInputStream(String format, InputStream result, Tune tune) {
+        List<Tune> tunes = new ArrayList<>();
+        tunes.add(tune);
+        return getTunesAsInputStream(format, result, tunes);
     }
 }

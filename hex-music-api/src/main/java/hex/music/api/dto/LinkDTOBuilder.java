@@ -48,7 +48,7 @@ public class LinkDTOBuilder {
         if (previous == null) {
             return null;
         }
-        String url = "tunes/abc/?limit=" + limit + "&offset=" + previous;
+        String url = "tunes/hex/?limit=" + limit + "&offset=" + previous;
         if (query != null) {
             url += "&q=" + query;
         }
@@ -75,7 +75,7 @@ public class LinkDTOBuilder {
         if (next == null) {
             return null;
         }
-        String url = "tunes/abc/?limit=" + limit + "&offset=" + next;
+        String url = "tunes/hex/?limit=" + limit + "&offset=" + next;
         if (query != null) {
             url += "&q=" + query;
         }
@@ -87,22 +87,22 @@ public class LinkDTOBuilder {
     }
 
     public LinkDTO createTuneDownloadLink(Tune tune) {
-        LinkDTO linkDTO = new LinkDTO("download-abc", createURI("tunes/abc/download/" + tune.getId()));
+        LinkDTO linkDTO = new LinkDTO("download-abc", createURI("tunes/hex/download/" + tune.getId()));
         return linkDTO;
     }
 
     public LinkDTO createTuneDownloadPdfLink(Tune tune) {
-        LinkDTO linkDTO = new LinkDTO("download-pdf", createURI("tunes/abc/download/" + tune.getId() + "?format=pdf"));
+        LinkDTO linkDTO = new LinkDTO("download-pdf", createURI("tunes/hex/download/" + tune.getId() + "?format=pdf"));
         return linkDTO;
     }
 
     public LinkDTO createTuneViewAbcLink(Tune tune) {
-        LinkDTO linkDTO = new LinkDTO("view-abc", createURI("tunes/abc/preview/" + tune.getId()));
+        LinkDTO linkDTO = new LinkDTO("view-abc", createURI("tunes/hex/preview/" + tune.getId()));
         return linkDTO;
     }
 
     public LinkDTO createTuneEditLink(Tune tune) {
-        LinkDTO linkDTO = new LinkDTO("edit", createURI("tunes/abc/edit/" + tune.getId()));
+        LinkDTO linkDTO = new LinkDTO("edit", createURI("tunes/hex/edit/" + tune.getId()));
         return linkDTO;
     }
 

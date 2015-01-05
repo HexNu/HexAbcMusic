@@ -63,23 +63,23 @@ hex = {
             alert(new Date().toLocaleDateString() + '\n'+ hex.tuneCollections.current.getTitle() + ': ' + hex.tuneCollections.current.getIdsAsString());
         },
         updateTune: function (tuneJson) {
-            http.PutJson('resources/tunes/abc/' + tuneJson.id, tuneJson, null, true);
+            http.PutJson('resources/tunes/hex/' + tuneJson.id, tuneJson, null, true);
         },
         saveNewTune: function (tuneJson) {
-            http.PostJson('resources/tunes/abc/', tuneJson, null, true);
+            http.PostJson('resources/tunes/hex/', tuneJson, null, true);
         },
         populateAutoCompleteLists: function () {
             hex.actions.clearList();
             hex.actions.getAutoCompleteData();
         },
         getAutoCompleteData: function () {
-            http.GetJson('resources/tunes/abc/composers', hex.actions.generateComposerList);
-            http.GetJson('resources/tunes/abc/keys', hex.actions.generateKeyList);
-            http.GetJson('resources/tunes/abc/clefs', hex.actions.generateClefList);
-            http.GetJson('resources/tunes/abc/sources', hex.actions.generateSourceList);
-            http.GetJson('resources/tunes/abc/regions', hex.actions.generateRegionList);
-            http.GetJson('resources/tunes/abc/rythms', hex.actions.generateRythmList);
-            http.GetJson('resources/tunes/abc/transcribers', hex.actions.generateTranscriberList);
+            http.GetJson('resources/tunes/hex/composers', hex.actions.generateComposerList);
+            http.GetJson('resources/tunes/hex/keys', hex.actions.generateKeyList);
+            http.GetJson('resources/tunes/hex/clefs', hex.actions.generateClefList);
+            http.GetJson('resources/tunes/hex/sources', hex.actions.generateSourceList);
+            http.GetJson('resources/tunes/hex/regions', hex.actions.generateRegionList);
+            http.GetJson('resources/tunes/hex/rythms', hex.actions.generateRythmList);
+            http.GetJson('resources/tunes/hex/transcribers', hex.actions.generateTranscriberList);
         },
         clearEditorArea: function () {
             dom.clearNode('editor-area');
@@ -134,7 +134,7 @@ hex = {
         },
         downloadAll: function (format) {
             format = format || 'abc';
-            location.href = 'resources/tunes/abc/download?format=' + format;
+            location.href = 'resources/tunes/hex/download?format=' + format;
         },
         edit: function (url) {
             hex.actions.clearEditorArea();
@@ -152,16 +152,16 @@ hex = {
         listSearchResults: function () {
             hex.actions.clearList();
             var queryString = $('search-box').value;
-            http.GetJson('resources/tunes/abc?q=' + queryString, hex.actions.generateList);
+            http.GetJson('resources/tunes/hex?q=' + queryString, hex.actions.generateList);
         },
         listNoteSearchResults: function () {
             hex.actions.clearList();
             var queryString = $('search-box').value;
-            http.GetJson('resources/tunes/abc?notes=' + queryString, hex.actions.generateList);
+            http.GetJson('resources/tunes/hex?notes=' + queryString, hex.actions.generateList);
         },
         listTunes: function (uri) {
             hex.actions.clearList();
-            uri = uri || 'resources/tunes/abc';
+            uri = uri || 'resources/tunes/hex';
             http.GetJson(uri, hex.actions.generateList);
         }
     },
@@ -229,7 +229,7 @@ hex = {
             this.add(exportTrigger.getElement());
         },
         addImportTrigger: function () {
-            var importTrigger = new element.FileUploader('file', 'resources/tunes/abc/upload', 'music_notes_up');
+            var importTrigger = new element.FileUploader('file', 'resources/tunes/hex/upload', 'music_notes_up');
             importTrigger.setTooltip('Ladda upp en abc-fil till servern.');
             this.add(importTrigger.getElement());
         },
