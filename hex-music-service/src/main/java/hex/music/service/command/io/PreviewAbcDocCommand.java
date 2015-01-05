@@ -1,7 +1,7 @@
 package hex.music.service.command.io;
 
 import hex.music.core.domain.Tune;
-import hex.music.io.AbcDocumentProducer;
+import hex.music.io.out.AbcDocumentProducer;
 import hex.music.service.command.AbstractServiceCommand;
 import java.util.ArrayList;
 import java.util.List;

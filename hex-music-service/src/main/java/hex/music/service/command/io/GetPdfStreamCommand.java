@@ -1,7 +1,7 @@
 package hex.music.service.command.io;
 
 import hex.music.core.domain.Tune;
-import hex.music.io.PdfStreamProducer;
+import hex.music.io.out.PdfStreamProducer;
 import hex.music.service.command.AbstractServiceCommand;
 import java.io.InputStream;
 import java.util.ArrayList;

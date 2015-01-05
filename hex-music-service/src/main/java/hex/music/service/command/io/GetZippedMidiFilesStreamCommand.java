@@ -1,7 +1,7 @@
 package hex.music.service.command.io;
 
 import hex.music.core.domain.Tune;
-import hex.music.io.ZippedMidiFilesStreamProducer;
+import hex.music.io.out.ZippedMidiFilesStreamProducer;
 import hex.music.service.command.AbstractServiceCommand;
 import java.io.InputStream;
 import java.util.ArrayList;
