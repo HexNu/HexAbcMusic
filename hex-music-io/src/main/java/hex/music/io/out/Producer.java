@@ -1,4 +1,4 @@
-package hex.music.io;
+package hex.music.io.out;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +27,10 @@ public interface Producer<T> {
                 ABC_FILE = BASE_DIR + "result.abc",
                 GIF_FILE = BASE_DIR + "result.gif",
                 GIF_START_FILE = BASE_DIR + "result-start.gif",
+                MIDI_FILE = BASE_DIR + "result.mid",
                 PDF_FILE = BASE_DIR + "result.pdf",
                 PS_FILE = BASE_DIR + "result.ps",
-                ZIPPED_ABC_FILE = MIDI_DIR + "result.abc";
+                ZIPPED_MIDI_FILE = MIDI_DIR + "result.zip";
     }
 
     public enum FileExtension {

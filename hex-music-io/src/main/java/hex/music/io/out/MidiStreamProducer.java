@@ -1,8 +1,7 @@
-package hex.music.io;
+package hex.music.io.out;
 
 import hex.music.core.domain.Tune;
 import hex.music.io.file.AbcFileWriter;
-import hex.music.io.file.ZipFileWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,43 +16,42 @@ import java.util.logging.Logger;
  *
  * @author hln
  */
-public class ZippedMidiFilesStreamProducer extends AbstractProducer<InputStream> {
+public class MidiStreamProducer extends AbstractProducer<InputStream> {
 
-    public ZippedMidiFilesStreamProducer(List<Tune> tunes) {
-        super(tunes);
+    private static final String MIDI_FILE_FLAG = "-o";
+
+    public MidiStreamProducer(Tune tune) {
+        super(tune);
     }
 
     @Override
     public InputStream produce() {
-        InputStream result = null;
-        process();
         try {
-            File zipFile = createZipFile();
-            result = new FileInputStream(zipFile);
+            File result = process();
+            return result != null ? new FileInputStream(result) : null;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ZippedMidiFilesStreamProducer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MidiStreamProducer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
+        return null;
     }
 
-    private File createZipFile() {
-        return new ZipFileWriter(new File(Path.MIDI_DIR), FileExtension.MID.get()).write();
-    }
-
-    private void process() {
-        File midiDir = new File(Path.MIDI_DIR);
+    private File process() {
+        File result = null;
         try {
-            midiDir.mkdirs();
-            File abcFile = new File(Path.ZIPPED_ABC_FILE);
+            File abcFile = new File(Path.ZIPPED_MIDI_FILE);
             new AbcFileWriter(getAbcDocumentAsString(), abcFile).write();
             List<String> commands = new ArrayList<>();
             commands.add(Command.ABC_2_MIDI);
             commands.add(abcFile.getAbsolutePath());
+            commands.add(MIDI_FILE_FLAG);
+            commands.add(Path.MIDI_FILE);
             ProcessBuilder builder = new ProcessBuilder(commands);
             Process process = builder.start();
             process.waitFor();
+            result = new File(Path.MIDI_FILE);
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(ZippedMidiFilesStreamProducer.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return result;
     }
 }

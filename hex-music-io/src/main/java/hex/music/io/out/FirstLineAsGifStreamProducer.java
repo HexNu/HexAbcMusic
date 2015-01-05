@@ -1,4 +1,4 @@
-package hex.music.io;
+package hex.music.io.out;
 
 import hex.music.core.domain.Tune;
 import hex.music.io.file.AbcFileWriter;
