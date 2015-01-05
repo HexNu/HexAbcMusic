@@ -54,6 +54,17 @@ public abstract class AbstractProducer<T> implements Producer {
         return result;
     }
 
+    /**
+     * Returns the first or only tune from the list.
+     *
+     * Convenience method.
+     *
+     * @return
+     */
+    protected Tune getTune() {
+        return tunes.get(0);
+    }
+
     protected List<Tune> getTunes() {
         return tunes;
     }
@@ -62,11 +73,18 @@ public abstract class AbstractProducer<T> implements Producer {
         return getPsAsFile(DEFAULT_INDENT_VALUE);
     }
 
+    private File createTempAbcFile() {
+        File abcFile = new File(Path.ABC_FILE);
+        abcFile.deleteOnExit();
+        return new AbcFileWriter(getAbcDocumentAsString(), abcFile).write();
+    }
+
     protected File getPsAsFile(String indentValue) {
+        return getPsAsFile(indentValue, createTempAbcFile());
+    }
+
+    protected File getPsAsFile(String indentValue, File abcFile) {
         try {
-            File abcFile = new File(Path.ABC_FILE);
-            abcFile.deleteOnExit();
-            new AbcFileWriter(getAbcDocumentAsString(), abcFile).write();
             File psFile = new File(Path.PS_FILE);
             psFile.deleteOnExit();
             List<String> commands = new ArrayList<>();

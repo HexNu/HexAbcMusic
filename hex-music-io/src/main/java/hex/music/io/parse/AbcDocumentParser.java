@@ -231,6 +231,9 @@ public class AbcDocumentParser {
                     tune.setSubheader(value);
                 }
                 break;
+            case "U":
+                // TODO: User defined, not implemented, do not use this field
+                break;
             case "V":
                 break;
             case "Z":

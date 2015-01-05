@@ -15,6 +15,7 @@ public interface Producer<T> {
     public interface Command {
 
         public static final String ABCM_2_PS = "abcm2ps",
+                PS_2_GIF = "ps2gif",
                 PS_2_PDF = "ps2pdf",
                 ABC_2_MIDI = "abc2midi";
     }
@@ -24,6 +25,8 @@ public interface Producer<T> {
         public static final String BASE_DIR = "/tmp/hex/",
                 MIDI_DIR = BASE_DIR + "midi/",
                 ABC_FILE = BASE_DIR + "result.abc",
+                GIF_FILE = BASE_DIR + "result.gif",
+                GIF_START_FILE = BASE_DIR + "result-start.gif",
                 PDF_FILE = BASE_DIR + "result.pdf",
                 PS_FILE = BASE_DIR + "result.ps",
                 ZIPPED_ABC_FILE = MIDI_DIR + "result.abc";
