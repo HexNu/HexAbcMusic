@@ -71,12 +71,18 @@ var List = function (tunes) {
                 this.domElement.appendChild(informationNode);
             }
             var firstLineNode = dom.createNode('dt');
+            var previewAsGifLink = dom.createNode('a');
+            previewAsGifLink.setAttribute('href', getUriByRel(tunes[i].links, 'view-gif'));
+            previewAsGifLink.setAttribute('target', 'view-gif');
+            previewAsGifLink.setAttribute('title', 'Visa noterna (GIF)');
             var firstLineImage = dom.createNode('img');
-            firstLineImage.setAttribute("src", "resources/tunes/hex/firstline/" + tunes[i].id);
-            firstLineImage.setAttribute("alt", "Första raden");
-            firstLineImage.setAttribute("width", "280");
-            firstLineImage.setAttribute("height", "30");
-            firstLineNode.appendChild(firstLineImage);
+            firstLineImage.setAttribute('src', getUriByRel(tunes[i].links, 'view-first-line'));
+            firstLineImage.setAttribute('alt', 'Första raden');
+            firstLineImage.setAttribute('width', '280');
+            firstLineImage.setAttribute('height', '30');
+            firstLineImage.setAttribute('border', '0');
+            previewAsGifLink.appendChild(firstLineImage);
+            firstLineNode.appendChild(previewAsGifLink);
             this.domElement.appendChild(firstLineNode);
             var itemLinksNode = dom.createNode('dd');
             itemLinksNode.setAttribute('style', 'margin-bottom: 3px');
@@ -103,9 +109,14 @@ var List = function (tunes) {
                         link.setTooltip('Ladda hem ABC-koden till din dator');
                         break;
                     case 'view-abc':
-                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_link', 'Granska');
+                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_link', 'Granska ABC');
                         link.setTooltip('Visa ABC-koden');
                         link.setTarget('view-abc');
+                        break;
+                    case 'audio-midi':
+                        link = new element.IconLink(tunes[i].links[j].uri, 'music_notes_listen', 'Lyssna (MIDI)');
+                        link.setTooltip('Lyssna (MIDI)');
+                        link.setTarget('audio-midi');
                         break;
                     case 'download-fw':
                         link = new element.IconButton('FW_put', 'Hämta');
@@ -117,7 +128,7 @@ var List = function (tunes) {
                         break;
                     case 'view-fw-page':
                         link = new element.IconLink(tunes[i].links[j].uri, 'FW_link', 'Hämta');
-                        link.setTooltip('Titta på låten på FolkWiki');
+                        link.setTooltip('Visa låten på FolkWiki');
                         link.setTarget('view-fw-page');
                         break;
                 }
@@ -218,4 +229,12 @@ NavigationBar.prototype = {
     getElement: function () {
         return this.domElement;
     }
+};
+var getUriByRel = function(jsonLinks, rel) {
+    for (var i = 0; i < jsonLinks.length; i++) {
+        if (jsonLinks[i].rel === rel) {
+            return decodeURIComponent(jsonLinks[i].uri);
+        }
+    }
+    return null;
 };

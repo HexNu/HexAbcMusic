@@ -16,6 +16,7 @@ import hex.music.service.command.io.GetPdfStreamCommand;
 import hex.music.service.command.io.GetPsStreamCommand;
 import hex.music.service.command.io.PreviewAbcDocCommand;
 import hex.music.service.command.io.PreviewGifCommand;
+import hex.music.service.command.io.PreviewMidiCommand;
 import hex.music.service.command.tune.SearchInNotesCommand;
 import hex.music.service.command.tune.SearchTunesCommand;
 import java.io.InputStream;
@@ -113,14 +114,21 @@ public class TuneResource extends AbstractResource {
     @Path("preview/{id}")
     public Response previewAbcCode(@PathParam("id") String id, @QueryParam("view") String view) throws UnsupportedEncodingException {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
-        if (view == null || view.equalsIgnoreCase("abc")) {
-            String abcString = commandExecutor.execute(new PreviewAbcDocCommand(tune), getKey());
-            return Response.ok(abcString)
-                    .header("Content-Type", "text/plain; charset=iso-8859-1")
-                    .build();
-        } else if (view.equals("gif") || view.equals("giff")) {
-            InputStream result = commandExecutor.execute(new PreviewGifCommand(tune), getKey());
-            return Response.ok(result).header("Content-Type", "image/gif").build();
+        InputStream result;
+        switch (view) {
+            case "gif":
+            case "giff":
+                result = commandExecutor.execute(new PreviewGifCommand(tune), getKey());
+                return Response.ok(result).header("Content-Type", "image/gif").build();
+            case "mid":
+            case "midi":
+                result = commandExecutor.execute(new PreviewMidiCommand(tune), getKey());
+                return Response.ok(result).header("Content-Type", "audio/midi").build();
+            case "abc":
+                String abcString = commandExecutor.execute(new PreviewAbcDocCommand(tune), getKey());
+                return Response.ok(abcString)
+                        .header("Content-Type", "text/plain; charset=iso-8859-1")
+                        .build();
         }
         return Response.noContent().build();
     }

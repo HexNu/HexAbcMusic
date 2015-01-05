@@ -97,7 +97,23 @@ public class LinkDTOBuilder {
     }
 
     public LinkDTO createTuneViewAbcLink(Tune tune) {
-        LinkDTO linkDTO = new LinkDTO("view-abc", createURI("tunes/hex/preview/" + tune.getId()));
+        LinkDTO linkDTO = new LinkDTO("view-abc", createURI("tunes/hex/preview/" + tune.getId() + "?view=abc"));
+        return linkDTO;
+    }
+    
+    public LinkDTO createTuneViewFirstLineGifLink(Tune tune) {
+        LinkDTO linkDTO = new LinkDTO("view-first-line", createURI("tunes/hex/firstline/" + tune.getId()));
+        return linkDTO;
+    }
+
+    
+    public LinkDTO createTuneViewGifLink(Tune tune) {
+        LinkDTO linkDTO = new LinkDTO("view-gif", createURI("tunes/hex/preview/" + tune.getId() + "?view=gif"));
+        return linkDTO;
+    }
+
+    public LinkDTO createTuneAudioMidiLink(Tune tune) {
+        LinkDTO linkDTO = new LinkDTO("audio-midi", createURI("tunes/hex/preview/" + tune.getId() + "?view=mid"));
         return linkDTO;
     }
 

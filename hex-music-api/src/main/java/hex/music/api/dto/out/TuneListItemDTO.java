@@ -28,6 +28,9 @@ public class TuneListItemDTO extends AbstractDTO {
         addLink(linkBuilder.createTuneDownloadLink(tune));
         addLink(linkBuilder.createTuneDownloadPdfLink(tune));
         addLink(linkBuilder.createTuneViewAbcLink(tune));
+        addLink(linkBuilder.createTuneViewFirstLineGifLink(tune));
+        addLink(linkBuilder.createTuneViewGifLink(tune));
+        addLink(linkBuilder.createTuneAudioMidiLink(tune));
         addLink(linkBuilder.createTuneEditLink(tune));
         id = String.valueOf(tune.getId());
         title = tune.getTitle();
