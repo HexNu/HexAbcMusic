@@ -1,4 +1,4 @@
-package hex.music.core.util;
+package hex.music.io.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;

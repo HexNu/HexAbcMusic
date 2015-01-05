@@ -19,23 +19,10 @@ public class StringUtil {
 
     public List<String> split() {
         List<String> result = new ArrayList<>();
-//        Matcher m = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'").matcher(string);
         Matcher m = Pattern.compile("[^\\s\"=']+|\"[^\"]*\"|'[^']*'").matcher(string);
         while (m.find()) {
             result.add(m.group());
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        String testar = "V:V1 name=\"1:a Fiol\" subname=\"F 1\" clef=treble";
-        for (String s : new StringUtil(testar).split()) {
-            System.out.println(s);
-        }
-//        String shortTest = "V:V1";
-//        for (String s : new StringUtil(shortTest).split()) {
-//            System.out.println(s);
-//        }
-
     }
 }
