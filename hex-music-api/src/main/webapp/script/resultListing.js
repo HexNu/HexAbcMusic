@@ -70,6 +70,14 @@ var List = function (tunes) {
                 informationNode.setAttribute('style', 'white-space: nowrap');
                 this.domElement.appendChild(informationNode);
             }
+            var firstLineNode = dom.createNode('dt');
+            var firstLineImage = dom.createNode('img');
+            firstLineImage.setAttribute("src", "resources/tunes/hex/firstline/" + tunes[i].id);
+            firstLineImage.setAttribute("alt", "Första raden");
+            firstLineImage.setAttribute("width", "280");
+            firstLineImage.setAttribute("height", "30");
+            firstLineNode.appendChild(firstLineImage);
+            this.domElement.appendChild(firstLineNode);
             var itemLinksNode = dom.createNode('dd');
             itemLinksNode.setAttribute('style', 'margin-bottom: 3px');
             for (var j = 0; j < tunes[i].links.length; j++) {

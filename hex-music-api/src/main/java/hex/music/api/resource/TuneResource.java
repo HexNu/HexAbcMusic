@@ -7,6 +7,7 @@ import hex.music.core.domain.Tune;
 import hex.music.core.domain.TuneListWrapper;
 import hex.music.service.command.io.CreateTunesFromAbcDocCommand;
 import hex.music.service.command.io.GetAbcStreamCommand;
+import hex.music.service.command.io.GetFirstLineGifStreamCommand;
 import hex.music.service.command.io.GetZippedMidiFilesStreamCommand;
 import hex.music.service.command.tune.GetAllTunesCommand;
 import hex.music.service.command.tune.GetTuneCommand;
@@ -14,6 +15,7 @@ import hex.music.service.command.tune.GetLimitedTuneListCommand;
 import hex.music.service.command.io.GetPdfStreamCommand;
 import hex.music.service.command.io.GetPsStreamCommand;
 import hex.music.service.command.io.PreviewAbcDocCommand;
+import hex.music.service.command.io.PreviewGifCommand;
 import hex.music.service.command.tune.SearchInNotesCommand;
 import hex.music.service.command.tune.SearchTunesCommand;
 import java.io.InputStream;
@@ -65,9 +67,8 @@ public class TuneResource extends AbstractResource {
     @GET
     @Path("download")
     public Response downloadTunes(@QueryParam("tunes") String tuneIds, @DefaultValue("abc") @QueryParam("format") String format) throws UnsupportedEncodingException {
-        InputStream result = null;
         String resultFileName = tuneIds == null || tuneIds.equals("") ? "Alla låtar" : "Låtsamling";
-        String resultFileExtension = format.equals("abc") || format.equals("pdf")  || format.equals("ps") ? "." + format : ".zip";
+        String resultFileExtension = getFileExtensionFromFormat(format);
         List<Tune> tunes = new ArrayList<>();
         if (tuneIds == null || tuneIds.equals("")) {
             tunes.addAll(commandExecutor.execute(new GetAllTunesCommand(), getKey()));
@@ -76,7 +77,7 @@ public class TuneResource extends AbstractResource {
                 tunes.add(commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey()));
             }
         }
-        result = getTunesAsInputStream(format, result, tunes);
+        InputStream result = getTunesAsInputStream(format, tunes);
         if (result != null) {
             return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
                     .header("Content-Disposition", "attachment; filename=\"" + resultFileName + resultFileExtension + "\"")
@@ -89,11 +90,11 @@ public class TuneResource extends AbstractResource {
     @Path("download/{id}")
     public Response downloadAbcTune(@PathParam("id") String id, @DefaultValue("abc") @QueryParam("format") String format) {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
-        InputStream result = null;
-        result = getTuneAsInputStream(format, result, tune);
+        InputStream result = getTuneAsInputStream(format, tune);
+        String resultFileExtension = getFileExtensionFromFormat(format);
         if (result != null) {
             return Response.ok((Object) result).type(format.equals("abc") ? MediaType.TEXT_PLAIN : MediaType.APPLICATION_OCTET_STREAM)
-                    .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + "." + format + "\"")
+                    .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + resultFileExtension + "\"")
                     .build();
         }
         return Response.noContent().build();
@@ -112,14 +113,16 @@ public class TuneResource extends AbstractResource {
     @Path("preview/{id}")
     public Response previewAbcCode(@PathParam("id") String id, @QueryParam("view") String view) throws UnsupportedEncodingException {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
-        String abcString = commandExecutor.execute(new PreviewAbcDocCommand(tune), getKey());
         if (view == null || view.equalsIgnoreCase("abc")) {
+            String abcString = commandExecutor.execute(new PreviewAbcDocCommand(tune), getKey());
             return Response.ok(abcString)
                     .header("Content-Type", "text/plain; charset=iso-8859-1")
                     .build();
-        } else {
-            return Response.noContent().build();
+        } else if (view.equals("gif") || view.equals("giff")) {
+            InputStream result = commandExecutor.execute(new PreviewGifCommand(tune), getKey());
+            return Response.ok(result).header("Content-Type", "image/gif").build();
         }
+        return Response.noContent().build();
     }
 
     @PUT
@@ -130,6 +133,14 @@ public class TuneResource extends AbstractResource {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("firstline/{id}")
+    public Response getFirstLine(@PathParam("id") String id) {
+        Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
+        InputStream result = tune.getFirstLine();
+        return Response.ok(result).header("Content-Type", "image/gif").build();
+    }
+
     @POST
     @Path("upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -138,28 +149,40 @@ public class TuneResource extends AbstractResource {
         return Response.ok("Number of tunes created: " + newTunes.size()).build();
     }
 
-    private InputStream getTunesAsInputStream(String format, InputStream result, List<Tune> tunes) {
+    private InputStream getTunesAsInputStream(String format, List<Tune> tunes) {
         switch (format) {
             case "abc":
-                result = commandExecutor.execute(new GetAbcStreamCommand(tunes), getKey());
-                break;
+                return commandExecutor.execute(new GetAbcStreamCommand(tunes), getKey());
+            case "gif":
+            case "giff":
+                return commandExecutor.execute(new GetFirstLineGifStreamCommand(tunes.get(0)), getKey());
             case "mid":
             case "midi":
-                result = commandExecutor.execute(new GetZippedMidiFilesStreamCommand(tunes), getKey());
-                break;
+                return commandExecutor.execute(new GetZippedMidiFilesStreamCommand(tunes), getKey());
             case "pdf":
-                result = commandExecutor.execute(new GetPdfStreamCommand(tunes), getKey());
-                break;
+                return commandExecutor.execute(new GetPdfStreamCommand(tunes), getKey());
             case "ps":
-                result = commandExecutor.execute(new GetPsStreamCommand(tunes), getKey());
-                break;
+                return commandExecutor.execute(new GetPsStreamCommand(tunes), getKey());
         }
-        return result;
+        return null;
     }
 
-    private InputStream getTuneAsInputStream(String format, InputStream result, Tune tune) {
+    private String getFileExtensionFromFormat(String format) {
+        switch (format) {
+            case "abc":
+            case "gif":
+            case "giff":
+            case "pdf":
+            case "ps":
+                return "." + format;
+            default:
+                return ".zip";
+        }
+    }
+
+    private InputStream getTuneAsInputStream(String format, Tune tune) {
         List<Tune> tunes = new ArrayList<>();
         tunes.add(tune);
-        return getTunesAsInputStream(format, result, tunes);
+        return getTunesAsInputStream(format, tunes);
     }
 }
