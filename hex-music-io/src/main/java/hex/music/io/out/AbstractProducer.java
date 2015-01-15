@@ -200,11 +200,11 @@ public abstract class AbstractProducer<T> implements Producer {
         FilenameFilter filter = (File dir, String name) -> {
             return FileExtension.getAll().stream().anyMatch((extension) -> (name.endsWith("." + extension)));
         };
-        new File(Path.MIDI_DIR).mkdirs();
+        new File(Path.ZIP_DIR).mkdirs();
         for (File fileToDelete : new File(Path.BASE_DIR).listFiles(filter)) {
             fileToDelete.delete();
         }
-        for (File fileToDelete : new File(Path.MIDI_DIR).listFiles(filter)) {
+        for (File fileToDelete : new File(Path.ZIP_DIR).listFiles(filter)) {
             fileToDelete.delete();
         }
     }

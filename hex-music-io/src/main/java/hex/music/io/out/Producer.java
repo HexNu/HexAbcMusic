@@ -23,14 +23,15 @@ public interface Producer<T> {
     public interface Path {
 
         public static final String BASE_DIR = "/tmp/hex/",
-                MIDI_DIR = BASE_DIR + "midi/",
+                ZIP_DIR = BASE_DIR + "zip/",
                 ABC_FILE = BASE_DIR + "result.abc",
                 GIF_FILE = BASE_DIR + "result.gif",
                 GIF_START_FILE = BASE_DIR + "result-start.gif",
                 MIDI_FILE = BASE_DIR + "result.mid",
                 PDF_FILE = BASE_DIR + "result.pdf",
                 PS_FILE = BASE_DIR + "result.ps",
-                ZIPPED_MIDI_FILE = MIDI_DIR + "result.zip";
+                ZIPPED_GIF_FILE = ZIP_DIR + "result.gif",
+                ZIPPED_MIDI_FILE = ZIP_DIR + "result.zip";
     }
 
     public enum FileExtension {

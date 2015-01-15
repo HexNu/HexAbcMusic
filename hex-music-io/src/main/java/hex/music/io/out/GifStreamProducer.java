@@ -1,12 +1,10 @@
 package hex.music.io.out;
 
 import hex.music.core.domain.Tune;
-import hex.music.io.file.AbcFileWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

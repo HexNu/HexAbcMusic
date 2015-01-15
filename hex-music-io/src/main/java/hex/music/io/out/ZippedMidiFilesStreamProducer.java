@@ -37,7 +37,7 @@ public class ZippedMidiFilesStreamProducer extends AbstractProducer<InputStream>
     }
 
     private File createZipFile() {
-        return new ZipFileWriter(new File(Path.MIDI_DIR), FileExtension.MID.get()).write();
+        return new ZipFileWriter(new File(Path.ZIP_DIR), FileExtension.MID.get()).write();
     }
 
     private void process() {
