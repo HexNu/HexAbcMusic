@@ -1,0 +1,25 @@
+<tune-list ng-controller="TuneListController">
+    <tune-list-header>{{listTitle}}</tune-list-header>
+    <tune-list-navbar>
+        <img ng-src="{{prev.icon}}" alt="&lt;" ng-click="prev.clicked()">
+        <img ng-src="{{next.icon}}" alt="&gt;" ng-click="next.clicked()">
+    </tune-list-navbar>
+    <tune-list-body>
+        <tune ng-repeat="tune in tunes">
+            <tune-title>{{tune.title}}</tune-title>
+            <tune-sample>
+                <a ng-href="{{tune.gifURL}}" target="_blank"><img ng-src="{{tune.firstLineURL}}" alt="Notexempel" class="tune-start"></a>
+            </tune-sample>
+            <tune-info>{{tune.composer ? tune.composer + ' - ' : ''}} {{tune.source  ? tune.source + ' - ' : ''}} 
+                {{tune.rythm ? tune.rythm + ' - ' : ''}} {{tune.keySignature}}</tune-info>
+            <select onchange="hex.tunes.openListLink(event)">
+                <option value="">Välj...</option>
+                <option value="{{link.uri}}" ng-repeat="link in tune.links">{{link.rel}}</option>
+            </select>
+        </tune>
+    </tune-list-body>
+    <tune-list-navbar>
+        <img ng-src="{{prev.icon}}" alt="&lt;" ng-click="prev.clicked()">
+        <img ng-src="{{next.icon}}" alt="&gt;" ng-click="next.clicked()">
+    </tune-list-navbar>
+</tune-list>

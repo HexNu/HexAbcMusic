@@ -73,13 +73,13 @@ hex = {
             hex.actions.getAutoCompleteData();
         },
         getAutoCompleteData: function () {
-            http.GetJson('resources/tunes/hex/composers', hex.actions.generateComposerList);
-            http.GetJson('resources/tunes/hex/keys', hex.actions.generateKeyList);
-            http.GetJson('resources/tunes/hex/clefs', hex.actions.generateClefList);
-            http.GetJson('resources/tunes/hex/sources', hex.actions.generateSourceList);
-            http.GetJson('resources/tunes/hex/regions', hex.actions.generateRegionList);
-            http.GetJson('resources/tunes/hex/rythms', hex.actions.generateRythmList);
-            http.GetJson('resources/tunes/hex/transcribers', hex.actions.generateTranscriberList);
+            http.GetJson('resources/list/composers', hex.actions.generateComposerList);
+            http.GetJson('resources/list/keys', hex.actions.generateKeyList);
+            http.GetJson('resources/list/clefs', hex.actions.generateClefList);
+            http.GetJson('resources/list/sources', hex.actions.generateSourceList);
+            http.GetJson('resources/list/regions', hex.actions.generateRegionList);
+            http.GetJson('resources/list/rythms', hex.actions.generateRythmList);
+            http.GetJson('resources/list/transcribers', hex.actions.generateTranscriberList);
         },
         clearEditorArea: function () {
             dom.clearNode('editor-area');

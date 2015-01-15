@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
  *
  * @author hln
  */
-@Path("tunes/abc")
+@Path("list")
 public class AutoCompleteResource extends AbstractResource {
 
     @GET

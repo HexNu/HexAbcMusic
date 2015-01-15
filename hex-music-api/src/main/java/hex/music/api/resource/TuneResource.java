@@ -3,17 +3,18 @@ package hex.music.api.resource;
 import hex.music.api.dto.LinkDTOBuilder;
 import hex.music.api.dto.out.LimitedTuneListDTO;
 import hex.music.api.dto.out.TuneDTO;
+import hex.music.core.HexMediaType;
 import hex.music.core.domain.Tune;
 import hex.music.core.domain.TuneListWrapper;
 import hex.music.service.command.io.CreateTunesFromAbcDocCommand;
 import hex.music.service.command.io.GetAbcStreamCommand;
-import hex.music.service.command.io.GetFirstLineGifStreamCommand;
 import hex.music.service.command.io.GetZippedMidiFilesStreamCommand;
 import hex.music.service.command.tune.GetAllTunesCommand;
 import hex.music.service.command.tune.GetTuneCommand;
 import hex.music.service.command.tune.GetLimitedTuneListCommand;
 import hex.music.service.command.io.GetPdfStreamCommand;
 import hex.music.service.command.io.GetPsStreamCommand;
+import hex.music.service.command.io.GetZippedGifFIlesStreamCommand;
 import hex.music.service.command.io.PreviewAbcDocCommand;
 import hex.music.service.command.io.PreviewGifCommand;
 import hex.music.service.command.io.PreviewMidiCommand;
@@ -80,7 +81,7 @@ public class TuneResource extends AbstractResource {
         }
         InputStream result = getTunesAsInputStream(format, tunes);
         if (result != null) {
-            return Response.ok((Object) result).type(MediaType.TEXT_PLAIN)
+            return Response.ok((Object) result).type(getContentTypeForSingleTune(format))
                     .header("Content-Disposition", "attachment; filename=\"" + resultFileName + resultFileExtension + "\"")
                     .build();
         }
@@ -94,7 +95,7 @@ public class TuneResource extends AbstractResource {
         InputStream result = getTuneAsInputStream(format, tune);
         String resultFileExtension = getFileExtensionFromFormat(format);
         if (result != null) {
-            return Response.ok((Object) result).type(format.equals("abc") ? MediaType.TEXT_PLAIN : MediaType.APPLICATION_OCTET_STREAM)
+            return Response.ok((Object) result).type(getContentTypeForSingleTune(format))
                     .header("Content-Disposition", "attachment; filename=\"" + tune.getTitle() + resultFileExtension + "\"")
                     .build();
         }
@@ -119,15 +120,15 @@ public class TuneResource extends AbstractResource {
             case "gif":
             case "giff":
                 result = commandExecutor.execute(new PreviewGifCommand(tune), getKey());
-                return Response.ok(result).header("Content-Type", "image/gif").build();
+                return Response.ok(result).type(HexMediaType.IMAGE_GIF).build();
             case "mid":
             case "midi":
                 result = commandExecutor.execute(new PreviewMidiCommand(tune), getKey());
-                return Response.ok(result).header("Content-Type", "audio/midi").build();
+                return Response.ok(result).type(HexMediaType.AUDIO_MIDI).build();
             case "abc":
                 String abcString = commandExecutor.execute(new PreviewAbcDocCommand(tune), getKey());
                 return Response.ok(abcString)
-                        .header("Content-Type", "text/plain; charset=iso-8859-1")
+                        .type(HexMediaType.TEXT_ABC)
                         .build();
         }
         return Response.noContent().build();
@@ -143,10 +144,11 @@ public class TuneResource extends AbstractResource {
 
     @GET
     @Path("firstline/{id}")
+    @Produces(HexMediaType.IMAGE_GIF)
     public Response getFirstLine(@PathParam("id") String id) {
         Tune tune = commandExecutor.execute(new GetTuneCommand(Long.valueOf(id)), getKey());
         InputStream result = tune.getFirstLine();
-        return Response.ok(result).header("Content-Type", "image/gif").build();
+        return Response.ok(result).type(HexMediaType.IMAGE_GIF).build();
     }
 
     @POST
@@ -157,13 +159,31 @@ public class TuneResource extends AbstractResource {
         return Response.ok("Number of tunes created: " + newTunes.size()).build();
     }
 
+    private String getContentTypeForSingleTune(String format) {
+        switch (format) {
+            case "abc":
+                return HexMediaType.TEXT_ABC;
+            case "gif":
+            case "giff":
+                return HexMediaType.IMAGE_GIF;
+            case "mid":
+            case "midi":
+                return HexMediaType.AUDIO_MIDI;
+            case "pdf":
+                return HexMediaType.APPLICATION_POSTSCRIPT;
+            case "ps":
+                return HexMediaType.APPLICATION_PDF;
+            default:
+            return HexMediaType.APPLICATION_ZIP;
+        }
+    }
     private InputStream getTunesAsInputStream(String format, List<Tune> tunes) {
         switch (format) {
             case "abc":
                 return commandExecutor.execute(new GetAbcStreamCommand(tunes), getKey());
             case "gif":
             case "giff":
-                return commandExecutor.execute(new GetFirstLineGifStreamCommand(tunes.get(0)), getKey());
+                return commandExecutor.execute(new GetZippedGifFIlesStreamCommand(tunes), getKey());
             case "mid":
             case "midi":
                 return commandExecutor.execute(new GetZippedMidiFilesStreamCommand(tunes), getKey());
