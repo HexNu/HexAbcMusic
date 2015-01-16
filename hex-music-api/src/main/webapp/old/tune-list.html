@@ -1,8 +1,8 @@
 <tune-list ng-controller="TuneListController">
     <tune-list-header>{{listTitle}}</tune-list-header>
     <tune-list-navbar>
-        <img ng-src="{{prev.icon}}" alt="&lt;" ng-click="prev.clicked()">
-        <img ng-src="{{next.icon}}" alt="&gt;" ng-click="next.clicked()">
+        <img ng-src="{{prev.icon}}" alt="" ng-click="prev.clicked()">
+        <img ng-src="{{next.icon}}" alt="" ng-click="next.clicked()">
     </tune-list-navbar>
     <tune-list-body>
         <tune ng-repeat="tune in tunes">
@@ -12,14 +12,14 @@
             </tune-sample>
             <tune-info>{{tune.composer ? tune.composer + ' - ' : ''}} {{tune.source  ? tune.source + ' - ' : ''}} 
                 {{tune.rythm ? tune.rythm + ' - ' : ''}} {{tune.keySignature}}</tune-info>
-            <select onchange="hex.tunes.openListLink(event)">
+<!--            <select>
                 <option value="">Välj...</option>
-                <option value="{{link.uri}}" ng-repeat="link in tune.links">{{link.rel}}</option>
-            </select>
+                <option value="{{option.url}}" ng-repeat="option in tune.options">{{option.name}}</option>
+            </select>-->
         </tune>
     </tune-list-body>
     <tune-list-navbar>
-        <img ng-src="{{prev.icon}}" alt="&lt;" ng-click="prev.clicked()">
-        <img ng-src="{{next.icon}}" alt="&gt;" ng-click="next.clicked()">
+        <img ng-src="{{prev.icon}}" alt="" ng-click="prev.clicked()">
+        <img ng-src="{{next.icon}}" alt="" ng-click="next.clicked()">
     </tune-list-navbar>
 </tune-list>

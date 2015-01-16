@@ -1,7 +1,10 @@
 var musicAppModule = angular.module('musicApp', []);
+musicAppModule.controller('TuneViewController', function($scope) {
+    $scope.viewTitle = "H";
+});
 musicAppModule.controller('TuneListController',
         function ($scope, $http) {
-            $scope.URL = '../resources/tunes/hex?limit=4';
+            $scope.URL = './resources/tunes/hex?limit=5';
             $scope.loadList = function (url) {
                 $scope.URL = url || $scope.URL;
                 $http.get($scope.URL).success(function (jsonData) {
@@ -35,12 +38,29 @@ musicAppModule.controller('TuneListController',
                     };
                     $scope.tunes = jsonData.tunes;
                     for (var i = 0, len = $scope.tunes.length; i < len; i++) {
+                        $scope.tunes[i].options = [];
                         for (var j = 0, len = $scope.tunes[i].links.length; j < len; j++) {
                             if ($scope.tunes[i].links[j].rel === 'view-first-line') {
                                 $scope.tunes[i].firstLineURL = decodeURIComponent($scope.tunes[i].links[j].uri);
                             }
                             if ($scope.tunes[i].links[j].rel === 'view-gif') {
                                 $scope.tunes[i].gifURL = decodeURIComponent($scope.tunes[i].links[j].uri);
+                                $scope.tunes[i].options.push({name: 'Visa GIF', url: decodeURIComponent($scope.tunes[i].links[j].uri)});
+                            }
+                            if ($scope.tunes[i].links[j].rel === 'download-abc') {
+                                $scope.tunes[i].options.push({name: 'Ladda hem ABC', url: decodeURIComponent($scope.tunes[i].links[j].uri)});
+                            }
+                            if ($scope.tunes[i].links[j].rel === 'download-pdf') {
+                                $scope.tunes[i].options.push({name: 'Ladda hem PDF', url: decodeURIComponent($scope.tunes[i].links[j].uri)});
+                            }
+                            if ($scope.tunes[i].links[j].rel === 'view-abc') {
+                                $scope.tunes[i].options.push({name: 'Visa ABC', url: decodeURIComponent($scope.tunes[i].links[j].uri)});
+                            }
+                            if ($scope.tunes[i].links[j].rel === 'audio-midi') {
+                                $scope.tunes[i].options.push({name: 'Ladda hem MIDI', url: decodeURIComponent($scope.tunes[i].links[j].uri)});
+                            }
+                            if ($scope.tunes[i].links[j].rel === 'edit') {
+                                $scope.tunes[i].options.push({name: 'Redigera', url: decodeURIComponent($scope.tunes[i].links[j].uri)});
                             }
                         }
                     }

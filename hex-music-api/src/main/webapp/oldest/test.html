@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="script/tuneCollection.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var System = {
+                out: {
+                    print: function (text) {
+                        var txtNode = document.createTextNode(text);
+                        document.getElementById('sys-out').appendChild(txtNode);
+                    },
+                    println: function (text) {
+                        var txtNode = document.createTextNode(text);
+                        var brNode = document.createElement('br');
+                        document.getElementById('sys-out').appendChild(txtNode);
+                        document.getElementById('sys-out').appendChild(brNode);
+                    }
+                }
+            };
+            var tuneCollection = new TuneCollection("Norrhälsingelåtar");
+            tuneCollection.add(new TuneItem(1, 'Majströms brudmarsch'));
+            tuneCollection.add(new TuneItem(2, 'Höga Pusten'));
+            tuneCollection.add(new TuneItem(3, 'Grevpolskan'));
+            tuneCollection.add(new TuneItem(4, 'Äppelbo gånglåt'));
+            tuneCollection.add(5, 'Baltzerjungfrun');
+            var printout = function () {
+                for (var tune in tuneCollection.getAll()) {
+                    System.out.print(tuneCollection.get(tune).getId() + ' - ');
+                    System.out.println(tuneCollection.get(tune).getTitle());
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div>Samlingar: </div>
+        <button onclick="printout()">Print</button>
+        <div id="sys-out">
+
+        </div>
+    </body>
+</html>

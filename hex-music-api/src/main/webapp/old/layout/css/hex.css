@@ -17,34 +17,49 @@ div#view-area, div#list-area {
     border: #999 solid 3px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px; 
+    height: 690px;
 }
 div#view-area {
-    left: 386px;
+    left: 396px;
     width: 800px;
-    min-height: 500px;
 }
 div#list-area {
-    left: 10px;
+    left: 20px;
     width: 350px;
 }
-tune-list {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 12px;
+tune-view {
+    
 }
-tune-list-header {
-    font-size: 14px;
+tune-view-header {
+    
+}
+tune-view-body {
+    padding: 10px;
+}
+tune-list, tune-view {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+}
+tune-list-header, tune-view-header {
+    font-size: 18px;
     text-align: center;
+    padding: 6px 0 0 0;
+    height: 24px;
 }
 tune-list-navbar {
-    line-height: 20px;
     text-align: center;
-    padding: 4px;
+    vertical-align: middle;
+    height: 20px;
+    padding: 6px 4px 4px 4px;
+}
+img[ng-src = './layout/images/resultset_previous_disabled.png'],
+img[ng-src = './layout/images/resultset_next_disabled.png'] {
+    opacity: 0.4;
 }
 tune-list-body {
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 550px;
-    min-height: 550px;
+    height: 580px;
     border-bottom: darkgray solid 1px;
 }
 tune-list tune-title {
@@ -61,9 +76,11 @@ tune-list tune {
 }
 tune-list tune-sample {
     width: 97%;
-    overflow-x: hidden;
+    max-height: 48px;
+    overflow: hidden;
 }
 tune-list tune-sample img {
+    width: 120%;
 }
 /*tune-list tune:nth-child(odd) {background-color: #f6f6f6}*/
 /*

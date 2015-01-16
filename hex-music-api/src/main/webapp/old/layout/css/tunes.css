@@ -2,11 +2,14 @@
     Created on : 2015-jan-15, 08:42:25
     Author     : hln
 */
+tune-view {display: block}
 tune-list {display: block}
-tune-list-header {display: block; font-size: x-large; font-weight: bold; margin: 0.3em;}
+tune-list-header, tune-view-header {display: block; font-size: x-large; font-weight: bold; margin: 0.3em;}
+tune-view-body {display: block}
+tune-view tune {display: block}
 tune-list-navbar {display: block}
 tune-list-body {display: block}
-tune-list tune { display: list-item; }
+tune-list tune {display: list-item;}
 tune-list * tune-title {display: block}
 tune-list * tune-sample {display: block} 
 tune-list * tune-info {display: block}
