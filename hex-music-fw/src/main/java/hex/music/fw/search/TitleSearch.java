@@ -12,8 +12,10 @@ import se.digitman.lightxml.XmlNode;
  */
 public class TitleSearch extends AbstractFwPageReader {
 
-    private static final String SEARCH_PATH = "PmWikiSv/Sök?action=search&q=",
+    private static final String SEARCH_PATH = "?n=Meta.Start&action=search&q=",
             TUNE_PAGE_BASE_PATH = "http://www.folkwiki.se/Musik/";
+//    private static final String SEARCH_PATH = "PmWikiSv/Sök?action=search&q=",
+//            TUNE_PAGE_BASE_PATH = "http://www.folkwiki.se/Musik/";
     private List<SearchResult> searchResult;
     private final String queryString;
     private final ResultCache cache = ResultCache.getInstance();

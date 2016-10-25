@@ -27,12 +27,11 @@ public class FwResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response search(@DefaultValue("10") @QueryParam("limit") String limit,
-            @DefaultValue("0") @QueryParam("offset") String offset,
+    public Response search(@DefaultValue("10") @QueryParam("limit") Integer limit,
+            @DefaultValue("0") @QueryParam("offset") Integer offset,
             @QueryParam("q") String q) {
         LinkDTOBuilder linkDTOBuilder = new LinkDTOBuilder(getBaseUri());
-        SearchResultListWrapper wrapper = commandExecutor.execute(new SearchTunesOnFolkWikiCommand(Integer.valueOf(limit),
-                Integer.valueOf(offset), q), getKey());
+        SearchResultListWrapper wrapper = commandExecutor.execute(new SearchTunesOnFolkWikiCommand(limit, offset, q), getKey());
         FwTuneListDTO result = new FwTuneListDTO(wrapper, linkDTOBuilder);
         return Response.ok(result).build();
     }

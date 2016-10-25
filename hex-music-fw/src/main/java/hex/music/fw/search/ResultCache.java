@@ -53,7 +53,7 @@ public class ResultCache {
         if (offset + limit < resultList.size()) {
             result.setNext(offset + limit);
         }
-        for (int i = offset; i < resultList.size() - 1 && i < offset + limit; i++) {
+        for (int i = offset; i <= resultList.size() - 1 && i < offset + limit; i++) {
             result.addResult(resultList.get(i));
         }
         return result;
